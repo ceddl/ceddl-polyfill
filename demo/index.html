@@ -1,0 +1,343 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>CEDDL-polyfill - ............................</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/product.css">
+    <link rel="stylesheet" type="text/css" href="/css/advert.css">
+</head>
+
+<body ceddl-observe="page"
+  data-section="home demo"
+  data-framework="loDash"
+  ceddl-page-ready="page_metadata cart products">
+
+<section style="padding-bottom: 0;" class="section">
+    <div class="container">
+        <div class="columns header">
+            <div class="column header-img">
+                <img src="/img/mainLogo.svg" alt="logo">
+            </div>
+            <div class="column is-two-thirds header-content">
+                <div class="header-content-align">
+                  <div class=header-name>
+                    <h3 class="title is-2"><strong>CEDDL-polyfill</strong>
+                      <p class="header-name-subtext">
+                        <span>............................</span>
+                      </p>
+                    </h3>
+                  </div>
+                  <div class="header-explain">
+                    <h5 class="subtitle is-5 header-explain-title">html and javascript interface intended to decouple your web analytics.</h5>
+                    <div class="content is-small">
+                        <p>Set analytics into templating of any frontend / mvc framework and it will do the job.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-4 is-parent">
+                <article class="tile is-child notification is-info">
+                    <p class="title">Demo actions</p>
+                    <p class="subtitle">Actions you can perform on this page.</p>
+                    <div class="content">
+                        <div id="hier"></div>
+                        <p>
+                          <button class="button is-success">Click here for an event</button>
+                        </p>
+                        <p>
+                          <button ceddl-click="clearcart" class="button is-success js-clear-cart">Clear cart</button>
+                        </p>
+                        <p>
+                          <button ceddl-click="navigation" class="button is-success js-new-page">Move to Products Page</button>
+                        </p>
+                        <form action="/" ceddl-submit="demosubmit" data-product-id="1234598754" onsubmit="event.preventDefault();">
+                          <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                              <input class="input" type="text" placeholder="Text input">
+                            </div>
+                          </div>
+
+                          <div class="field">
+                            <label class="label">Message</label>
+                            <div class="control">
+                              <textarea class="textarea" placeholder="Textarea"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="field is-grouped">
+                            <div class="control">
+                              <button class="button is-success">Submit</button>
+                            </div>
+                          </div>
+                      </form>
+                    </div>
+                </article>
+                <article class="tile is-child notification is-info">
+                    <p class="title">Info</p>
+                    <p class="subtitle">Documentation links</p>
+                </article>
+            </div>
+            <div class="tile is-vertical is-8">
+                <div class="tile">
+                    <div class="tile is-parent is-vertical">
+                        <article class="tile is-child notification is-info">
+                            <p class="title">Products</p>
+                            <div ceddl-observe="products" class="content js-product-container">
+
+                              <div class="is-clearfix"></div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="tile is-parent">
+                        <article class="tile is-child notification is-info">
+                          <div>
+                            <p class="title">Advertisement</p>
+                            <div class="content">
+                              <div ceddl-observe="advertisement" data-name="Non-stop gratis extra's" class="ad">
+                                <div class="ad-img">
+                                  <img src="/img/ad.jpg" alt="ziggo bennefits"/>
+                                </div>
+                                <div ceddl-observe="advertiser" data-id="1920_5ah13" data-name="Google AdWords Conversion" class="ad-content">
+                                  <h3>Non-stop gratis extra's</h3>
+                                  <p>
+                                  Heb je een Vodafone en Ziggo abonnement? Dan ontvang je non-stop gratis extra’s! Elke maand weer.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <p class="title">Cart</p>
+                            <div class="content js-cart-container">
+
+                            </div>
+                          </div>
+
+                        </article>
+                    </div>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child">
+                        <div class="message is-success">
+                          <p class="message-header">Results</p>
+                          <div class="message-body">
+                              <pre class="js-data-object" ></pre>
+                              <pre class="js-event-object" ></pre>
+                          </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered is-small">
+      <p>
+
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+<script id="product-template" type="text/x-lodash-template">
+    <div class="container-item" subscriptiontype="<%= subscription_type %>"
+        ceddl-observe="product"
+        ceddl-click="addtocart"
+        data-sale2="<%= sale?true:false %>"
+        data-name="<%= name %>"
+        data-short-name="<%= short_name %>"
+        data-price-once="<%= price_once %>"
+        data-price-month="<%= price_month %>"
+        data-subscription-type="<%= subscription_type %>">
+      <div class="item" style="background-image: url(https://unsplash.it/300?image=<%= image %>)">
+        <div class="item-overlay">
+          <% if (sale){ %>
+            <div class="sale-tag"><span>SALE</span></div>
+          <% } %>
+        </div>
+        <div class="item-content">
+          <div class="item-top-content">
+            <div class="item-top-content-inner">
+              <div class="item-product">
+                <div class="item-top-title">
+                  <h2><%= short_name %></h2>
+                  <p class="subdescription">
+                    <%= name %>
+                  </p>
+                </div>
+              </div>
+              <div class="item-product-price">
+                <span class="price-num">$<%= price_once %></span>
+                <p class="subdescription">$<%= price_month %></p>
+              </div>
+            </div>
+          </div>
+          <div class="item-add-content">
+            <div class="item-add-content-inner">
+              <div class="item-section">
+                <h4>Type</h4>
+                    <p><%= subscription_type %></p>
+              </div>
+              <div class="item-section">
+                  <button ceddl-click="addtocart" class="button is-success">Buy now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
+<script id="cart-product-template" type="text/x-lodash-template">
+    <div class="js-cart-product container-item"
+          ceddl-click="removefromcart"
+          ceddl-observe="product"
+          ceddl-model="package"
+          data-sale="<%= sale?true:false %>"
+          data-name="<%= name %>"
+          data-short-name="<%= short_name %>"
+          data-price-once="<%= price_once %>"
+          data-price-month="<%= price_month %>">
+            <div ceddl-observe="device"
+              data-sale="<%= sale?true:false %>"
+              data-name="<%= name %>"
+              data-short-name="<%= short_name %>"
+              data-price-once="<%= price_once %>"
+              data-price-month="<%= price_month %>"
+              data-brand="sublist" ></div>
+            <div ceddl-observe="sim"
+              data-sale="<%= sale?true:false %>"
+              data-name="<%= name %>"
+              data-short-name="<%= short_name %>"
+              data-price-once="<%= price_once %>"
+              data-price-month="<%= price_month %>"
+              data-subscription-type="<%= subscription_type %>"
+              data-brand="sublist" ></div>
+      <div class="item" style="background-image: url(https://unsplash.it/300?image=<%= image %>)">
+        <div class="item-overlay">
+          <% if (sale){ %>
+            <div class="sale-tag"><span>SALE</span></div>
+          <% } %>
+        </div>
+        <div class="item-content">
+          <div class="item-top-content">
+            <div class="item-top-content-inner">
+              <div class="item-product">
+                <div class="item-top-title">
+                  <h2><%= short_name %></h2>
+                  <p class="subdescription">
+                    <%= name %>
+                  </p>
+                </div>
+              </div>
+              <div class="item-product-price">
+                <span class="price-num">$<%= price_once %></span>
+                <p class="subdescription">$<%= price_month %></p>
+              </div>
+            </div>
+          </div>
+          <div class="item-add-content">
+            <div class="item-add-content-inner">
+              <div class="item-section">
+                <h4>Type</h4>
+                    <p><%= subscription_type %></p>
+              </div>
+              <div class="item-section">
+                <button ceddl-click="removefromcart" class="button is-danger">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
+<script id="cart-template" type="text/x-lodash-template">
+    <div id="cart" ceddl-observe="cart" data-qty="<%= products.length %>">
+        <a href="#cart" class="button is-success">
+            <span class="tag is-warning"><%= products.length %></span>
+            <span class="icon is-medium" style="display: inline-block; margin-left: 5px; margin-right: 5px;">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%"; viewBox="0 0 512 512">
+                <path fill="#FFF" d="M192 464c0 26.51-21.49 48-48 48s-48-21.49-48-48c0-26.51 21.49-48 48-48s48 21.49 48 48z"></path>
+                <path fill="#FFF" d="M512 464c0 26.51-21.49 48-48 48s-48-21.49-48-48c0-26.51 21.49-48 48-48s48 21.49 48 48z"></path>
+                <path fill="#FFF"  d="M512 256v-192h-384c0-17.673-14.327-32-32-32h-96v32h64l24.037 206.027c-14.647 11.729-24.037 29.75-24.037 49.973 0 35.348 28.654 64 64 64h384v-32h-384c-17.673 0-32-14.327-32-32 0-0.109 0.007-0.218 0.008-0.328l415.992-63.672z"></path>
+            </svg>
+            </span>
+        </a>
+        <% for (var key in products) { %>
+            <%= demo.cartProductTemplate(products[key]) %>
+        <% } %>
+    </div>
+</script>
+
+
+<script async src="index.js" ></script>
+<script async src="js/demo.models.js"></script>
+<script src="js/lodash.js" ></script>
+<script src="js/cart.js" ></script>
+<script src="js/products.js" ></script>
+<script src="js/app.js" ></script>
+
+</body>
+
+</html>
+
+
+<!-- <div ceddl-observe="cart" quantity="2" >
+  <div ceddl-observe="products">
+    <div>
+      <div ceddl-observe="product" ceddl-model="package" name="samsung galaxy s8 + red essential" >
+        <div ceddl-observe="device" name="galaxy s8" ></div>
+
+        <div ceddl-observe="sim" name="red-essential" ></div>
+      </div>
+      <div ceddl-observe="product" _model="package" name="samsung galaxy s8 + red essential" >
+        <div ceddl-observe="device" name="galaxy s8" ></div>
+
+        <div ceddl-observe="sim" name="red-essential" ></div>
+      </div>
+      <div ceddl-observe="popup"></div>
+    </div>
+  </div>
+</div> -->
+
+<!-- {
+popup: {}
+cart: {
+  quantity: 1,
+  products: [
+    {
+      name: 'Samsung galaxy s8 + red essential',
+      device: {
+        name: 'Samsung galaxy s8'
+      },
+      sim: {
+        name: 'Red essential'
+      }
+    },
+    {
+      name: 'Samsung galaxy s8 + red essential',
+      device: {
+        name: 'Samsung galaxy s8'
+      },
+      sim: {
+        name: 'Red essential'
+      }
+    }
+  ]
+} -->

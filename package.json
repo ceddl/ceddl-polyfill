@@ -1,0 +1,27 @@
+{
+  "name": "customer-experience-digital-data-layer-polyfill",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node demo/app.js",
+    "build": "node_modules/rollup/bin/rollup -c",
+    "test": "node_modules/rollup/bin/rollup -c && node_modules/karma/bin/karma start karma.conf.js"
+  },
+  "devDependencies": {
+    "glob": "7.1.2",
+    "install": "^0.12.1",
+    "jasmine-core": "3.1.0",
+    "karma": "2.0.4",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "1.1.2",
+    "karma-jasmine": "1.1.2",
+    "karma-phantomjs-launcher": "1.0.4",
+    "karma-rollup-preprocessor": "^6.0.0",
+    "karma-spec-reporter": "0.0.32",
+    "node-static": "^0.7.10",
+    "npm": "^6.2.0",
+    "rollup": "^0.62.0",
+    "rollup-plugin-istanbul": "^2.0.1"
+  }
+}

@@ -1,0 +1,23 @@
+.ad {
+    border: 1px solid grey;
+    border-radius: 15px;
+    overflow: hidden;
+    max-width: 370px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.5);
+    color: #363636;
+    margin-bottom: 1.25rem;
+}
+
+.ad-img img {
+    vertical-align: bottom;
+}
+
+.ad-content {
+    padding: 1.25rem 2.5rem 1.25rem 1.5rem;
+    font-size: 0.8em;
+}
+
+.ad-content h3 {
+    font-size: 1.5em;
+}
