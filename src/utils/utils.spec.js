@@ -98,11 +98,11 @@ describe('util', () => {
             let lhs = {
                 foo: 'bar',
                 baz: 'daz'
-            }
+            };
             let rhs = {
                 foo: 'bak',
                 baz: 'daz'
-            }
+            };
             expect(utils.diff(lhs, lhs)).toEqual({});
             expect(utils.diff(lhs, rhs)).toEqual({ foo: 'bak' });
         });
@@ -110,11 +110,11 @@ describe('util', () => {
         it('should return a result  if a single values are added or removed', () => {
             let lhs = {
                 foo: 'bar'
-            }
+            };
             let rhs = {
                 foo: 'bar',
                 baz: 'daz'
-            }
+            };
             expect(utils.diff(lhs, rhs)).toEqual({ baz: 'daz' });
             expect(utils.diff(lhs, {})).toEqual({ foo: undefined });
         });
@@ -127,11 +127,11 @@ describe('util', () => {
             let lhs = {
                 foo: date,
                 baz: date
-            }
+            };
             let rhs = {
                 foo: date,
                 baz: tomorrow
-            }
+            };
             expect(utils.diff(lhs, lhs)).toEqual({});
             expect(utils.diff(lhs, rhs)).toEqual({ baz: tomorrow });
             expect(utils.diff(date, date)).toEqual({});
@@ -147,7 +147,7 @@ describe('util', () => {
                     }
                 },
                 baz: 'daz'
-            }
+            };
             let rhs = {
                 foo: {
                     kla: 'kli',
@@ -158,7 +158,7 @@ describe('util', () => {
                     }
                 },
                 baz: 'daz'
-            }
+            };
             expect(utils.diff(lhs, lhs)).toEqual({});
             expect(utils.diff(lhs, rhs)).toEqual({
                 foo: {

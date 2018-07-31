@@ -1,1 +1,1 @@
-console.log('demo models');
+window.CEDDL.initialize();
