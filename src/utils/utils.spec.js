@@ -173,7 +173,7 @@ describe('util', () => {
 
     describe('debounce', () => {
 
-        it('should call callback only once after periode has past', () => {
+        it('should call callback only once after periode has past', (done) => {
             let count = 0;
             let debouncedfunc = utils.debounce(function() {
                 count++;
@@ -189,10 +189,11 @@ describe('util', () => {
             }, 45);
             setTimeout(function() {
                   expect(count).toBe(2);
+                  done();
             }, 70);
         });
 
-        it('should call callback once immidiatly and wait after periode has past', () => {
+        it('should call callback once immidiatly and wait after periode has past', (done) => {
             let count = 0;
             let debouncedfunc = utils.debounce(function() {
                 count++;
@@ -203,10 +204,10 @@ describe('util', () => {
             debouncedfunc();
             debouncedfunc();
             expect(count).toBe(1);
-
+            done();
         });
 
-        it('should set a timeout of 100ms if no timeout is provided', () => {
+        it('should set a timeout of 100ms if no timeout is provided', (done) => {
             let count = 0;
             let debouncedfunc = utils.debounce(function() {
                 count++;
@@ -219,6 +220,7 @@ describe('util', () => {
             setTimeout(function() {
                   expect(count).toBe(1);
                   debouncedfunc();
+                  done();
             }, 120);
         });
 
