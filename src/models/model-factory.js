@@ -45,30 +45,32 @@ Object.defineProperty(ModelFactory.prototype, "fields", {
  */
 ModelFactory.prototype.create = function(modelArgs) {
     var mf = this;
-    var model = function(values) {
-        var myModel;
+    let model = function(values) {
+        let myModel;
         if (modelArgs.extends) {
             myModel = new mf.models[modelArgs.extends](values);
         } else {
             myModel = new Model(values);
+            myModel.fields = {};
         }
 
-        for (var key in modelArgs.fields) {
-            var field = modelArgs.fields[key];
+        for (let key in modelArgs.fields) {
+            let field = modelArgs.fields[key];
 
             if (field.type) {
                 // TODO: Refactor weird if statements
                 if (field.type === ModelField || field.type === ListField) {
-                    var foreignModel = mf.models[field.foreignModel];
+
+                    let foreignModel = mf.models[field.foreignModel];
                     if (foreignModel) {
-                        myModel.setField(key, new field.type(foreignModel, key, values[key], field.required, field.choices, ModelFactory));
+                        myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices);
                     } else {
                         //logger.warn(`${field.foreignModel} is undefined`);
                     }
                 } else if (field.type === ArrayField) {
-                    myModel.setField(key, new field.type(field.fieldType, key, values[key], field.required, field.choices));
+                    myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.choices);
                 } else {
-                    myModel.setField(key, new field.type(key, values[key], field.required, field.choices));
+                    myModel.fields[key] = new field.type(key, values[key], field.required, field.choices);
                 }
             } else {
                 //logger.warn(`${field.type} is not a valid field type.`);
@@ -78,9 +80,8 @@ ModelFactory.prototype.create = function(modelArgs) {
         return myModel;
     };
 
-
     model.getFields = function() {
-        var fields = {};
+        let fields = {};
         if (modelArgs.extends) {
             fields = new mf.models[modelArgs.extends].getFields();
         }

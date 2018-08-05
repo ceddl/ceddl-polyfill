@@ -27,16 +27,16 @@ function ModelField(model, key, value, required) {
     }
 }
 
+ModelField.isFlat = function() {
+    return false;
+}
+
+ModelField.isList = function() {
+    return false;
+}
+
 ModelField.prototype = Object.create(Field.prototype);
 ModelField.prototype.constructor = ModelField;
-
-ModelField.prototype.isFlat = function() {
-    return false;
-}
-
-ModelField.prototype.isList = function() {
-    return false;
-}
 
 ModelField.prototype.getValue = function() {
     return this._object ? this._object.getValue() : {};

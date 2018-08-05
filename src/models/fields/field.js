@@ -29,11 +29,11 @@ function Field (key, value, required) {
     this.value = value;
 }
 
-Field.prototype.isFlat = function() {
+Field.isFlat = function() {
     return true;
 }
 
-Field.prototype.isList = function() {
+Field.isList = function() {
     return false;
 }
 

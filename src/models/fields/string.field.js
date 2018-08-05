@@ -26,6 +26,14 @@ function StringField(key, value, required, choices) {
     }
 }
 
+StringField.isFlat = function() {
+    return true;
+}
+
+StringField.isList = function() {
+    return false;
+}
+
 StringField.prototype = Object.create(Field.prototype);
 StringField.prototype.constructor = StringField;
 

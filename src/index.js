@@ -1,9 +1,9 @@
-"use strict";
-
+import PassModelFactory from './models/model-factory.js';
 import utils from './utils/utils.js';
 import ClickObserver from './observers/click.observer.js';
+import CEDDLObserver from './observers/ceddl.observer.js';
 
-var _clickObserver;
+var _clickObserver, _ceddlObserver;
 
 function Base() {
     if (!(this instanceof Base)) {
@@ -17,12 +17,29 @@ function Base() {
  */
 Base.prototype.initialize = function() {
     _clickObserver = new ClickObserver(this);
-    // _ceddlObserver = new CEDDLObserver(this, ModelFactory);
+    _ceddlObserver = new CEDDLObserver(this, PassModelFactory);
 }
-
 
 Base.prototype.fireEvent = function(name, data) {
     console.log(name, data);
 }
+
+Base.prototype.pushToDataObject = function(name, data) {
+    console.log(name, data);
+}
+
+/**
+ * Get the model factory
+ *
+ * @readonly
+ * @static
+ * @memberof CEDDL
+ * @returns {Object} ModelFactory
+ */
+Object.defineProperty(Base.prototype, "ModelFactory", {
+    get: function ModelFactory() {
+       return PassModelFactory;
+    }
+});
 
 window.CEDDL = new Base();

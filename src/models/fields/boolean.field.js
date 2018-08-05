@@ -31,6 +31,14 @@ function BooleanField(key, value, required) {
     }
 }
 
+BooleanField.isFlat = function() {
+    return true;
+}
+
+BooleanField.isList = function() {
+    return false;
+}
+
 BooleanField.prototype = Object.create(Field.prototype);
 BooleanField.prototype.constructor = BooleanField;
 

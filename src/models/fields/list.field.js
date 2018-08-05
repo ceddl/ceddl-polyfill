@@ -37,16 +37,16 @@ function ListField (model, key, list, required, ModelFactory) {
     }
 }
 
-ListField.prototype = Object.create(Field.prototype);
-ListField.prototype.constructor = ListField;
-
-ListField.prototype.isFlat = function() {
+ListField.isFlat = function() {
     return false;
 }
 
-ListField.prototype.isList = function() {
+ListField.isList = function() {
     return true;
 }
+
+ListField.prototype = Object.create(Field.prototype);
+ListField.prototype.constructor = ListField;
 
 /**
  * Get the values of all the instances in the list combined
