@@ -49,4 +49,9 @@ describe('ModelField', () => {
         expect(modelField.getErrors()).toBe(null);
         expect(modelField.getWarnings()[0].msg).toBe('Invalid value for StringField name: 5');
     });
+
+    it('should default isFlat and isList', () => {
+        expect(ModelField.isFlat()).toBe(false);
+        expect(ModelField.isList()).toBe(false);
+    });
 });

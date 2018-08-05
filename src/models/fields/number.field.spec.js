@@ -16,4 +16,9 @@ describe('NumberField', () => {
         expect(notNumberField.getErrors()).toBeFalsy();
         expect(notNumberField.getWarnings()).toBe('Invalid value for NumberField string: test');
     });
+
+    it('should default isFlat and isList', () => {
+        expect(NumberField.isFlat()).toBe(true);
+        expect(NumberField.isList()).toBe(false);
+    });
 });

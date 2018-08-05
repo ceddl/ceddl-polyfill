@@ -34,4 +34,8 @@ describe('StringField', () => {
         expect(nonChoiceField.getWarnings()).toBeFalsy();
     });
 
+    it('should default isFlat and isList', () => {
+        expect(StringField.isFlat()).toBe(true);
+        expect(StringField.isList()).toBe(false);
+    });
 });

@@ -24,4 +24,10 @@ describe('BooleanField', () => {
         expect(stringField.getErrors()).toBeFalsy();
         expect(stringField.getWarnings()).toBe('Invalid value for BooleanField boolean: some-string');
     });
+
+    it('should default isFlat and isList', () => {
+        expect(BooleanField.isFlat()).toBe(true);
+        expect(BooleanField.isList()).toBe(false);
+    });
+
 });

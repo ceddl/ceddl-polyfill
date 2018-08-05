@@ -73,4 +73,10 @@ describe('ListField', () => {
 
         expect (listField.getErrors()).toBeFalsy();
     });
+
+    it('should default isFlat and isList', () => {
+        expect(ListField.isFlat()).toBe(false);
+        expect(ListField.isList()).toBe(true);
+    });
+
 });

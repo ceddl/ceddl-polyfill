@@ -31,4 +31,9 @@ describe('ArrayField', () => {
         expect (arrayField.getErrors()).toBeFalsy();
         expect (arrayField.getWarnings()).toBeFalsy();
     });
+
+    it('should default isFlat and isList', () => {
+        expect(ArrayField.isFlat()).toBe(true);
+        expect(ArrayField.isList()).toBe(false);
+    });
 });

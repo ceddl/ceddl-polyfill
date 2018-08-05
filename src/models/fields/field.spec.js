@@ -15,8 +15,8 @@ describe('Field', () => {
     it('should default isFlat and isList', () => {
         let field = new Field('test', 'foo', true);
         expect(field.getValue()).toBe('foo');
-        expect(field.isFlat()).toBe(true);
-        expect(field.isList()).toBe(false);
+        expect(Field.isFlat()).toBe(true);
+        expect(Field.isList()).toBe(false);
     });
 
 });
