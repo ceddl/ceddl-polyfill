@@ -1,7 +1,10 @@
-import PassModelFactory from './models/model-factory.js';
 import utils from './utils/utils.js';
+import passEventbus from './utils/eventbus';
+import PassModelFactory from './models/model-factory.js';
 import ClickObserver from './observers/click.observer.js';
 import CEDDLObserver from './observers/ceddl.observer.js';
+
+
 
 var _clickObserver, _ceddlObserver;
 
@@ -39,6 +42,19 @@ Base.prototype.pushToDataObject = function(name, data) {
 Object.defineProperty(Base.prototype, "ModelFactory", {
     get: function ModelFactory() {
        return PassModelFactory;
+    }
+});
+
+/**
+ * Get the eventbus
+ *
+ * @readonly
+ * @memberof DataMoho
+ * @returns {Object} Eventbus
+ */
+Object.defineProperty(Base.prototype, "eventbus", {
+    get: function eventbus() {
+       return passEventbus;
     }
 });
 
