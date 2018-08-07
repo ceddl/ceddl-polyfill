@@ -20,10 +20,12 @@
     "karma-jasmine": "1.1.2",
     "karma-phantomjs-launcher": "1.0.4",
     "karma-rollup-preprocessor": "^6.0.0",
+    "karma-sinon": "^1.0.5",
     "karma-spec-reporter": "0.0.32",
     "node-static": "^0.7.10",
     "npm": "^6.2.0",
     "rollup": "^0.62.0",
-    "rollup-plugin-istanbul": "^2.0.1"
+    "rollup-plugin-istanbul": "^2.0.1",
+    "sinon": "^6.1.4"
   }
 }

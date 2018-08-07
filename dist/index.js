@@ -431,7 +431,7 @@
             try {
                 callback.apply(scope, args);
             } catch (error) {
-                //logger.error(error.message);
+                logger.error(error.message);
             }
 
             if(events[i].once) {
