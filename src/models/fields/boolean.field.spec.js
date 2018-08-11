@@ -19,15 +19,8 @@ describe('BooleanField', () => {
         expect(booleanStringFieldFalse.value).toBe(false);
     });
 
-    it('should allow a string value, but should give warning', () => {
-        let stringField = new BooleanField('boolean', 'some-string', true);
-        expect(stringField.getErrors()).toBeFalsy();
-        expect(stringField.getWarnings()).toBe('Invalid value for BooleanField boolean: some-string');
+    it('should NOT allow a string value', () => {
+        let stringField = new BooleanField('boolean', 'test', true);
+        expect(stringField.getErrors()).toBeTruthy();
     });
-
-    it('should default isFlat and isList', () => {
-        expect(BooleanField.isFlat()).toBe(true);
-        expect(BooleanField.isList()).toBe(false);
-    });
-
 });

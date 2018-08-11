@@ -20,7 +20,7 @@ function ModelField(model, key, value, required) {
              *
              * @public
              */
-            this.warning = `${model} is not a valid Model`;
+            this.error = model + ' is not a valid Model';
         }
     } else {
         this._object = null;
@@ -66,31 +66,5 @@ ModelField.prototype.getErrors = function() {
 
     return (errors.length > 0 && errors) || null;
 }
-
-/**
- * Get a list of warnings from the model's fields, prepended by own warning Object
- *
- * @returns {Array.<{field: string, msg: string}>} List of warning Objects
- * @memberof ModelField
- */
-ModelField.prototype.getWarnings = function() {
-    let warnings = [];
-    if (this.warning) {
-        warnings.push({
-            field: this.key,
-            msg: this.warning
-        });
-    }
-
-    if (this._object) {
-        let validator = this._object.validate();
-        if (validator.warnings.length > 0) {
-            warnings.push(...validator.warnings);
-        }
-    }
-
-    return (warnings.length > 0 && warnings) || null;
-}
-
 
 export default ModelField;

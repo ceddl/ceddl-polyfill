@@ -9,7 +9,7 @@ import Field from './field';
  * @param {boolean} required Is the field required?
  * @memberof ListField
  */
-function ListField (model, key, list, required, ModelFactory) {
+function ListField (model, key, list, required, choices, ModelFactory) {
     Field.call(this, key, list, required);
     this._items = [];
     if (list) {
@@ -27,9 +27,9 @@ function ListField (model, key, list, required, ModelFactory) {
                  * @public
                  */
                 if (item._model) {
-                    this.warning = item._model + ' is not a valid Model';
+                    this.error = item._model + ' is not a valid Model';
                 } else {
-                    this.warning = model + ' is not a valid Model';
+                    this.error = model + ' is not a valid Model';
                 }
 
             }
@@ -90,30 +90,5 @@ ListField.prototype.getErrors = function() {
     return (errors.length > 0 && errors) || null;
 }
 
-/**
- * Get list of warnings from models in the list, prepended by own warning Object
- *
- * @returns {Array.<{field: string, msg: string}>} List of warning Objects
- * @memberof ListField
- */
-ListField.prototype.getWarnings = function() {
-    var warnings = [];
-
-    if (this.warning) {
-        warnings.push({
-            field: this.key,
-            msg: this.warning
-        });
-    }
-
-    for (var item of this._items) {
-        var validator = item.validate();
-        if (validator.warnings.length > 0) {
-            warnings.push(...validator.warnings);
-        }
-    }
-
-    return (warnings.length > 0 && warnings) || null;
-}
 
 export default ListField;

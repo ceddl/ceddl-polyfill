@@ -494,40 +494,23 @@
      * @memberof Model
      */
     Model.prototype.validate = function() {
-        var errors = [],
-            warnings = [];
+            var errors = [];
 
-        for (var key in this.fields) {
-            var field = this.fields[key];
-            var fieldErrors = field.getErrors();
-            var fieldWarnings = field.getWarnings();
-            if (fieldErrors) {
-                errors.push({
-                    field: key,
-                    msg: fieldErrors
-                });
+            for (var key in this.fields) {
+                var field = this.fields[key];
+                var fieldErrors = field.getErrors();
+                if (fieldErrors) {
+                    errors.push({
+                        field: key,
+                        msg: fieldErrors
+                    });
+                }
             }
-            if (fieldWarnings) {
-                warnings.push({
-                    field: key,
-                    msg: fieldWarnings
-                });
+
+            return {
+                valid: errors.length <= 0,
+                errors: errors,
             }
-        }
-
-        if(errors.length > 0 || warnings.length > 0 ) {
-            console.log({
-            valid: errors.length <= 0,
-            errors: errors,
-            warnings: warnings
-        });
-        }
-
-        return {
-            valid: errors.length <= 0,
-            errors: errors,
-            warnings: warnings
-        }
     };
 
     /**
@@ -544,7 +527,7 @@
              * Will be set if something is wrong with the value passed to the field
              * @public
              */
-            this.warning = 'Required field ' + key + ' not set';
+            this.error = 'Required field ' + key + ' not set';
         }
 
         /**
@@ -589,16 +572,6 @@
     };
 
     /**
-     * Get the field's warning message
-     *
-     * @returns {string} warning message
-     * @memberof Field
-     */
-    Field.prototype.getWarnings = function() {
-        return this.warning;
-    };
-
-    /**
      * Create a StringField on a model to vaidate a string value
      * Creates an instance of StringField.
      * @param {any} key
@@ -612,15 +585,15 @@
         this._choices = choices && choices.split('|') || null;
 
         if (value !== null && value !== undefined && typeof value !== 'string') {
-            this.warning = `Invalid value for StringField ${key}: ${value}`;
+            this.error = 'Invalid value for StringField '+key+': '+value;
         }
 
         if (value === "undefined") {
-            this.warning = `Invalid value for StringField ${key}: ${value}`;
+            this.error = 'Invalid value for StringField '+key+': '+value;
         }
 
         if (value && choices && this._choices.indexOf(value) <= -1) {
-            this.warning = `Invalid value for StringField ${key}, should be ${choices}`;
+            this.error = 'Invalid value for StringField ' +key+', should be '+choices;
         }
     }
 
@@ -661,7 +634,7 @@
             }
         } else {
             if (value !== undefined && value !== null && typeof value !== 'boolean') {
-                this.warning = 'Invalid value for BooleanField ' + key + ': ' + value;
+                this.error = 'Invalid value for BooleanField ' + key + ': ' + value;
             }
         }
     }
@@ -697,7 +670,7 @@
                  *
                  * @public
                  */
-                this.warning = `${model} is not a valid Model`;
+                this.error = model + ' is not a valid Model';
             }
         } else {
             this._object = null;
@@ -745,31 +718,6 @@
     };
 
     /**
-     * Get a list of warnings from the model's fields, prepended by own warning Object
-     *
-     * @returns {Array.<{field: string, msg: string}>} List of warning Objects
-     * @memberof ModelField
-     */
-    ModelField.prototype.getWarnings = function() {
-        let warnings = [];
-        if (this.warning) {
-            warnings.push({
-                field: this.key,
-                msg: this.warning
-            });
-        }
-
-        if (this._object) {
-            let validator = this._object.validate();
-            if (validator.warnings.length > 0) {
-                warnings.push(...validator.warnings);
-            }
-        }
-
-        return (warnings.length > 0 && warnings) || null;
-    };
-
-    /**
      * Create a ListField on a model to create a relation between that model and many instances of another Model
      * Creates an instance of ListField.
      * @param {Model} model The Model type for the relation
@@ -790,15 +738,16 @@
                         this._items.push(new model(item));
                     }
                 } catch(e) {
+                    console.log(e);
                     /**
                      * The field's error message
                      *
                      * @public
                      */
                     if (item._model) {
-                        this.warning = item._model + ' is not a valid Model';
+                        this.error = item._model + ' is not a valid Model';
                     } else {
-                        this.warning = model + ' is not a valid Model';
+                        this.error = model + ' is not a valid Model';
                     }
 
                 }
@@ -860,32 +809,6 @@
     };
 
     /**
-     * Get list of warnings from models in the list, prepended by own warning Object
-     *
-     * @returns {Array.<{field: string, msg: string}>} List of warning Objects
-     * @memberof ListField
-     */
-    ListField.prototype.getWarnings = function() {
-        var warnings = [];
-
-        if (this.warning) {
-            warnings.push({
-                field: this.key,
-                msg: this.warning
-            });
-        }
-
-        for (var item of this._items) {
-            var validator = item.validate();
-            if (validator.warnings.length > 0) {
-                warnings.push(...validator.warnings);
-            }
-        }
-
-        return (warnings.length > 0 && warnings) || null;
-    };
-
-    /**
      * Create a NumberField on a model to validate a number value
      * Creates an instance of NumberField.
      * @param {string} key The field's key for sending to analytics
@@ -899,8 +822,7 @@
             this.value = parseFloat(value);
 
             if (isNaN(this.value)) {
-                this.warning = `Invalid value for NumberField ${key}: ${value}`;
-                this.value = false; // prevent a NaN
+                this.error = 'Invalid value for NumberField '+ key +':'+value;
             }
         }
     }
@@ -931,7 +853,7 @@
                      * @public
                      */
                     // TODO: fix warning message
-                    this.warning = `${field} is not a valid field`;
+                    this.error = field + ' is not a valid field';
                 }
             }
         }
@@ -976,37 +898,6 @@
 
         return (errors.length > 0 && errors) || null;
     };
-
-    /**
-     * Get list of warnings from models in the list, prepended by own warning Object
-     *
-     * @returns {Array.<{field: string, msg: string}>} List of warning Objects
-     * @memberof ArrayField
-     */
-    ArrayField.prototype.getWarnings = function() {
-        var warnings = [];
-
-        if (this.warning) {
-            warnings.push({
-                field: this.key,
-                msg: this.warning
-            });
-        }
-
-        for (var item of this._items) {
-            var warning = item.getWarnings();
-            if (warning) {
-                warnings.push({
-                    field: item.key,
-                    msg: warning,
-                });
-            }
-        }
-
-        return (warnings.length > 0 && warnings) || null;
-    };
-
-    // import logger from '../logger';
 
     /**
      * Class for creating models
@@ -1063,12 +954,16 @@
                         let foreignModel = mf.models[field.foreignModel];
                         if (foreignModel) {
                             myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices);
+                        } else {
+                            logger.warn(field.foreignModel+' is undefined');
                         }
                     } else if (field.type === ArrayField) {
                         myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.choices);
                     } else {
                         myModel.fields[key] = new field.type(key, values[key], field.required, field.choices);
                     }
+                } else {
+                    logger.warn(field.type+' is not a valid field type.');
                 }
             }
 

@@ -6,16 +6,14 @@ describe('StringField', () => {
         expect(stringField.getErrors()).toBe(undefined);
     });
 
-    it('should allow a non-string value, but should give warning', () => {
+    it('should NOT allow a non-string value', () => {
         let nonStringField = new StringField('nonstringtest', 42, true);
-        expect(nonStringField.getErrors()).toBeFalsy();
-        expect(nonStringField.getWarnings()).toBe('Invalid value for StringField nonstringtest: 42');
+        expect(nonStringField.getErrors()).toBeTruthy();
     });
 
-    it('should allow undefined string as a value, but should give warning', () => {
+    it('should NOT allow undefined string as a value', () => {
         let nonStringField = new StringField('nonstringtest', 'undefined', true);
-        expect(nonStringField.getErrors()).toBeFalsy();
-        expect(nonStringField.getWarnings()).toBe('Invalid value for StringField nonstringtest: undefined');
+        expect(nonStringField.getErrors()).toBeTruthy();
     });
 
     it('should allow one of the choices', () => {
@@ -23,19 +21,19 @@ describe('StringField', () => {
         expect(choiceField.getErrors()).toBe(undefined);
     });
 
-    it('should allow a different value than one of the choices, but should give warning', () => {
+    it('should error one of the choices', () => {
         let nonChoiceField = new StringField('choicetest', 'banaan', true, 'appel|peer');
-        expect(nonChoiceField.getErrors()).toBeFalsy();
+        expect(nonChoiceField.getErrors()).toBeTruthy();
     });
 
-    it('should not error or give warning if not required and undefined', () => {
+    it('should not error if not required and undefined', () => {
         let nonChoiceField = new StringField('choicetest', undefined, false, 'appel|peer');
         expect(nonChoiceField.getErrors()).toBe(undefined);
-        expect(nonChoiceField.getWarnings()).toBeFalsy();
     });
 
     it('should default isFlat and isList', () => {
         expect(StringField.isFlat()).toBe(true);
         expect(StringField.isList()).toBe(false);
     });
+
 });

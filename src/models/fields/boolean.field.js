@@ -26,7 +26,7 @@ function BooleanField(key, value, required) {
         }
     } else {
         if (value !== undefined && value !== null && typeof value !== 'boolean') {
-            this.warning = 'Invalid value for BooleanField ' + key + ': ' + value;
+            this.error = 'Invalid value for BooleanField ' + key + ': ' + value;
         }
     }
 }

@@ -13,7 +13,7 @@ function Field (key, value, required) {
          * Will be set if something is wrong with the value passed to the field
          * @public
          */
-        this.warning = 'Required field ' + key + ' not set';
+        this.error = 'Required field ' + key + ' not set';
     }
 
     /**
@@ -55,16 +55,6 @@ Field.prototype.getValue = function() {
  */
 Field.prototype.getErrors = function() {
     return this.error;
-}
-
-/**
- * Get the field's warning message
- *
- * @returns {string} warning message
- * @memberof Field
- */
-Field.prototype.getWarnings = function() {
-    return this.warning;
 }
 
 export default Field;

@@ -39,40 +39,23 @@ Model.prototype.getValue = function() {
  * @memberof Model
  */
 Model.prototype.validate = function() {
-    var errors = [],
-        warnings = [];
+        var errors = [];
 
-    for (var key in this.fields) {
-        var field = this.fields[key];
-        var fieldErrors = field.getErrors();
-        var fieldWarnings = field.getWarnings();
-        if (fieldErrors) {
-            errors.push({
-                field: key,
-                msg: fieldErrors
-            });
+        for (var key in this.fields) {
+            var field = this.fields[key];
+            var fieldErrors = field.getErrors();
+            if (fieldErrors) {
+                errors.push({
+                    field: key,
+                    msg: fieldErrors
+                });
+            }
         }
-        if (fieldWarnings) {
-            warnings.push({
-                field: key,
-                msg: fieldWarnings
-            });
+
+        return {
+            valid: errors.length <= 0,
+            errors: errors,
         }
-    }
-
-    if(errors.length > 0 || warnings.length > 0 ) {
-        console.log({
-        valid: errors.length <= 0,
-        errors: errors,
-        warnings: warnings
-    });
-    }
-
-    return {
-        valid: errors.length <= 0,
-        errors: errors,
-        warnings: warnings
-    }
 }
 
 

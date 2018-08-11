@@ -26,32 +26,31 @@ describe('ModelField', () => {
             kek: 'lel',
         }, true);
 
-        expect(modelField.getErrors()).toBeFalsy();
+        expect(modelField.getErrors()).toBeFalsy()
     });
 
-    it('should allow a non model instance value, but should give warning', () => {
+    it('should NOT allow a non model instance value', () => {
         let notModelField = new ModelField('poop', 'test', 'test', true);
-        expect(notModelField.getErrors()).toBeFalsy();
-        expect(notModelField.getWarnings()[0].msg).toBe('poop is not a valid Model');
+        expect(notModelField.getErrors()).toBeTruthy();
     });
 
     it('should allow an empty value on non-required fields', () => {
         let emptyModelField = new ModelField(testModel, 'test', null, false);
-        expect(emptyModelField.getErrors()).toBeFalsy();
-        expect(emptyModelField.getWarnings()).toBeFalsy();
+        expect(emptyModelField.getErrors()).toBeFalsy()
     });
 
-    it('should validate incorrect models, but should give warning', () => {
+    it('should invalidate incorrect models', () => {
         let modelField = new ModelField(testModel, 'field', {
             name: 5,
             kek: 'bar',
         }, true);
-        expect(modelField.getErrors()).toBe(null);
-        expect(modelField.getWarnings()[0].msg).toBe('Invalid value for StringField name: 5');
+
+        expect (modelField.getErrors().length).not.toBe(0);
     });
 
     it('should default isFlat and isList', () => {
         expect(ModelField.isFlat()).toBe(false);
         expect(ModelField.isList()).toBe(false);
     });
+
 });

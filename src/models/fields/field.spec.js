@@ -6,10 +6,9 @@ describe('Field', () => {
         expect(field.getErrors()).toBeFalsy();
     });
 
-    it('should allow an empty value for a required field, but should give warning', () => {
+    it('should NOT allow an empty value for a required field', () => {
         let field = new Field('test', null, true);
-        expect(field.getErrors()).toBeFalsy();
-        expect(field.getWarnings()).toBe('Required field test not set');
+        expect(field.getErrors()).toBeTruthy();
     });
 
     it('should default isFlat and isList', () => {

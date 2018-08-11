@@ -14,8 +14,7 @@ function NumberField(key, value, required) {
         this.value = parseFloat(value);
 
         if (isNaN(this.value)) {
-            this.warning = `Invalid value for NumberField ${key}: ${value}`;
-            this.value = false; // prevent a NaN
+            this.error = 'Invalid value for NumberField '+ key +':'+value;
         }
     }
 }

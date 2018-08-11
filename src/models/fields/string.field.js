@@ -14,15 +14,15 @@ function StringField(key, value, required, choices) {
     this._choices = choices && choices.split('|') || null;
 
     if (value !== null && value !== undefined && typeof value !== 'string') {
-        this.warning = `Invalid value for StringField ${key}: ${value}`;
+        this.error = 'Invalid value for StringField '+key+': '+value;
     }
 
     if (value === "undefined") {
-        this.warning = `Invalid value for StringField ${key}: ${value}`;
+        this.error = 'Invalid value for StringField '+key+': '+value;
     }
 
     if (value && choices && this._choices.indexOf(value) <= -1) {
-        this.warning = `Invalid value for StringField ${key}, should be ${choices}`;
+        this.error = 'Invalid value for StringField ' +key+', should be '+choices;
     }
 }
 

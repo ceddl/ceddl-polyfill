@@ -1,4 +1,4 @@
-// import logger from '../logger';
+import logger from '../utils/logger';
 import Model from './model.js';
 import StringField from './fields/string.field.js';
 import BooleanField from './fields/boolean.field.js';
@@ -62,9 +62,9 @@ ModelFactory.prototype.create = function(modelArgs) {
 
                     let foreignModel = mf.models[field.foreignModel];
                     if (foreignModel) {
-                        myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices);
+                        myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices, mf);
                     } else {
-                        //logger.warn(`${field.foreignModel} is undefined`);
+                        logger.warn('foreignModel on '+modelArgs.key+' is not defined');
                     }
                 } else if (field.type === ArrayField) {
                     myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.choices);
@@ -72,7 +72,7 @@ ModelFactory.prototype.create = function(modelArgs) {
                     myModel.fields[key] = new field.type(key, values[key], field.required, field.choices);
                 }
             } else {
-                //logger.warn(`${field.type} is not a valid field type.`);
+                logger.warn(field.type+' is not a valid field type.');
             }
         }
 

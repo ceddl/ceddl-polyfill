@@ -36,14 +36,14 @@ describe('Model', () => {
         });
     }
 
-    it('should give warning for unknown argument', () => {
+    it('should give error for unknown argument', () => {
         let model = createModel();
         let instance = new model({
             unknownField: 'kek',
         });
 
         let validator = instance.validate();
-        expect(validator.warnings[0].msg).toEqual('Required field field not set');
+        expect(validator.errors.length).not.toBe(0);
     });
 
     it('should be able to make extended instances', () => {
@@ -66,7 +66,7 @@ describe('Model', () => {
             },
         });
 
-        expect(typeof instance).toEqual('object');
+        expect(typeof instance).toBe('object');
     });
 
     it('should be able to return a proper value object', () => {
@@ -97,21 +97,20 @@ describe('Model', () => {
                 }
             }
         });
-
         let unmodel = new model({
-            checkField: 'notnull'
+            checkField: 'notnull',
         });
 
         let unmodels = new model({});
 
         expect(JSON.stringify(unmodel.getValue())).toBe(JSON.stringify({
-            checkField: 'notnull'
+            checkField: 'notnull',
         }));
 
         expect(JSON.stringify(unmodels.getValue())).toBe(JSON.stringify({}));
     });
 
-    it('should be able to return values for an invalid model, but should send a warning', () => {
+    it('should not be able to return values for an invalid model', () => {
         let model = createModel();
 
         let instance = new model({
@@ -121,10 +120,6 @@ describe('Model', () => {
             },
         });
 
-        const expectResult = { foreign: { field: [ 'test', 'test' ] } };
-
-        expect(JSON.stringify(instance.getValue())).toBe(JSON.stringify(expectResult));
-
-        expect(instance.validate().warnings[0].msg).toBe('Required field field not set');
+        expect(JSON.stringify(instance.getValue())).toBe(JSON.stringify({error: 'Cant get values from an invalid Model'}));
     });
 });

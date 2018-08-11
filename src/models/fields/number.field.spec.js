@@ -11,14 +11,14 @@ describe('NumberField', () => {
         expect(stringNumField.getErrors()).toBe(undefined);
     });
 
-    it('should allow a non-numerical value, but should give warning', () => {
+    it('should NOT allow a non-numerical value', () => {
         let notNumberField = new NumberField('string', 'test', true);
-        expect(notNumberField.getErrors()).toBeFalsy();
-        expect(notNumberField.getWarnings()).toBe('Invalid value for NumberField string: test');
+        expect(notNumberField.getErrors()).toBeTruthy();
     });
 
     it('should default isFlat and isList', () => {
         expect(NumberField.isFlat()).toBe(true);
         expect(NumberField.isList()).toBe(false);
     });
+
 });

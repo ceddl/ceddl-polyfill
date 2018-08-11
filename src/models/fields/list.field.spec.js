@@ -26,7 +26,7 @@ describe('ListField', () => {
                 name: 'test1',
                 kek: 'lel',
             },
-        ], true, ModelFactory);
+        ], true, undefined, ModelFactory);
         expect(listField.getErrors()).toBeFalsy();
         expect(listField._items.length).not.toBe(0);
     });
@@ -47,31 +47,38 @@ describe('ListField', () => {
                 _model: 'override',
                 foo: 'bar',
             },
-        ], true, ModelFactory);
+        ], true, undefined, ModelFactory);
         expect(listField.getErrors()).toBeFalsy();
         expect(listField._items.length).not.toBe(0);
     });
 
-    it('should allow non-model values, but should give warning', () => {
-        let notModelListField = new ListField('poop', 'testlist', 'test', true, ModelFactory);
-        expect(notModelListField.getErrors()).toBeFalsy();
-        expect(notModelListField.getWarnings()[0].msg).toBe('poop is not a valid Model');
+    it('should NOT allow non-model values', () => {
+        let notModelListField = new ListField('poop', 'testlist', 'test', true);
+        expect(notModelListField.getErrors()).toBeTruthy();
     });
 
-    it('should NOT error or give warning when value passed is empty', () => {
-        let listField = new ListField(testModel, 'field', null, false, ModelFactory);
+    it('should pass model errors', () => {
+        let errorListField = new ListField(testModel, 'errortest', [
+            {
+                name: 'Not all fields are here!',
+            }
+        ], true, undefined, ModelFactory);
+        expect(Array.isArray(errorListField.getErrors())).toBe(true);
+    });
+
+    it('shouldnt error when value passed is empty', () => {
+        let listField = new ListField(testModel, 'field', null, false);
 
         expect (listField.getErrors()).toBeFalsy();
-        expect (listField.getWarnings()).toBeFalsy();
     });
 
     it('should validate correct models', () => {
         let listField = new ListField(testModel, 'field', [{
             name: 'test',
             kek: 'bar',
-        }], true, ModelFactory);
+        }], true, undefined, ModelFactory);
 
-        expect (listField.getErrors()).toBeFalsy();
+        expect(listField.getErrors()).toBeFalsy();
     });
 
     it('should default isFlat and isList', () => {
@@ -80,3 +87,4 @@ describe('ListField', () => {
     });
 
 });
+

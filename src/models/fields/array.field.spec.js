@@ -8,32 +8,31 @@ describe('ArrayField', () => {
         expect(arrayField._items.length).not.toBe(0);
     });
 
-    it('should allow incorrect data types, but should give warning', () => {
+    it('should NOT allow incorrect data types', () => {
         let arrayField = new ArrayField(StringField, 'products', [false, 'banaan'], true);
-        expect(arrayField.getErrors()).toBeFalsy();
-        expect(arrayField.getWarnings()[0].msg).toBe('Invalid value for StringField products0: false');
+        expect(arrayField.getErrors()).toBeTruthy();
     });
 
     it('should pass field errors', () => {
         let arrayField = new ArrayField(StringField, 'products', ['banaan', 5], true);
-        expect(arrayField.getErrors()).toBeFalsy();
-        expect(arrayField.getWarnings()[0].msg).toBe('Invalid value for StringField products1: 5');
+        expect(arrayField.getErrors()).toBeTruthy();
+        expect(Array.isArray(arrayField.getErrors())).toBe(true);
     });
 
-    it('should allow something that is not a field, but should give warning', () => {
+    it('should not allow something that is not a field', () => {
         let arrayField = new ArrayField('Not a field', 'products', ['banaan', 5], true);
-        expect(arrayField.getErrors()).toBeFalsy();
-        expect(arrayField.getWarnings()[0].msg).toBe('Not a field is not a valid field');
+        expect(arrayField.getErrors()).toBeTruthy();
+        expect(Array.isArray(arrayField.getErrors())).toBe(true);
     });
 
-    it('should NOT error or give warnings when value passed is empty', () => {
+    it('shouldnt error when value passed is empty', () => {
         let arrayField = new ArrayField('field', 'field', null, false);
         expect (arrayField.getErrors()).toBeFalsy();
-        expect (arrayField.getWarnings()).toBeFalsy();
     });
 
     it('should default isFlat and isList', () => {
         expect(ArrayField.isFlat()).toBe(true);
         expect(ArrayField.isList()).toBe(false);
     });
+
 });

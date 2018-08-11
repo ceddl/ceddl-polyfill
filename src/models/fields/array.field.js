@@ -16,7 +16,7 @@ function ArrayField(field, key, list, required) {
                  * @public
                  */
                 // TODO: fix warning message
-                this.warning = `${field} is not a valid field`;
+                this.error = field + ' is not a valid field';
             }
         }
     }
@@ -60,35 +60,6 @@ ArrayField.prototype.getErrors = function() {
     }
 
     return (errors.length > 0 && errors) || null;
-}
-
-/**
- * Get list of warnings from models in the list, prepended by own warning Object
- *
- * @returns {Array.<{field: string, msg: string}>} List of warning Objects
- * @memberof ArrayField
- */
-ArrayField.prototype.getWarnings = function() {
-    var warnings = [];
-
-    if (this.warning) {
-        warnings.push({
-            field: this.key,
-            msg: this.warning
-        });
-    }
-
-    for (var item of this._items) {
-        var warning = item.getWarnings();
-        if (warning) {
-            warnings.push({
-                field: item.key,
-                msg: warning,
-            });
-        }
-    }
-
-    return (warnings.length > 0 && warnings) || null;
 }
 
 
