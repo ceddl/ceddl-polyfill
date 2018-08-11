@@ -1,17 +1,41 @@
 import utils from './utils/utils.js';
+import eventBus from './utils/eventbus.js';
+import logger from './utils/logger.js';
 import passEventbus from './utils/eventbus';
 import PassModelFactory from './models/model-factory.js';
+import ModelStore from './stores/modelStore';
+import EventStore from './stores/eventStore';
 import ClickObserver from './observers/click.observer.js';
 import CEDDLObserver from './observers/ceddl.observer.js';
 
+var _clickObserver, _ceddlObserver, _modelStore, _eventStore;
 
 
-var _clickObserver, _ceddlObserver;
+/**
+ * Method used for printing field errors on models
+ * @param {String} key The key of the field
+ * @param {Object} errors List of field errors or string containing error
+ * @memberof DataMoho
+ */
+function _printFieldErrors(key, errors) {
+    for (let error of errors) {
+        if (Array.isArray(error.msg)) {
+            _printFieldErrors(key + '.' + error.field, error.msg);
+        } else {
+            var message = 'Fielderror: '+key+'.'+error.field+': '+error.msg;
+            logger.warn(message);
+            eventBus.emit('CEDDL:Fielderror', {
+                exDescription: message,
+                exFatal: false,
+            });
+        }
+    }
+}
+
 
 function Base() {
-    if (!(this instanceof Base)) {
-        throw new TypeError('Must be constructed via new');
-    }
+    _modelStore = new ModelStore();
+    _eventStore = new EventStore();
 }
 
 /**
@@ -28,8 +52,47 @@ Base.prototype.fireEvent = function(name, data) {
 }
 
 Base.prototype.pushToDataObject = function(name, data) {
-    console.log(name, data);
+    var model = PassModelFactory.models[name];
+    if (!model) {
+        this._logWarning('Model does not exist for key: ' + name);
+        return;
+    }
+
+    // A undefined value signals a deleted item.
+    if (data === undefined) {
+        _modelStore.pushModel(name, data);
+        return;
+    }
+
+    const object = new PassModelFactory.models[name](data);
+    const validator = object.validate();
+
+    if (validator.valid) {
+        _modelStore.storeModel(name, object.getValue());
+    } else {
+       _printFieldErrors(name, validator.errors)
+    }
 }
+
+
+/**
+ * Returns all stored models.
+ * @returns {Object}
+ * @memberof DataMoho
+ */
+Base.prototype.getModels = function() {
+    return _modelStore.getStoredModels();
+}
+
+/**
+ * Returns all stored events.
+ * @returns {Array}
+ * @memberof DataMoho
+ */
+Base.prototype.getEvents = function() {
+    return _eventStore.getEvents();
+}
+
 
 /**
  * Get the model factory

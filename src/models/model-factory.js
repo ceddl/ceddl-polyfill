@@ -1,6 +1,5 @@
 // import logger from '../logger';
 import Model from './model.js';
-
 import StringField from './fields/string.field.js';
 import BooleanField from './fields/boolean.field.js';
 import ModelField from './fields/model.field.js';

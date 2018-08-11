@@ -9,6 +9,11 @@ var demo = demo? demo : {};
 
     function bindDataObject() {
 
+        CEDDL.eventbus.on('dataObject', function(data) {
+            document.querySelector('.js-event-object').innerHTML = 'events:' + JSON.stringify(data, null, 4);
+        });
+
+
     }
 
 

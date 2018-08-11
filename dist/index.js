@@ -452,7 +452,7 @@
         });
     };
 
-    var passEventbus = (new Eventbus());
+    var eventBus = (new Eventbus());
 
     /**
      * Defines an abstract data model
@@ -513,6 +513,14 @@
                     msg: fieldWarnings
                 });
             }
+        }
+
+        if(errors.length > 0 || warnings.length > 0 ) {
+            console.log({
+            valid: errors.length <= 0,
+            errors: errors,
+            warnings: warnings
+        });
         }
 
         return {
@@ -1089,6 +1097,174 @@
     var PassModelFactory = (new ModelFactory());
 
     /**
+     * Publish a delta event on the event bus with all nested data that changed.
+     * Recursively moves through the delta to also publish the smallest changes
+     * under a specific eventName.
+     * @param {String} eventName The name of the delta event.
+     * @param {(Object|Array)} data The delta that needs to be dispatched.
+     *
+     * emitPropertyEvents('model', {
+     *      a: 'b',
+     *      c: [
+     *          { d: 1 },
+     *          { d: 2 }
+     *      ],
+     *      e: {
+     *          f: true
+     *      }
+     * });
+     * // Will dispatch the following events:
+     * 'model' -> { a: 'b', c: [{ d: 1 }, { d: 2 }] e: { f: true } }
+     * 'model.a' -> 'b'
+     * 'model.c' -> [{ d: 1 }, { d: 2 }]
+     * 'model.c.0' -> { d: 1 }
+     * 'model.c.0.d' -> 1
+     * 'model.c.1' -> { d: 2 }
+     * 'model.c.1.d' -> 2
+     * 'model.e' -> { f: true }
+     * 'model.e.f' -> true
+     */
+    function emitPropertyEvents(eventName, diff, baseKey, store) {
+        if(store && store[baseKey] !== undefined && store[baseKey] !== null) {
+           eventBus.emit(eventName, store[baseKey]);
+        } else {
+           eventBus.emit(eventName, undefined);
+        }
+
+        if (Array.isArray(diff)) {
+            diff.forEach((item, index) => {
+                emitPropertyEvents(`${eventName}.${index}`, item, index, store[baseKey]);
+            });
+        } else if (diff === Object(diff)) {
+            Object.keys(diff).forEach((key) => {
+                const child = diff[key];
+                emitPropertyEvents(`${eventName}.${key}`, child, key, store[baseKey]);
+            });
+        }
+    }
+
+    /**
+     * Model store that keeps saves models and dispatches delta events on the event
+     * bus when a model is updated.
+     * Creates an instance of ModelStore.
+     * @memberof ModelStore
+     */
+    function ModelStore() {
+        this._modelStore = {};
+    }
+
+    /**
+     * Returns the stored objects as a collection. Returns a copy of the data
+     * by default, but can return the actual data if desired.
+     * @param {Boolean} [default=false] Flag indicating whether to return a
+     * clone or the actual object.
+     * @returns {Object}
+     * @memberof ModelStore
+     */
+    ModelStore.prototype.getStoredModels = function(debug) {
+        if (debug & debug === true) {
+            return this._modelStore;
+        }
+
+        return utils.simpleDeepClone(this._modelStore);
+    };
+
+    /**
+     * Stores or updates a model for a specific key. The new model is then
+     * diffed against the old model. When there are changes the entire store
+     * will be dispatched, as well as events for all levels of the diff.
+     * @param {String} key They key under which to store or update the model.
+     * @param {Object} data Model to be stored.
+     * @memberof ModelStore
+     */
+    ModelStore.prototype.storeModel = function(key, data) {
+        // If there was no previous model use an empty object to generate the diff.
+        const existingModel = this._modelStore[key] || {};
+        // If there is no new data use an empty object to generate the diff.
+        const newData = data ||{};
+
+        const diff = utils.diff(existingModel, newData);
+
+        if (data) {
+            this._modelStore[key] = data;
+        } else {
+            delete this._modelStore[key];
+        }
+
+        if (!utils.isEmpty(diff)) {
+            eventBus.emit('dataObject', this.getStoredModels());
+            emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
+        }
+
+    };
+
+    /**
+     * Clears all models from the store while keeping the reference intact.
+     * @memberof ModelStore
+     */
+    ModelStore.prototype.clearStore = function() {
+        Object.keys(this._modelStore).forEach((key) => {
+            delete this._modelStore[key];
+        });
+    };
+
+    /**
+     * Simple store that saves events before dispatching them on the event bus.
+     * Creates an instance of EventStore.
+     * @memberof EventStore
+     */
+    function EventStore() {
+        this._eventStore = [];
+    }
+
+    /**
+     * Returns the stored events with their name and data. Returns a copy of
+     * the data by default, but can return the actual data if desired. The
+     * event data is never cloned, as data comes from the user and might
+     * contain circular references or functions.
+     * @param {Boolean} [default=false] Flag indicating whether to return a
+     * clone or the actual object.
+     * @returns {Array<Object>}
+     * @memberof EventStore
+     */
+    EventStore.prototype.getStoredEvents = function(debug) {
+        if (debug & debug === true) {
+            return this._eventStore;
+        }
+
+        return this._eventStore.map(function(value) {
+            return {
+                name: value.name,
+                data: value.data,
+            };
+        });
+    };
+
+    /**
+     * Saves an event to the store before dispatching it on the event bus.
+     * @param {String} name The name of the event.
+     * @param {...any} data The event data.
+     * @memberof EventStore
+     */
+    EventStore.prototype.storeEvent = function(name, data) {
+        this._eventStore.push({
+            name,
+            data,
+        });
+        eventBus.emit('eventObject', this._eventStore);
+        eventBus.emit(name, data);
+    };
+
+
+    /**
+     * Clears all events from the store but keeps the reference intact.
+     * @memberof EventStore
+     */
+    EventStore.prototype.clearStore = function() {
+        this._eventStore.splice(0, this._eventStore.length);
+    };
+
+    /**
      * Determines if the element is a valid element to stop the delegation loop and
      * fire the click event.
      * @param  {HTMLElement} element current in the deligation loop
@@ -1339,12 +1515,34 @@
         this.generateModelObjects();
     };
 
-    var _clickObserver, _ceddlObserver;
+    var _clickObserver, _ceddlObserver, _modelStore, _eventStore;
+
+
+    /**
+     * Method used for printing field errors on models
+     * @param {String} key The key of the field
+     * @param {Object} errors List of field errors or string containing error
+     * @memberof DataMoho
+     */
+    function _printFieldErrors(key, errors) {
+        for (let error of errors) {
+            if (Array.isArray(error.msg)) {
+                _printFieldErrors(key + '.' + error.field, error.msg);
+            } else {
+                var message = 'Fielderror: '+key+'.'+error.field+': '+error.msg;
+                logger.warn(message);
+                eventBus.emit('CEDDL:Fielderror', {
+                    exDescription: message,
+                    exFatal: false,
+                });
+            }
+        }
+    }
+
 
     function Base() {
-        if (!(this instanceof Base)) {
-            throw new TypeError('Must be constructed via new');
-        }
+        _modelStore = new ModelStore();
+        _eventStore = new EventStore();
     }
 
     /**
@@ -1361,8 +1559,47 @@
     };
 
     Base.prototype.pushToDataObject = function(name, data) {
-        console.log(name, data);
+        var model = PassModelFactory.models[name];
+        if (!model) {
+            this._logWarning('Model does not exist for key: ' + name);
+            return;
+        }
+
+        // A undefined value signals a deleted item.
+        if (data === undefined) {
+            _modelStore.pushModel(name, data);
+            return;
+        }
+
+        const object = new PassModelFactory.models[name](data);
+        const validator = object.validate();
+
+        if (validator.valid) {
+            _modelStore.storeModel(name, object.getValue());
+        } else {
+           _printFieldErrors(name, validator.errors);
+        }
     };
+
+
+    /**
+     * Returns all stored models.
+     * @returns {Object}
+     * @memberof DataMoho
+     */
+    Base.prototype.getModels = function() {
+        return _modelStore.getStoredModels();
+    };
+
+    /**
+     * Returns all stored events.
+     * @returns {Array}
+     * @memberof DataMoho
+     */
+    Base.prototype.getEvents = function() {
+        return _eventStore.getEvents();
+    };
+
 
     /**
      * Get the model factory
@@ -1387,7 +1624,7 @@
      */
     Object.defineProperty(Base.prototype, "eventbus", {
         get: function eventbus() {
-           return passEventbus;
+           return eventBus;
         }
     });
 

@@ -60,6 +60,14 @@ Model.prototype.validate = function() {
         }
     }
 
+    if(errors.length > 0 || warnings.length > 0 ) {
+        console.log({
+        valid: errors.length <= 0,
+        errors: errors,
+        warnings: warnings
+    });
+    }
+
     return {
         valid: errors.length <= 0,
         errors: errors,
