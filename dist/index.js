@@ -296,21 +296,11 @@
 
     var utils = (new Utils());
 
-    /**
-     * Proxy around the console object to allow for mocking during tests and
-     * checking if the relevant console methods exist. If one doesn't, it falls
-     * back to console.log.
-     */
-    var logger = {
-        log: console.log.bind(console),
-        info: console.info ? console.info.bind(console) : console.log.bind(console),
-        warn: console.warn ? console.warn.bind(console) : console.log.bind(console),
-        error: console.error ? console.error.bind(console) : console.log.bind(console),
-    };
-
     // Private variables
     var _values = {};
     var _events;
+    var logger = new Logger();
+    var eventbus = new Eventbus();
 
     /**
      * @desc An EventBus is responsible for managing a set of listeners and publishing
@@ -452,7 +442,74 @@
         });
     };
 
-    var eventBus = (new Eventbus());
+    function logAndEmit(level, message) {
+        if(!message || message === '') {
+            return;
+        }
+        message = 'ceddl:'+level+' '+message;
+
+        if(console && console.log) {
+            switch(level) {
+                case 'info':
+                    console.info ? console.info(message) : console.log(message);
+                    break;
+                case 'warn':
+                    console.warn ? console.warn(message) : console.log(message);
+                    break;
+                case 'field':
+                    console.warn ? console.warn(message) : console.log(message);
+                    break;
+                case 'error':
+                    console.error ? console.error(message) : console.log(message);
+                    break;
+                default:
+                    console.log(message);
+            }
+        }
+
+
+        eventbus.emit('ceddl:'+level, {
+            exDescription: message,
+            exFatal: level === 'error',
+        });
+    }
+
+    /**
+     * console object to allow for mocking during tests and checking if the relevant
+     * console methods exist. it also allows us to emit errors on the eventbus witch
+     * is handy for analytics and improvement of the application.
+     *
+     * field errors are special and blocked from being logged and emitted multiple
+     * times during a page load. the events produces by the logger are not part of
+     * the eventstore.
+     */
+    function Logger () {
+        this.fieldErrors = [];
+    }
+
+    Logger.prototype.log = function(message) {
+        logAndEmit('log', message);
+    };
+
+    Logger.prototype.info = function(message) {
+        logAndEmit('info', message);
+    };
+
+    Logger.prototype.field = function(message) {
+        if (this.fieldErrors.includes(message)) {
+            return;
+        }
+        this.fieldErrors.push(message);
+        logAndEmit('warn', message);
+    };
+
+    Logger.prototype.warn = function(message) {
+        logAndEmit('warn', message);
+    };
+
+    Logger.prototype.error = function(message) {
+        logAndEmit('error', message);
+    };
 
     /**
      * Defines an abstract data model
@@ -726,7 +783,7 @@
      * @param {boolean} required Is the field required?
      * @memberof ListField
      */
-    function ListField (model, key, list, required, ModelFactory) {
+    function ListField (model, key, list, required, choices, ModelFactory) {
         Field.call(this, key, list, required);
         this._items = [];
         if (list) {
@@ -738,7 +795,6 @@
                         this._items.push(new model(item));
                     }
                 } catch(e) {
-                    console.log(e);
                     /**
                      * The field's error message
                      *
@@ -953,9 +1009,9 @@
 
                         let foreignModel = mf.models[field.foreignModel];
                         if (foreignModel) {
-                            myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices);
+                            myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices, mf);
                         } else {
-                            logger.warn(field.foreignModel+' is undefined');
+                            logger.warn('foreignModel on '+modelArgs.key+' is not defined');
                         }
                     } else if (field.type === ArrayField) {
                         myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.choices);
@@ -1021,9 +1077,9 @@
      */
     function emitPropertyEvents(eventName, diff, baseKey, store) {
         if(store && store[baseKey] !== undefined && store[baseKey] !== null) {
-           eventBus.emit(eventName, store[baseKey]);
+           eventbus.emit(eventName, store[baseKey]);
         } else {
-           eventBus.emit(eventName, undefined);
+           eventbus.emit(eventName, undefined);
         }
 
         if (Array.isArray(diff)) {
@@ -1087,7 +1143,7 @@
         }
 
         if (!utils.isEmpty(diff)) {
-            eventBus.emit('dataObject', this.getStoredModels());
+            eventbus.emit('dataObject', this.getStoredModels());
             emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
         }
 
@@ -1146,8 +1202,8 @@
             name,
             data,
         });
-        eventBus.emit('eventObject', this._eventStore);
-        eventBus.emit(name, data);
+        eventbus.emit('eventObject', this._eventStore);
+        eventbus.emit(name, data);
     };
 
 
@@ -1424,16 +1480,11 @@
             if (Array.isArray(error.msg)) {
                 _printFieldErrors(key + '.' + error.field, error.msg);
             } else {
-                var message = 'Fielderror: '+key+'.'+error.field+': '+error.msg;
-                logger.warn(message);
-                eventBus.emit('CEDDL:Fielderror', {
-                    exDescription: message,
-                    exFatal: false,
-                });
+                var message = key+'.'+error.field+': '+error.msg;
+                logger.field(message);
             }
         }
     }
-
 
     function Base() {
         _modelStore = new ModelStore();
@@ -1518,8 +1569,8 @@
      * @returns {Object} Eventbus
      */
     Object.defineProperty(Base.prototype, "eventbus", {
-        get: function eventbus() {
-           return eventBus;
+        get: function eventbus$$1() {
+           return eventbus;
         }
     });
 

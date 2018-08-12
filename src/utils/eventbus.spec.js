@@ -1,4 +1,4 @@
-import eventbus from './eventbus';
+import {eventbus, logger} from './eventbus';
 describe('Eventbus', () => {
 
     it('should allow binding and unbind with a scope and emitting with arguments', () => {

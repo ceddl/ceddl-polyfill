@@ -1,7 +1,5 @@
 import utils from './utils/utils.js';
-import eventBus from './utils/eventbus.js';
-import logger from './utils/logger.js';
-import passEventbus from './utils/eventbus';
+import {logger, eventbus as passEventBus} from './utils/eventbus.js';
 import PassModelFactory from './models/model-factory.js';
 import ModelStore from './stores/modelStore';
 import EventStore from './stores/eventStore';
@@ -22,16 +20,11 @@ function _printFieldErrors(key, errors) {
         if (Array.isArray(error.msg)) {
             _printFieldErrors(key + '.' + error.field, error.msg);
         } else {
-            var message = 'Fielderror: '+key+'.'+error.field+': '+error.msg;
-            logger.warn(message);
-            eventBus.emit('CEDDL:Fielderror', {
-                exDescription: message,
-                exFatal: false,
-            });
+            var message = key+'.'+error.field+': '+error.msg;
+            logger.field(message);
         }
     }
 }
-
 
 function Base() {
     _modelStore = new ModelStore();
@@ -117,7 +110,7 @@ Object.defineProperty(Base.prototype, "ModelFactory", {
  */
 Object.defineProperty(Base.prototype, "eventbus", {
     get: function eventbus() {
-       return passEventbus;
+       return passEventBus;
     }
 });
 

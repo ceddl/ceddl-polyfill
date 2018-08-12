@@ -1,8 +1,8 @@
-import logger from './logger.js';
-
 // Private variables
 var _values = {};
 var _events;
+var logger = new Logger();
+var eventbus = new Eventbus();
 
 /**
  * @desc An EventBus is responsible for managing a set of listeners and publishing
@@ -144,4 +144,82 @@ Eventbus.prototype.clearHistory = function() {
     });
 }
 
-export default (new Eventbus());
+function logAndEmit(level, message) {
+    if(!message || message === '') {
+        return;
+    }
+    message = 'ceddl:'+level+' '+message
+
+    if(console && console.log) {
+        switch(level) {
+            case 'info':
+                console.info ? console.info(message) : console.log(message);
+                break;
+            case 'warn':
+                console.warn ? console.warn(message) : console.log(message);
+                break;
+            case 'field':
+                console.warn ? console.warn(message) : console.log(message);
+                break;
+            case 'error':
+                console.error ? console.error(message) : console.log(message);
+                break;
+            default:
+                console.log(message);
+        }
+    }
+
+
+    eventbus.emit('ceddl:'+level, {
+        exDescription: message,
+        exFatal: level === 'error',
+    });
+}
+
+/**
+ * console object to allow for mocking during tests and checking if the relevant
+ * console methods exist. it also allows us to emit errors on the eventbus witch
+ * is handy for analytics and improvement of the application.
+ *
+ * field errors are special and blocked from being logged and emitted multiple
+ * times during a page load. the events produces by the logger are not part of
+ * the eventstore.
+ */
+function Logger () {
+    this.fieldErrors = [];
+}
+
+Logger.prototype.log = function(message) {
+    logAndEmit('log', message);
+}
+
+Logger.prototype.info = function(message) {
+    logAndEmit('info', message);
+}
+
+Logger.prototype.field = function(message) {
+    if (this.fieldErrors.includes(message)) {
+        return;
+    }
+    this.fieldErrors.push(message);
+    logAndEmit('warn', message);
+}
+
+Logger.prototype.warn = function(message) {
+    logAndEmit('warn', message);
+}
+
+Logger.prototype.error = function(message) {
+    logAndEmit('error', message);
+}
+
+export {
+    logger,
+    eventbus
+}
+
+
+
+
+
+

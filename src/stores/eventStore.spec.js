@@ -1,5 +1,5 @@
-import eventBus from '../utils/eventbus';
-eventBus.__proto__.emit = sinon.spy();
+import {eventbus} from '../utils/eventbus';
+eventbus.__proto__.emit = sinon.spy();
 import EventStore from './eventStore.js';
 
 describe('EventStore:', () => {
@@ -20,7 +20,7 @@ describe('EventStore:', () => {
         });
 
         afterEach(() => {
-            eventBus.emit.resetHistory();
+            eventbus.emit.resetHistory();
         });
 
         describe('getStoredEvents:', () => {
@@ -87,9 +87,9 @@ describe('EventStore:', () => {
 
             it('should dispatch the event on the event bus', () => {
                 eventStore.storeEvent(testEvent, testData);
-                sinon.assert.callCount(eventBus.emit, 2);
-                sinon.assert.calledWith(eventBus.emit, 'eventObject', eventStore.getStoredEvents());
-                sinon.assert.calledWith(eventBus.emit, testEvent, testData);
+                sinon.assert.callCount(eventbus.emit, 2);
+                sinon.assert.calledWith(eventbus.emit, 'eventObject', eventStore.getStoredEvents());
+                sinon.assert.calledWith(eventbus.emit, testEvent, testData);
             });
         });
 

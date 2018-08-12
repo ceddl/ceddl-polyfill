@@ -1,4 +1,4 @@
-import logger from '../utils/logger';
+import {logger} from '../utils/eventbus';
 import Model from './model.js';
 import StringField from './fields/string.field.js';
 import BooleanField from './fields/boolean.field.js';

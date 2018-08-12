@@ -1,4 +1,4 @@
-import eventBus from '../utils/eventbus';
+import {eventbus} from '../utils/eventbus';
 
 /**
  * Simple store that saves events before dispatching them on the event bus.
@@ -43,8 +43,8 @@ EventStore.prototype.storeEvent = function(name, data) {
         name,
         data,
     });
-    eventBus.emit('eventObject', this._eventStore);
-    eventBus.emit(name, data);
+    eventbus.emit('eventObject', this._eventStore);
+    eventbus.emit(name, data);
 }
 
 

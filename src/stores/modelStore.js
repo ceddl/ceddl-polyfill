@@ -1,5 +1,5 @@
 import utils from '../utils/utils';
-import eventBus from '../utils/eventbus';
+import {eventbus} from '../utils/eventbus';
 
 /**
  * Publish a delta event on the event bus with all nested data that changed.
@@ -31,9 +31,9 @@ import eventBus from '../utils/eventbus';
  */
 function emitPropertyEvents(eventName, diff, baseKey, store) {
     if(store && store[baseKey] !== undefined && store[baseKey] !== null) {
-       eventBus.emit(eventName, store[baseKey]);
+       eventbus.emit(eventName, store[baseKey]);
     } else {
-       eventBus.emit(eventName, undefined);
+       eventbus.emit(eventName, undefined);
     }
 
     if (Array.isArray(diff)) {
@@ -97,7 +97,7 @@ ModelStore.prototype.storeModel = function(key, data) {
     }
 
     if (!utils.isEmpty(diff)) {
-        eventBus.emit('dataObject', this.getStoredModels());
+        eventbus.emit('dataObject', this.getStoredModels());
         emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
     }
 
