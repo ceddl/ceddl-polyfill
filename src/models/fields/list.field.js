@@ -39,11 +39,11 @@ function ListField (model, key, list, required, choices, ModelFactory) {
 
 ListField.isFlat = function() {
     return false;
-}
+};
 
 ListField.isList = function() {
     return true;
-}
+};
 
 ListField.prototype = Object.create(Field.prototype);
 ListField.prototype.constructor = ListField;
@@ -62,7 +62,7 @@ ListField.prototype.getValue = function() {
     }
 
     return data;
-}
+};
 
 /**
  * Get list of errors from models in the list, prepended by own error Object
@@ -88,7 +88,7 @@ ListField.prototype.getErrors = function() {
     }
 
     return (errors.length > 0 && errors) || null;
-}
+};
 
 
 export default ListField;

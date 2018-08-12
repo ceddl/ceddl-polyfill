@@ -24,11 +24,11 @@ function ArrayField(field, key, list, required) {
 
 ArrayField.isFlat = function() {
     return true;
-}
+};
 
 ArrayField.isList = function() {
     return false;
-}
+};
 
 ArrayField.prototype = Object.create(Field.prototype);
 ArrayField.prototype.constructor = ArrayField;
@@ -60,7 +60,7 @@ ArrayField.prototype.getErrors = function() {
     }
 
     return (errors.length > 0 && errors) || null;
-}
+};
 
 
 export default ArrayField;

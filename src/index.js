@@ -1,4 +1,3 @@
-import utils from './utils/utils.js';
 import {logger, eventbus as passEventBus} from './utils/eventbus.js';
 import PassModelFactory from './models/model-factory.js';
 import ModelStore from './stores/modelStore';
@@ -6,7 +5,7 @@ import EventStore from './stores/eventStore';
 import ClickObserver from './observers/click.observer.js';
 import CEDDLObserver from './observers/ceddl.observer.js';
 
-var _clickObserver, _ceddlObserver, _modelStore, _eventStore;
+var _modelStore, _eventStore;
 
 
 /**
@@ -36,13 +35,13 @@ function Base() {
  * and initialize the html interface when ready.
  */
 Base.prototype.initialize = function() {
-    _clickObserver = new ClickObserver(this);
-    _ceddlObserver = new CEDDLObserver(this, PassModelFactory);
-}
+    new ClickObserver(this);
+    new CEDDLObserver(this, PassModelFactory);
+};
 
 Base.prototype.fireEvent = function(name, data) {
     _eventStore.storeEvent(name, data);
-}
+};
 
 Base.prototype.pushToDataObject = function(name, data) {
     var model = PassModelFactory.models[name];
@@ -63,9 +62,9 @@ Base.prototype.pushToDataObject = function(name, data) {
     if (validator.valid) {
         _modelStore.storeModel(name, object.getValue());
     } else {
-       _printFieldErrors(name, validator.errors)
+       _printFieldErrors(name, validator.errors);
     }
-}
+};
 
 
 /**
@@ -75,7 +74,7 @@ Base.prototype.pushToDataObject = function(name, data) {
  */
 Base.prototype.getModels = function() {
     return _modelStore.getStoredModels();
-}
+};
 
 /**
  * Returns all stored events.
@@ -84,7 +83,7 @@ Base.prototype.getModels = function() {
  */
 Base.prototype.getEvents = function() {
     return _eventStore.getStoredEvents();
-}
+};
 
 /**
  * Get the model factory

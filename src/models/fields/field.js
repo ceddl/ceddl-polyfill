@@ -31,11 +31,11 @@ function Field (key, value, required) {
 
 Field.isFlat = function() {
     return true;
-}
+};
 
 Field.isList = function() {
     return false;
-}
+};
 
 /**
  * Get the inner value of the field. Primarily here to be overridden by ModelField and ListField
@@ -45,7 +45,7 @@ Field.isList = function() {
  */
 Field.prototype.getValue = function() {
     return this.value;
-}
+};
 
 /**
  * Get the field's error message
@@ -55,6 +55,6 @@ Field.prototype.getValue = function() {
  */
 Field.prototype.getErrors = function() {
     return this.error;
-}
+};
 
 export default Field;

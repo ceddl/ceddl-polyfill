@@ -1,4 +1,4 @@
-import {eventbus, logger} from './eventbus';
+import {eventbus} from './eventbus';
 describe('Eventbus', () => {
 
     it('should allow binding and unbind with a scope and emitting with arguments', () => {
@@ -9,7 +9,7 @@ describe('Eventbus', () => {
             expect(c).toBe('c');
             expect(this).toBe(scope);
             count++;
-        }
+        };
         eventbus.on('a', cb, scope);
         eventbus.emit('a', 'b', 'c');
         eventbus.off('a', cb);
@@ -21,14 +21,14 @@ describe('Eventbus', () => {
 
     it('should allow binding and unbind by callback without scope', () => {
         let count = 0;
-        let cb1 = function(b, c) {
+        let cb1 = function() {
             expect(this.constructor.name).toBe('Eventbus');
             count++;
-        }
-        let cb2 = function(b, c) {
+        };
+        let cb2 = function() {
             expect(this.constructor.name).toBe('Eventbus');
             count++;
-        }
+        };
         eventbus.on('b', cb1);
         eventbus.on('b', cb2);
         eventbus.emit('b', 'b');
@@ -39,12 +39,12 @@ describe('Eventbus', () => {
 
     it('should allow removal of all listeners by name', () => {
         let count = 0;
-        let cb1 = function(b, c) {
+        let cb1 = function() {
             count++;
-        }
-        let cb2 = function(b, c) {
+        };
+        let cb2 = function() {
             count++;
-        }
+        };
         eventbus.on('c', cb1);
         eventbus.on('c', cb2);
         eventbus.emit('c', 'b', 'c');
@@ -56,12 +56,12 @@ describe('Eventbus', () => {
     it('should allow a listener to remove itselfe when called via once with scope', () => {
         let count = 0;
         let scope = {scope: 'scope'};
-        let cb1 = function(b, c) {
+        let cb1 = function() {
             count++;
-        }
-        let cb2 = function(b, c) {
+        };
+        let cb2 = function() {
             count++;
-        }
+        };
         eventbus.once('d', cb1, scope);
         eventbus.on('d', cb2, scope);
         eventbus.emit('d', 'b', 'c');
@@ -72,12 +72,12 @@ describe('Eventbus', () => {
     it('should allow a listener to remove itselfe when called via once without scope', () => {
         let count = 0;
         let scope = {scope: 'scope'};
-        let cb1 = function(b, c) {
+        let cb1 = function() {
             count++;
-        }
-        let cb2 = function(b, c) {
+        };
+        let cb2 = function() {
             count++;
-        }
+        };
         eventbus.once('e', cb1);
         eventbus.on('e', cb1, scope);
         eventbus.on('e', cb2);
@@ -93,12 +93,12 @@ describe('Eventbus', () => {
             count++;
             expect(this.constructor.name).toBe('Eventbus');
             expect(b).toBe('b');
-        }
+        };
         let cbOnce = function(b) {
             count++;
             expect(this).toBe(scope);
             expect(b).toBe('b');
-        }
+        };
         eventbus.emit('f', 'b');
         eventbus.on('f', cb);
         eventbus.once('f', cbOnce, scope);
@@ -113,13 +113,13 @@ describe('Eventbus', () => {
      */
     it('should fire all events even if one throws an exception', () => {
         let count = 0;
-        let cb1 = function(b, c) {
+        let cb1 = function() {
             expect(this.constructor.name).toBe('Eventbus');
             count++;
-        }
-        let excFunc = function(b, c) {
+        };
+        let excFunc = function() {
             throw new Error('testing: external error on eventbus should not stop analytics process');
-            count++;
+            count++; // eslint-disable-line
         };
 
         eventbus.on('g', excFunc);

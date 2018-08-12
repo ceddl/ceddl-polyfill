@@ -16,5 +16,8 @@
         "indent": 0,
         "no-console": 0,
         "no-unsafe-finally": 0
+    },
+    "globals": {
+        "sinon": true
     }
 }

@@ -27,7 +27,7 @@ describe('ModelFactory', () => {
 
     it('should expose a function to get the fields from the model', () => {
         let model = createModel();
-        let fieldNames = []
+        let fieldNames = [];
         for (let key in model.getFields()) {
             fieldNames.push(key);
         }
@@ -40,7 +40,7 @@ describe('ModelFactory', () => {
     });
 
     it('should support extending a model', () => {
-        let model = createModel();
+        createModel();
         let extended = ModelFactory.create({
             key: 'extended',
             extends: 'model',

@@ -17,7 +17,7 @@ function BooleanField(key, value, required) {
     if (value !== undefined && value !== null && (typeof value === 'boolean' || _allowedStrings.indexOf(value) > -1)) {
         if (typeof value === 'string') {
             if (_trueStrings.indexOf(value) > -1) {
-                this.value = true
+                this.value = true;
             } else {
                 this.value = false;
             }
@@ -33,11 +33,11 @@ function BooleanField(key, value, required) {
 
 BooleanField.isFlat = function() {
     return true;
-}
+};
 
 BooleanField.isList = function() {
     return false;
-}
+};
 
 BooleanField.prototype = Object.create(Field.prototype);
 BooleanField.prototype.constructor = BooleanField;

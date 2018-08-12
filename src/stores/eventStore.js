@@ -30,7 +30,7 @@ EventStore.prototype.getStoredEvents = function(debug) {
             data: value.data,
         };
     });
-}
+};
 
 /**
  * Saves an event to the store before dispatching it on the event bus.
@@ -45,7 +45,7 @@ EventStore.prototype.storeEvent = function(name, data) {
     });
     eventbus.emit('ceddl:events', this._eventStore);
     eventbus.emit(name, data);
-}
+};
 
 
 /**
@@ -54,7 +54,7 @@ EventStore.prototype.storeEvent = function(name, data) {
  */
 EventStore.prototype.clearStore = function() {
     this._eventStore.splice(0, this._eventStore.length);
-}
+};
 
 
 export default EventStore;

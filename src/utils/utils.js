@@ -14,7 +14,7 @@ function Utils () {}
  */
 Utils.prototype.isDate = function(d) {
     return d instanceof Date;
-}
+};
 
 /**
  * [isEmpty description]
@@ -23,7 +23,7 @@ Utils.prototype.isDate = function(d) {
  */
 Utils.prototype.isEmpty = function(o) {
     return Object.keys(o).length === 0;
-}
+};
 
 /**
  * [isObject description]
@@ -32,7 +32,7 @@ Utils.prototype.isEmpty = function(o) {
  */
 Utils.prototype.isObject = function(o) {
     return o != null && o instanceof Object;
-}
+};
 
 /**
  * [properObject description]
@@ -43,15 +43,15 @@ Utils.prototype.properObject = function(o) {
     if (this.isObject(o) && !o.hasOwnProperty) {
         return Object.assign({}, o);
     } else {
-        return o
+        return o;
     }
-}
+};
 
 Utils.prototype.toCamelCase = function(attrString) {
     return attrString.replace(/-([a-z])/g, function (g) {
         return g[1].toUpperCase();
-    })
-}
+    });
+};
 
 /**
  * isArrayOfStrings
@@ -67,7 +67,7 @@ Utils.prototype.isArrayOfStrings = function(o) {
           return false;
     }
     return true;
-}
+};
 
 /**
  * A very naive deep clone that's specifically used to clone ceddl
@@ -93,7 +93,7 @@ Utils.prototype.simpleDeepClone = function(target) {
         // The value must be a primitive.
         return target;
     }
-}
+};
 
 /**
  * The purpose of this function is to deep diff two objects.
@@ -146,7 +146,7 @@ Utils.prototype.diff = function(lhs, rhs) {
 
         return Object.assign(acc, {[key]: difference}); // return updated key
     }, deletedValues);
-}
+};
 
 /**
  * Document ready function. Will resolve immidiatly if DOM has already loaded
@@ -166,7 +166,7 @@ Utils.prototype.pageReady = function(callback) {
     } else {
         document.addEventListener('DOMContentLoaded', callback);
     }
-}
+};
 
 /**
  * low resource way of obtaining all related attributes.
@@ -175,7 +175,7 @@ Utils.prototype.pageReady = function(callback) {
  * @returns {Object} atribute data without prefixes
  */
 Utils.prototype.getAllElementsAttributes = function(element, opt) {
-    var obj = {}
+    var obj = {};
     if(element) {
         obj = this.simpleDeepClone(element.dataset);
     }
@@ -193,7 +193,7 @@ Utils.prototype.getAllElementsAttributes = function(element, opt) {
         }
     }
     return obj;
-}
+};
 
 /**
  * This function is a simplefied implementation of xpath
@@ -242,7 +242,7 @@ Utils.prototype.perfXtagString = function(element) {
     }
 
     return paths.length ? "/" + paths.join("/") : null;
-}
+};
 
 /**
  * Creates a debounced function that delays invoking func until after wait
@@ -287,7 +287,7 @@ Utils.prototype.debounce = function(func, wait, immediate) {
     };
 
     return debounced;
-}
+};
 
 
 

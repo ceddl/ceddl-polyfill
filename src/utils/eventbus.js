@@ -26,7 +26,7 @@ Eventbus.prototype.prepareEvent = function(name) {
     if (!_events) _events = {};
     if (!_events[name]) _events[name] = [];
     return _events[name];
-}
+};
 
 /**
  * Remove a specific callback from an event, or remove all callbacks from an
@@ -51,7 +51,7 @@ Eventbus.prototype.off = function(name, callback, scope) {
     } else {
         delete _events[name];
     }
-}
+};
 
 /**
  * Adds a listener to be invoked when events of the specified type are
@@ -74,7 +74,7 @@ Eventbus.prototype.on = function(name, callback, scope) {
     }
 
     this.prepareEvent(name).push({ callback: callback, scope: scope });
-}
+};
 
 /**
  * Similar to on, except that the listener is removed after it is
@@ -96,7 +96,7 @@ Eventbus.prototype.once = function(name, callback, scope) {
     } else {
         this.prepareEvent(name).push({ callback: callback, scope: scope, once: true });
     }
-}
+};
 
 /**
 * Emits an event of the given type with the given data. All handlers of that
@@ -130,7 +130,7 @@ Eventbus.prototype.emit = function(name, ...args) {
             this.off(name, callback, events[i].scope);
         }
     }
-}
+};
 
 
 /**
@@ -142,13 +142,13 @@ Eventbus.prototype.clearHistory = function() {
     Object.keys(_values).forEach((key) => {
         delete _values[key];
     });
-}
+};
 
 function logAndEmit(level, message) {
     if(!message || message === '') {
         return;
     }
-    message = 'ceddl:'+level+' '+message
+    message = 'ceddl:'+level+' '+message;
 
     if(console && console.log) {
         switch(level) {
@@ -191,11 +191,11 @@ function Logger () {
 
 Logger.prototype.log = function(message) {
     logAndEmit('log', message);
-}
+};
 
 Logger.prototype.info = function(message) {
     logAndEmit('info', message);
-}
+};
 
 Logger.prototype.field = function(message) {
     if (this.fieldErrors.includes(message)) {
@@ -203,20 +203,20 @@ Logger.prototype.field = function(message) {
     }
     this.fieldErrors.push(message);
     logAndEmit('warn', message);
-}
+};
 
 Logger.prototype.warn = function(message) {
     logAndEmit('warn', message);
-}
+};
 
 Logger.prototype.error = function(message) {
     logAndEmit('error', message);
-}
+};
 
 export {
     logger,
     eventbus
-}
+};
 
 
 

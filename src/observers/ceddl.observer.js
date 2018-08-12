@@ -63,7 +63,7 @@ CeddlObserver.prototype.getElementAttributes = function(modelName, el) {
     }
 
     return object;
-}
+};
 
 /**
  * GenerateModelObjects is a helper function to collect all data from the page
@@ -83,7 +83,7 @@ CeddlObserver.prototype.generateModelObjects = function() {
         dataObj = this.getElementAttributes(modelName, document.querySelector('[ceddl-observe="' + modelName + '"]'));
         this.ceddl.pushToDataObject(modelName, dataObj);
     });
-}
+};
 
 /**
  * Sets a mutation observer on body listening to attribute, dom child changes and
@@ -97,7 +97,7 @@ CeddlObserver.prototype.setListeners = function() {
     var ceddlObserver = new MutationObserver(this.debouncedGenerateModelObjectsCall);
     var config = { attributes: true, childList: true, subtree: true, characterData: false };
     ceddlObserver.observe(document.body, config);
-}
+};
 
 /**
  * After pageload the init function initialise a mutation observer
@@ -106,6 +106,6 @@ CeddlObserver.prototype.setListeners = function() {
 CeddlObserver.prototype.init = function() {
     this.setListeners();
     this.generateModelObjects();
-}
+};
 
 export default CeddlObserver;

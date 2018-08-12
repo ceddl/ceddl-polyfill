@@ -26,7 +26,7 @@ describe('ModelField', () => {
             kek: 'lel',
         }, true);
 
-        expect(modelField.getErrors()).toBeFalsy()
+        expect(modelField.getErrors()).toBeFalsy();
     });
 
     it('should NOT allow a non model instance value', () => {
@@ -36,7 +36,7 @@ describe('ModelField', () => {
 
     it('should allow an empty value on non-required fields', () => {
         let emptyModelField = new ModelField(testModel, 'test', null, false);
-        expect(emptyModelField.getErrors()).toBeFalsy()
+        expect(emptyModelField.getErrors()).toBeFalsy();
     });
 
     it('should invalidate incorrect models', () => {

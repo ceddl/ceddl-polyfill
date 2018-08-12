@@ -15,7 +15,7 @@ import ArrayField from './fields/array.field.js';
 
 function ModelFactory () {
     this.models = {};
-};
+}
 
 /**
  * getter function exposing all the field types on the modelfactory api
@@ -96,6 +96,6 @@ ModelFactory.prototype.create = function(modelArgs) {
     mf.models[modelArgs.key] = model;
 
     return model;
-}
+};
 
 export default (new ModelFactory());

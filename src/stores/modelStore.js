@@ -72,7 +72,7 @@ ModelStore.prototype.getStoredModels = function(debug) {
     }
 
     return utils.simpleDeepClone(this._modelStore);
-}
+};
 
 /**
  * Stores or updates a model for a specific key. The new model is then
@@ -101,7 +101,7 @@ ModelStore.prototype.storeModel = function(key, data) {
         emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
     }
 
-}
+};
 
 /**
  * Clears all models from the store while keeping the reference intact.
@@ -111,7 +111,7 @@ ModelStore.prototype.clearStore = function() {
     Object.keys(this._modelStore).forEach((key) => {
         delete this._modelStore[key];
     });
-}
+};
 
 
 export default ModelStore;

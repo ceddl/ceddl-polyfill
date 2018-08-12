@@ -21,11 +21,11 @@ function NumberField(key, value, required) {
 
 NumberField.isFlat = function() {
     return true;
-}
+};
 
 NumberField.isList = function() {
     return false;
-}
+};
 
 NumberField.prototype = Object.create(Field.prototype);
 NumberField.prototype.constructor = NumberField;

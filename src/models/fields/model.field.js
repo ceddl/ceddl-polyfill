@@ -29,18 +29,18 @@ function ModelField(model, key, value, required) {
 
 ModelField.isFlat = function() {
     return false;
-}
+};
 
 ModelField.isList = function() {
     return false;
-}
+};
 
 ModelField.prototype = Object.create(Field.prototype);
 ModelField.prototype.constructor = ModelField;
 
 ModelField.prototype.getValue = function() {
     return this._object ? this._object.getValue() : {};
-}
+};
 
 /**
  * Get a list of errors from the model's fields, prepended by own error Object
@@ -65,6 +65,6 @@ ModelField.prototype.getErrors = function() {
     }
 
     return (errors.length > 0 && errors) || null;
-}
+};
 
 export default ModelField;

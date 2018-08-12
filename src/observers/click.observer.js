@@ -77,7 +77,7 @@ function getsubmitEventData(element) {
 
     Object.assign(baseObj, utils.getAllElementsAttributes(element));
 
-    delete baseObj.ceddl
+    delete baseObj.ceddl;
     return baseObj;
 }
 
@@ -110,7 +110,7 @@ ClickObserver.prototype.measureClick = function(element) {
     var eventData = getClickEventData(element);
 
     this.ceddl.fireEvent(eventName, eventData);
-}
+};
 
 /**
  * measureSubmit is adding the option to add a custom name to an event.
@@ -122,7 +122,7 @@ ClickObserver.prototype.measureSubmit = function(element) {
     var eventData = getsubmitEventData(element);
 
     this.ceddl.fireEvent(eventName, eventData);
-}
+};
 
 /**
  * Detecting clicks and submits
@@ -142,6 +142,6 @@ ClickObserver.prototype.setListeners = function() {
         const target = e.target;
         that.measureSubmit(target);
     }, true);
-}
+};
 
-export default ClickObserver
+export default ClickObserver;

@@ -7,11 +7,11 @@
 function Model(args) {
     this._args = args;
     this.fields = {};
-};
+}
 
 Model.prototype.setField = function(key, fieldObj) {
     this.fields[key] = fieldObj;
-}
+};
 
 Model.prototype.getValue = function() {
     const validation = this.validate();
@@ -30,7 +30,7 @@ Model.prototype.getValue = function() {
     } else {
         return {error: 'Cant get values from an invalid Model'};
     }
-}
+};
 
 /**
  * Validate the model
@@ -55,8 +55,8 @@ Model.prototype.validate = function() {
         return {
             valid: errors.length <= 0,
             errors: errors,
-        }
-}
+        };
+};
 
 
 export default Model;

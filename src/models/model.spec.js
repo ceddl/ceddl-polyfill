@@ -1,4 +1,3 @@
-import Model from './model.js';
 import ModelFactory from './model-factory.js';
 
 describe('Model', () => {
@@ -47,7 +46,7 @@ describe('Model', () => {
     });
 
     it('should be able to make extended instances', () => {
-        let model = createModel();
+        createModel();
         let extended = ModelFactory.create({
             key: 'extended',
             extends: 'model',
