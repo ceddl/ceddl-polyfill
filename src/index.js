@@ -41,19 +41,19 @@ Base.prototype.initialize = function() {
 }
 
 Base.prototype.fireEvent = function(name, data) {
-    console.log(name, data);
+    _eventStore.storeEvent(name, data);
 }
 
 Base.prototype.pushToDataObject = function(name, data) {
     var model = PassModelFactory.models[name];
     if (!model) {
-        this._logWarning('Model does not exist for key: ' + name);
+        logger.field('Model does not exist for key: ' + name);
         return;
     }
 
     // A undefined value signals a deleted item.
     if (data === undefined) {
-        _modelStore.pushModel(name, data);
+        _modelStore.storeModel(name, data);
         return;
     }
 
@@ -83,9 +83,8 @@ Base.prototype.getModels = function() {
  * @memberof DataMoho
  */
 Base.prototype.getEvents = function() {
-    return _eventStore.getEvents();
+    return _eventStore.getStoredEvents();
 }
-
 
 /**
  * Get the model factory

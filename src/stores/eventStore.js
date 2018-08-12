@@ -43,7 +43,7 @@ EventStore.prototype.storeEvent = function(name, data) {
         name,
         data,
     });
-    eventbus.emit('eventObject', this._eventStore);
+    eventbus.emit('ceddl:events', this._eventStore);
     eventbus.emit(name, data);
 }
 

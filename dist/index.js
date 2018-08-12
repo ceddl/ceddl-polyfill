@@ -181,7 +181,10 @@
      * @returns {Object} atribute data without prefixes
      */
     Utils.prototype.getAllElementsAttributes = function(element, opt) {
-        var obj = this.simpleDeepClone(element.dataset);
+        var obj = {};
+        if(element) {
+            obj = this.simpleDeepClone(element.dataset);
+        }
         if(!opt || opt.excludeCEDDLAttributes !== true) {
            obj.ceddl = {};
         }
@@ -1143,7 +1146,7 @@
         }
 
         if (!utils.isEmpty(diff)) {
-            eventbus.emit('dataObject', this.getStoredModels());
+            eventbus.emit('ceddl:models', this.getStoredModels());
             emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
         }
 
@@ -1202,7 +1205,7 @@
             name,
             data,
         });
-        eventbus.emit('eventObject', this._eventStore);
+        eventbus.emit('ceddl:events', this._eventStore);
         eventbus.emit(name, data);
     };
 
@@ -1265,9 +1268,9 @@
             baseObj.href = element.href;
         }
 
-
         Object.assign(baseObj, utils.getAllElementsAttributes(element));
 
+        delete baseObj.ceddl;
         return baseObj;
     }
 
@@ -1292,6 +1295,7 @@
 
         Object.assign(baseObj, utils.getAllElementsAttributes(element));
 
+        delete baseObj.ceddl;
         return baseObj;
     }
 
@@ -1321,7 +1325,7 @@
     ClickObserver.prototype.measureClick = function(element) {
         var attributes = utils.getAllElementsAttributes(element);
         var eventName = attributes.ceddl.click || 'click';
-        var eventData = getClickEventData(element, { excludeCEDDLAttributes: true});
+        var eventData = getClickEventData(element);
 
         this.ceddl.fireEvent(eventName, eventData);
     };
@@ -1333,7 +1337,7 @@
     ClickObserver.prototype.measureSubmit = function(element) {
         var attributes = utils.getAllElementsAttributes(element);
         var eventName = attributes.ceddl.submit || 'submit';
-        var eventData = getsubmitEventData(element, { excludeCEDDLAttributes: true});
+        var eventData = getsubmitEventData(element);
 
         this.ceddl.fireEvent(eventName, eventData);
     };
@@ -1501,19 +1505,19 @@
     };
 
     Base.prototype.fireEvent = function(name, data) {
-        console.log(name, data);
+        _eventStore.storeEvent(name, data);
     };
 
     Base.prototype.pushToDataObject = function(name, data) {
         var model = PassModelFactory.models[name];
         if (!model) {
-            this._logWarning('Model does not exist for key: ' + name);
+            logger.field('Model does not exist for key: ' + name);
             return;
         }
 
         // A undefined value signals a deleted item.
         if (data === undefined) {
-            _modelStore.pushModel(name, data);
+            _modelStore.storeModel(name, data);
             return;
         }
 
@@ -1543,9 +1547,8 @@
      * @memberof DataMoho
      */
     Base.prototype.getEvents = function() {
-        return _eventStore.getEvents();
+        return _eventStore.getStoredEvents();
     };
-
 
     /**
      * Get the model factory

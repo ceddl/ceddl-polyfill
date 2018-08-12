@@ -175,7 +175,10 @@ Utils.prototype.pageReady = function(callback) {
  * @returns {Object} atribute data without prefixes
  */
 Utils.prototype.getAllElementsAttributes = function(element, opt) {
-    var obj = this.simpleDeepClone(element.dataset);
+    var obj = {}
+    if(element) {
+        obj = this.simpleDeepClone(element.dataset);
+    }
     if(!opt || opt.excludeCEDDLAttributes !== true) {
        obj.ceddl = {};
     }

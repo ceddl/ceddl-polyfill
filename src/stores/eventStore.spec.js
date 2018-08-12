@@ -88,7 +88,7 @@ describe('EventStore:', () => {
             it('should dispatch the event on the event bus', () => {
                 eventStore.storeEvent(testEvent, testData);
                 sinon.assert.callCount(eventbus.emit, 2);
-                sinon.assert.calledWith(eventbus.emit, 'eventObject', eventStore.getStoredEvents());
+                sinon.assert.calledWith(eventbus.emit, 'ceddl:events', eventStore.getStoredEvents());
                 sinon.assert.calledWith(eventbus.emit, testEvent, testData);
             });
         });

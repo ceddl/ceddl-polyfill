@@ -97,7 +97,7 @@ ModelStore.prototype.storeModel = function(key, data) {
     }
 
     if (!utils.isEmpty(diff)) {
-        eventbus.emit('dataObject', this.getStoredModels());
+        eventbus.emit('ceddl:models', this.getStoredModels());
         emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
     }
 

@@ -50,9 +50,9 @@ function getClickEventData(element) {
         baseObj.href = element.href;
     }
 
-
     Object.assign(baseObj, utils.getAllElementsAttributes(element));
 
+    delete baseObj.ceddl;
     return baseObj;
 }
 
@@ -77,6 +77,7 @@ function getsubmitEventData(element) {
 
     Object.assign(baseObj, utils.getAllElementsAttributes(element));
 
+    delete baseObj.ceddl
     return baseObj;
 }
 
@@ -106,7 +107,7 @@ function ClickObserver(ceddl) {
 ClickObserver.prototype.measureClick = function(element) {
     var attributes = utils.getAllElementsAttributes(element);
     var eventName = attributes.ceddl.click || 'click';
-    var eventData = getClickEventData(element, { excludeCEDDLAttributes: true});
+    var eventData = getClickEventData(element);
 
     this.ceddl.fireEvent(eventName, eventData);
 }
@@ -118,7 +119,7 @@ ClickObserver.prototype.measureClick = function(element) {
 ClickObserver.prototype.measureSubmit = function(element) {
     var attributes = utils.getAllElementsAttributes(element);
     var eventName = attributes.ceddl.submit || 'submit';
-    var eventData = getsubmitEventData(element, { excludeCEDDLAttributes: true});
+    var eventData = getsubmitEventData(element);
 
     this.ceddl.fireEvent(eventName, eventData);
 }
