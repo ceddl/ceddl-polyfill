@@ -1,11 +1,11 @@
 {
-  "name": "customer-experience-digital-data-layer-polyfill",
+  "name": "CEDDL-polyfill",
   "version": "1.0.0",
-  "description": "",
+  "description": "customer experience digital data layer polyfill. Bridging the gap between the 2015 ceddl spec and the browsers",
   "main": "index.js",
   "scripts": {
     "dev": "node demo/app.js",
-    "build": "node_modules/rollup/bin/rollup -c",
+    "build": "node_modules/rollup/bin/rollup -c && node_modules/uglify-js/bin/uglifyjs -o dist/index.min.js -- dist/index.js",
     "test": "node_modules/rollup/bin/rollup -c && node_modules/karma/bin/karma start karma.conf.js",
     "lint": "node_modules/eslint/bin/eslint.js src/**"
   },
@@ -26,6 +26,7 @@
     "npm": "^6.2.0",
     "rollup": "^0.62.0",
     "rollup-plugin-istanbul": "^2.0.1",
-    "sinon": "^6.1.4"
+    "sinon": "^6.1.4",
+    "uglify-js": "^3.4.7"
   }
 }

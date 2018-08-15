@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>CEDDL-polyfill - ............................</title>
+    <title>CEDDL-polyfill -  Bridging the gap between the spec and the browsers</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="/css/product.css">
     <link rel="stylesheet" type="text/css" href="/css/advert.css">
@@ -13,7 +13,8 @@
 
 <body ceddl-observe="page"
   data-section="home demo"
-  data-framework="loDash">
+  data-framework="loDash"
+  data-page-ready="pageMetadata products">
 
 <section style="padding-bottom: 0;" class="section">
     <div class="container">
@@ -106,7 +107,7 @@
                             <div class="content">
                               <div ceddl-observe="advertisement" data-name="Non-stop gratis extra's" class="ad">
                                 <div class="ad-img">
-                                  <img src="/img/ad.jpg" alt="ziggo bennefits"/>
+                                  <img src="https://unsplash.it/300?image=55" alt="just an image"/>
                                 </div>
                                 <div ceddl-observe="advertiser" data-id="1920_5ah13" data-name="Google AdWords Conversion" class="ad-content">
                                   <h3>Your Add</h3>
@@ -290,6 +291,9 @@
 <script src="js/products.js" ></script>
 <script src="js/app.js" ></script>
 <script async src="js/demo.models.js"></script>
+<script src="js/temporary-aditional-inputs/page-metadata.js" ></script>
+<script src="js/temporary-aditional-inputs/performance-timing.js" ></script>
+<script src="js/temporary-aditional-inputs/page-ready.js" ></script>
 
 </body>
 

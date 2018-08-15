@@ -18,9 +18,6 @@ var demo = demo? demo : {};
                 rendering = false;
             }, 150);
         }
-
-
-
     }
 
     function bindDataObject() {

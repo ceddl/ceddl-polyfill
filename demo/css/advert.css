@@ -9,8 +9,14 @@
     margin-bottom: 1.25rem;
 }
 
+.ad-img {
+    max-height: 150px;
+    overflow: hidden;
+}
+
 .ad-img img {
     vertical-align: bottom;
+    width: 100%;
 }
 
 .ad-content {

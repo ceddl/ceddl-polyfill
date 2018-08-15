@@ -7,7 +7,8 @@ var watchOptions = {
     input: 'src/index.js',
     output: {
         file: 'dist/index.js',
-        format: 'umd'
+        format: 'umd',
+        name: 'CEDDL'
     },
     watch: {
         include: 'src/**'
@@ -31,10 +32,5 @@ require('http').createServer(function (request, response) {
         }
     }).resume();
 }).listen(8080);
-
-
-
-
-
 
 console.log('Navigate to http://localhost:8080/');

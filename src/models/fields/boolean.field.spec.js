@@ -23,4 +23,10 @@ describe('BooleanField', () => {
         let stringField = new BooleanField('boolean', 'test', true);
         expect(stringField.getErrors()).toBeTruthy();
     });
+
+    it('should default isFlat and isList', () => {
+        expect(BooleanField.isFlat()).toBe(true);
+        expect(BooleanField.isList()).toBe(false);
+    });
+
 });

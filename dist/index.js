@@ -1,7 +1,7 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (factory());
+    (global.CEDDL = factory());
 }(this, (function () { 'use strict';
 
     // Private variables
@@ -1472,7 +1472,7 @@
         this.generateModelObjects();
     };
 
-    var _modelStore, _eventStore;
+    var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
 
 
     /**
@@ -1502,8 +1502,17 @@
      * and initialize the html interface when ready.
      */
     Base.prototype.initialize = function() {
-        new ClickObserver(this);
-        new CeddlObserver(this, PassModelFactory);
+        if(!_clickObserver && !_CEDDLObserver) {
+            _clickObserver = new ClickObserver(this);
+            _CEDDLObserver = new CeddlObserver(this, PassModelFactory);
+        } else {
+            _modelStore.clearStore();
+            _eventStore.clearStore();
+            eventbus.clearHistory();
+            _CEDDLObserver.generateModelObjects();
+            eventbus.emit('initialize');
+        }
+
     };
 
     Base.prototype.fireEvent = function(name, data) {
@@ -1579,6 +1588,8 @@
         }
     });
 
-    window.CEDDL = new Base();
+    var index = (new Base());
+
+    return index;
 
 })));

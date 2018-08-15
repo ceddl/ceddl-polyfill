@@ -5,7 +5,7 @@ import EventStore from './stores/eventStore';
 import ClickObserver from './observers/click.observer.js';
 import CEDDLObserver from './observers/ceddl.observer.js';
 
-var _modelStore, _eventStore;
+var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
 
 
 /**
@@ -35,8 +35,17 @@ function Base() {
  * and initialize the html interface when ready.
  */
 Base.prototype.initialize = function() {
-    new ClickObserver(this);
-    new CEDDLObserver(this, PassModelFactory);
+    if(!_clickObserver && !_CEDDLObserver) {
+        _clickObserver = new ClickObserver(this);
+        _CEDDLObserver = new CEDDLObserver(this, PassModelFactory);
+    } else {
+        _modelStore.clearStore();
+        _eventStore.clearStore();
+        passEventBus.clearHistory();
+        _CEDDLObserver.generateModelObjects();
+        passEventBus.emit('initialize');
+    }
+
 };
 
 Base.prototype.fireEvent = function(name, data) {
@@ -112,4 +121,4 @@ Object.defineProperty(Base.prototype, "eventbus", {
     }
 });
 
-window.CEDDL = new Base();
+export default (new Base());
