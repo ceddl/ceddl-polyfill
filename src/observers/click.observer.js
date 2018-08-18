@@ -1,4 +1,5 @@
 import utils from '../utils/utils';
+import assign from '../utils/assign';
 
 /**
  * Determines if the element is a valid element to stop the delegation loop and
@@ -50,7 +51,7 @@ function getClickEventData(element) {
         baseObj.href = element.href;
     }
 
-    Object.assign(baseObj, utils.getAllElementsAttributes(element));
+    assign(baseObj, utils.getAllElementsAttributes(element));
 
     delete baseObj.ceddl;
     return baseObj;
@@ -75,7 +76,7 @@ function getsubmitEventData(element) {
         baseObj.href = element.action;
     }
 
-    Object.assign(baseObj, utils.getAllElementsAttributes(element));
+    assign(baseObj, utils.getAllElementsAttributes(element));
 
     delete baseObj.ceddl;
     return baseObj;

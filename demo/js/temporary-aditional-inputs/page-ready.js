@@ -58,8 +58,8 @@
         CEDDL.eventbus.once(name, markComplete);
 
         return {
-            name,
-            markComplete,
+            name: name,
+            markComplete: markComplete
         };
     }
 
@@ -84,14 +84,14 @@
     function pageReadySetListeners(eventNames) {
         // Reset the previous state
         _store = {};
-        _listeners.forEach((eventCallback) => {
+        _listeners.forEach(function(eventCallback) {
             CEDDL.eventbus.off(eventCallback.name, eventCallback.markComplete);
         });
         this._listeners = [];
 
         // If there is no need to wait for anything dispatch event when the page is ready.
         if (!eventNames || eventNames.length === 0) {
-            pageReady(() => {
+            pageReady(function() {
                 CEDDL.fireEvent('pageready', _store);
             });
             return;
@@ -101,7 +101,9 @@
 
         if (!Array.isArray(eventNames)) {
             // Split on whitespace and remove empty entries.
-            eventNames = eventNames.split(' ').filter(value => !!value);
+            eventNames = eventNames.split(' ').filter(function(value) {
+                return !!value;
+            });
         }
 
         if(this.el) {
@@ -109,14 +111,16 @@
         }
 
         // Create the new state
-        eventNames.forEach((name) => { _store[name] = false; });
+        eventNames.forEach(function(name) {
+            _store[name] = false;
+        });
         _listeners = eventNames.map(setCompleteListener);
     }
 
 
     _el = document.querySelector('[data-page-ready]');
     pageReadySetListeners(_el ? _el.getAttribute('data-page-ready') : '');
-    CEDDL.eventbus.on('initialize', function(){
+    CEDDL.eventbus.on('initialize', function() {
         _el = document.querySelector('[data-page-ready]');
         pageReadySetListeners(_el ? _el.getAttribute('data-page-ready') : '');
     });

@@ -1,3 +1,5 @@
+import assign from './assign';
+
 /**
  * Singleton Class for instantiating utillity's. Functions need to be
  * functional / performant and stateless to promote re-use
@@ -129,7 +131,7 @@ Utils.prototype.diff = function(lhs, rhs) {
         } else {
             tmp1 = {};
             tmp1[key] = undefined
-            return Object.assign(acc, tmp1);
+            return assign(acc, tmp1);
         }
     }, {});
 
@@ -144,7 +146,7 @@ Utils.prototype.diff = function(lhs, rhs) {
         if (!l.hasOwnProperty(key)) {
             tmp2 = {};
             tmp2[key] = r[key];
-            return Object.assign(acc, tmp2); // return added r key
+            return assign(acc, tmp2); // return added r key
         }
 
         var difference = that.diff(l[key], r[key]);
@@ -155,7 +157,7 @@ Utils.prototype.diff = function(lhs, rhs) {
 
         tmp3 = {};
         tmp3[key] = difference;
-        return Object.assign(acc, tmp3); // return updated key
+        return assign(acc, tmp3); // return updated key
     }, deletedValues);
 };
 

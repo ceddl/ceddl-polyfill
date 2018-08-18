@@ -118,21 +118,14 @@
     *
     *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
     */
-    Eventbus.prototype.emit = function(name, arg0, arg1, arg2) {
+    Eventbus.prototype.emit = function(name, arg) {
         var events = this.prepareEvent(name).slice();
         var args;
-
-        if(arg0) {
-            args = [];
-            args.push(arg0);
-        }
-
-        if(arg1){
-            args.push(arg1);
-        }
-
-        if(arg2){
-            args.push(arg2);
+        for (var j = 1, length = arguments.length; j < length; j++) {
+            if (!args) {
+                args = [];
+            }
+            args.push(arguments[j]);
         }
 
         _values[name] = args;
@@ -232,6 +225,39 @@
     Logger.prototype.error = function(message) {
         logAndEmit('error', message);
     };
+
+    /**
+     * object.assign internal poly for ie11
+     */
+    var assign;
+    if (typeof Object.assign == 'function') {
+        assign = Object.assign;
+    } else {
+        assign = function(target, firstSource) {
+          if (target === undefined || target === null) {
+            throw new TypeError('Cannot convert first argument to object');
+          }
+          var to = Object(target);
+          for (var i = 1; i < arguments.length; i++) {
+            var nextSource = arguments[i];
+            if (nextSource === undefined || nextSource === null) {
+              continue;
+            }
+
+            var keysArray = Object.keys(Object(nextSource));
+            for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+              var nextKey = keysArray[nextIndex];
+              var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+              if (desc !== undefined && desc.enumerable) {
+                to[nextKey] = nextSource[nextKey];
+              }
+            }
+          }
+          return to;
+        };
+    }
+
+    var assign$1 = assign;
 
     /**
      * Defines an abstract data model
@@ -765,7 +791,7 @@
                 fields = new mf.models[modelArgs.extends].getFields();
             }
 
-            Object.assign(fields, modelArgs.fields);
+            assign$1(fields, modelArgs.fields);
             return fields;
         };
 
@@ -911,7 +937,7 @@
             } else {
                 tmp1 = {};
                 tmp1[key] = undefined;
-                return Object.assign(acc, tmp1);
+                return assign$1(acc, tmp1);
             }
         }, {});
 
@@ -926,7 +952,7 @@
             if (!l.hasOwnProperty(key)) {
                 tmp2 = {};
                 tmp2[key] = r[key];
-                return Object.assign(acc, tmp2); // return added r key
+                return assign$1(acc, tmp2); // return added r key
             }
 
             var difference = that.diff(l[key], r[key]);
@@ -937,7 +963,7 @@
 
             tmp3 = {};
             tmp3[key] = difference;
-            return Object.assign(acc, tmp3); // return updated key
+            return assign$1(acc, tmp3); // return updated key
         }, deletedValues);
     };
 
@@ -1305,7 +1331,7 @@
             baseObj.href = element.href;
         }
 
-        Object.assign(baseObj, utils.getAllElementsAttributes(element));
+        assign$1(baseObj, utils.getAllElementsAttributes(element));
 
         delete baseObj.ceddl;
         return baseObj;
@@ -1330,7 +1356,7 @@
             baseObj.href = element.action;
         }
 
-        Object.assign(baseObj, utils.getAllElementsAttributes(element));
+        assign$1(baseObj, utils.getAllElementsAttributes(element));
 
         delete baseObj.ceddl;
         return baseObj;
@@ -1513,7 +1539,6 @@
     };
 
     var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
-
 
     /**
      * Method used for printing field errors on models

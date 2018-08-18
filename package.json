@@ -1,6 +1,6 @@
 {
-  "name": "CEDDL-polyfill",
-  "version": "1.0.0",
+  "name": "@ceddl/ceddl-polyfill",
+  "version": "0.9.0",
   "description": "customer experience digital data layer polyfill. Bridging the gap between the 2015 ceddl spec and the browsers",
   "main": "index.js",
   "scripts": {

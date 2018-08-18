@@ -121,12 +121,12 @@
         var resolution = width + 'x' + height;
 
         features = {
-            cookie,
-            touch,
+            cookie: cookie,
+            touch: touch,
             device_pixel_ratio: (Math.round(devicePixelRatio * 1000) / 1000).toFixed(3),
-            resolution,
-            width,
-            height,
+            resolution: resolution,
+            width: width,
+            height: height,
         };
 
         return features;

@@ -7,7 +7,6 @@ import CEDDLObserver from './observers/ceddl.observer.js';
 
 var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
 
-
 /**
  * Method used for printing field errors on models
  * @param {String} key The key of the field

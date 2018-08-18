@@ -112,21 +112,14 @@ Eventbus.prototype.once = function(name, callback, scope) {
 *
 *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
 */
-Eventbus.prototype.emit = function(name, arg0, arg1, arg2) {
+Eventbus.prototype.emit = function(name, arg) {
     var events = this.prepareEvent(name).slice();
     var args;
-
-    if(arg0) {
-        args = [];
-        args.push(arg0);
-    }
-
-    if(arg1){
-        args.push(arg1);
-    }
-
-    if(arg2){
-        args.push(arg2);
+    for (var j = 1, length = arguments.length; j < length; j++) {
+        if (!args) {
+            args = [];
+        }
+        args.push(arguments[j]);
     }
 
     _values[name] = args;

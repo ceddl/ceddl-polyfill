@@ -1,4 +1,5 @@
 import {logger} from '../utils/eventbus';
+import assign from '../utils/assign';
 import Model from './model.js';
 import StringField from './fields/string.field.js';
 import BooleanField from './fields/boolean.field.js';
@@ -85,7 +86,7 @@ ModelFactory.prototype.create = function(modelArgs) {
             fields = new mf.models[modelArgs.extends].getFields();
         }
 
-        Object.assign(fields, modelArgs.fields);
+        assign(fields, modelArgs.fields);
         return fields;
     };
 

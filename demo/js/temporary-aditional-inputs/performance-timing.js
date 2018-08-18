@@ -23,7 +23,7 @@
      * @return {Object} PerformanceObj containg performance metrics
      */
     function getPerformanceTimingData() {
-        let PerformanceObj = {
+        var PerformanceObj = {
             'redirecting': performance.timing.fetchStart - performance.timing.navigationStart,
             'dnsconnect': performance.timing.requestStart - performance.timing.fetchStart,
             'request': performance.timing.responseStart - performance.timing.requestStart,
@@ -36,10 +36,12 @@
          * Obtaining the transferred kb of resources inluding estimated document size.
          */
         if (window.performance && window.performance.getEntriesByType) {
-            let resources = window.performance.getEntriesByType('resource');
-            let documentSize = unescape(encodeURIComponent(document.documentElement.innerHTML)).length / 4.2;
-            let byteTotal = 0;
-            for (const resource of resources) {
+            var resource
+            var resources = window.performance.getEntriesByType('resource');
+            var documentSize = unescape(encodeURIComponent(document.documentElement.innerHTML)).length / 4.2;
+            var byteTotal = 0;
+            for (var i = 0; i < resources.length; i++) {
+                resource = resources[i];
                 byteTotal = byteTotal + resource.transferSize;
             }
             PerformanceObj.transferbytes = byteTotal + Math.round(documentSize);
@@ -94,7 +96,7 @@
        if (!performance || !performance.timing) {
             return;
         } else {
-            var checkComplete = setInterval(() => {
+            var checkComplete = setInterval(function () {
                 if(performance.timing.domComplete > 0) {
                     clearInterval(checkComplete);
                     CEDDL.pushToDataObject('performanceTiming', getPerformanceTimingData());
