@@ -111,6 +111,7 @@ Utils.prototype.simpleDeepClone = function(target) {
  */
 Utils.prototype.diff = function(lhs, rhs) {
     var that = this;
+    var tmp1, tmp2, tmp3;
     if (lhs === rhs) {
        return {}; // equal return no diff
     }
@@ -123,7 +124,13 @@ Utils.prototype.diff = function(lhs, rhs) {
     var r = this.properObject(rhs);
 
     var deletedValues = Object.keys(l).reduce(function(acc, key) {
-        return r.hasOwnProperty(key) ? acc : Object.assign(acc, {[key]: undefined});
+        if(r.hasOwnProperty(key)) {
+            return acc;
+        } else {
+            tmp1 = {};
+            tmp1[key] = undefined
+            return Object.assign(acc, tmp1);
+        }
     }, {});
 
     if (this.isDate(l) || this.isDate(r)) {
@@ -135,7 +142,9 @@ Utils.prototype.diff = function(lhs, rhs) {
 
     return Object.keys(r).reduce(function(acc, key) {
         if (!l.hasOwnProperty(key)) {
-            return Object.assign(acc, {[key]: r[key]}); // return added r key
+            tmp2 = {};
+            tmp2[key] = r[key];
+            return Object.assign(acc, tmp2); // return added r key
         }
 
         var difference = that.diff(l[key], r[key]);
@@ -144,7 +153,9 @@ Utils.prototype.diff = function(lhs, rhs) {
             return acc; // return no diff
         }
 
-        return Object.assign(acc, {[key]: difference}); // return updated key
+        tmp3 = {};
+        tmp3[key] = difference;
+        return Object.assign(acc, tmp3); // return updated key
     }, deletedValues);
 };
 
@@ -154,7 +165,7 @@ Utils.prototype.diff = function(lhs, rhs) {
  * @param {Function} callback function
  */
 Utils.prototype.pageReady = function(callback) {
-    let isReady;
+    var isReady;
     if (document.attachEvent) {
         isReady = document.readyState === "complete";
     } else {
@@ -185,8 +196,8 @@ Utils.prototype.getAllElementsAttributes = function(element, opt) {
 
     if(element) {
         for (var i = 0; i < element.attributes.length; i++) {
-            let attrib = element.attributes[i];
-            let name = attrib.name;
+            var attrib = element.attributes[i];
+            var name = attrib.name;
             if(obj.ceddl && name.indexOf('ceddl-') > -1) {
                 obj.ceddl[this.toCamelCase(name.replace('ceddl-', ''))] = attrib.value;
             }

@@ -8,14 +8,15 @@ import utils from '../utils/utils';
  * @param {Object} ceddl ModelFactory
  */
 function CeddlObserver(ceddl, ModelFactory) {
+    var that = this;
     this.ceddl = ceddl;
 
     this.ModelFactory = ModelFactory;
-    this.debouncedGenerateModelObjectsCall = utils.debounce(() => {
-        this.generateModelObjects();
+    this.debouncedGenerateModelObjectsCall = utils.debounce(function() {
+        that.generateModelObjects();
     }, 100);
-    utils.pageReady(() => {
-        this.init();
+    utils.pageReady(function() {
+        that.init();
     });
 }
 
@@ -32,6 +33,7 @@ CeddlObserver.prototype.getElementAttributes = function(modelName, el) {
     var fields = this.ModelFactory.models[modelName].getFields();
     var elAttr = utils.getAllElementsAttributes(el);
     var object = {};
+    var item;
 
     if (el === null) {
         return undefined;
@@ -50,7 +52,8 @@ CeddlObserver.prototype.getElementAttributes = function(modelName, el) {
         } else if (field.type.isList()) {
             var elements = el.querySelectorAll('[ceddl-observe=' + field.foreignModel + ']');
             object[key] = [];
-            for (var item of elements) {
+            for (var i = 0; i < elements.length; i++) {
+                item = elements[i];
                 var model = item.getAttribute('ceddl-model');
                 object[key].push(this.getElementAttributes(model || field.foreignModel, item));
             }
@@ -73,15 +76,17 @@ CeddlObserver.prototype.getElementAttributes = function(modelName, el) {
 CeddlObserver.prototype.generateModelObjects = function() {
     var rootModels = [];
     var dataObj;
+    var that = this;
+
     for (var model in this.ModelFactory.models) {
         if (this.ModelFactory.models[model].isRoot()) {
             rootModels.push(model);
         }
     }
 
-    rootModels.forEach((modelName) => {
-        dataObj = this.getElementAttributes(modelName, document.querySelector('[ceddl-observe="' + modelName + '"]'));
-        this.ceddl.pushToDataObject(modelName, dataObj);
+    rootModels.forEach(function (modelName) {
+        dataObj = that.getElementAttributes(modelName, document.querySelector('[ceddl-observe="' + modelName + '"]'));
+        that.ceddl.pushToDataObject(modelName, dataObj);
     });
 };
 

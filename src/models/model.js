@@ -14,7 +14,7 @@ Model.prototype.setField = function(key, fieldObj) {
 };
 
 Model.prototype.getValue = function() {
-    const validation = this.validate();
+    var validation = this.validate();
     if (validation.valid) {
         var data = {};
 

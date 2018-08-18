@@ -12,8 +12,10 @@ import Field from './field';
 function ListField (model, key, list, required, choices, ModelFactory) {
     Field.call(this, key, list, required);
     this._items = [];
+    var item;
     if (list) {
-        for (var item of list) {
+        for (var i = 0; i < list.length; i++) {
+            item = list[i];
             try {
                 if (item._model) {
                     this._items.push(new ModelFactory.models[item._model](item));
@@ -56,8 +58,10 @@ ListField.prototype.constructor = ListField;
  */
 ListField.prototype.getValue = function() {
     var data = [];
+    var item;
 
-    for (var item of this._items) {
+    for (var i = 0; i < this._items.length; i++) {
+        item = this._items[i];
         data.push(item.getValue());
     }
 
@@ -72,6 +76,7 @@ ListField.prototype.getValue = function() {
  */
 ListField.prototype.getErrors = function() {
     var errors = [];
+    var item, validator;
 
     if (this.error) {
         errors.push({
@@ -80,10 +85,11 @@ ListField.prototype.getErrors = function() {
         });
     }
 
-    for (var item of this._items) {
-        var validator = item.validate();
-        if (validator.errors.length > 0) {
-            errors.push(...validator.errors);
+    for (var i = 0; i < this._items.length; i++) {
+        item = this._items[i];
+        validator = item.validate();
+        for (var j = 0; j < validator.errors.length; j++) {
+            errors.push(validator.errors[j]);
         }
     }
 

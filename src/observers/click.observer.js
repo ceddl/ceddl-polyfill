@@ -34,9 +34,9 @@ function delegate(callback, el) {
  * @param {HTMLElement} element DOM element
  */
 function getClickEventData(element) {
-    let textContent = element.textContent.replace(/\s\s+/g, ' ').trim();
+    var textContent = element.textContent.replace(/\s\s+/g, ' ').trim();
 
-    const baseObj = {
+    var baseObj = {
         'xtag': utils.perfXtagString(element),
         'action': 'click',
         'tag': element.tagName.toLowerCase(),
@@ -133,13 +133,13 @@ ClickObserver.prototype.setListeners = function() {
 
     doc.addEventListener('click', function(e) {
         e = e || event;
-        const target = e.target;
+        var target = e.target;
         delegate(that.measureClick, target);
     }, true);
 
     doc.addEventListener('submit', function(e) {
         e = e || event;
-        const target = e.target;
+        var target = e.target;
         that.measureSubmit(target);
     }, true);
 };

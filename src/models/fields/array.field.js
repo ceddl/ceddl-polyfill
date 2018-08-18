@@ -4,9 +4,10 @@ import Field from './field';
 function ArrayField(field, key, list, required) {
     Field.call(this, key, list, required);
     this._items = [];
+    var item;
     if (list) {
-        for (let i in list) {
-            let item = list[i];
+        for (var i in list) {
+            item = list[i];
             try {
                 this._items.push(new field(key+i, item, true));
             } catch(e) {
@@ -41,6 +42,7 @@ ArrayField.prototype.constructor = ArrayField;
  */
 ArrayField.prototype.getErrors = function() {
     var errors = [];
+    var item, error;
 
     if (this.error) {
         errors.push({
@@ -49,8 +51,9 @@ ArrayField.prototype.getErrors = function() {
         });
     }
 
-    for (var item of this._items) {
-        var error = item.getErrors();
+    for (var i = 0; i < this._items.length; i++) {
+        item = this._items[i];
+        error = item.getErrors();
         if (error) {
             errors.push({
                 field: item.key,

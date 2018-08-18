@@ -37,13 +37,13 @@ function emitPropertyEvents(eventName, diff, baseKey, store) {
     }
 
     if (Array.isArray(diff)) {
-        diff.forEach((item, index) => {
-            emitPropertyEvents(`${eventName}.${index}`, item, index, store[baseKey]);
+        diff.forEach(function (item, index) {
+            emitPropertyEvents(eventName+'.'+index, item, index, store[baseKey]);
         });
     } else if (diff === Object(diff)) {
-        Object.keys(diff).forEach((key) => {
-            const child = diff[key];
-            emitPropertyEvents(`${eventName}.${key}`, child, key, store[baseKey]);
+        Object.keys(diff).forEach(function(key) {
+            var child = diff[key];
+            emitPropertyEvents(eventName+'.'+key, child, key, store[baseKey]);
         });
     }
 }
@@ -84,11 +84,11 @@ ModelStore.prototype.getStoredModels = function(debug) {
  */
 ModelStore.prototype.storeModel = function(key, data) {
     // If there was no previous model use an empty object to generate the diff.
-    const existingModel = this._modelStore[key] || {};
+    var existingModel = this._modelStore[key] || {};
     // If there is no new data use an empty object to generate the diff.
-    const newData = data ||{};
+    var newData = data ||{};
 
-    const diff = utils.diff(existingModel, newData);
+    var diff = utils.diff(existingModel, newData);
 
     if (data) {
         this._modelStore[key] = data;
@@ -98,7 +98,7 @@ ModelStore.prototype.storeModel = function(key, data) {
 
     if (!utils.isEmpty(diff)) {
         eventbus.emit('ceddl:models', this.getStoredModels());
-        emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
+        emitPropertyEvents(key, diff, key, this.getStoredModels());
     }
 
 };
@@ -108,8 +108,9 @@ ModelStore.prototype.storeModel = function(key, data) {
  * @memberof ModelStore
  */
 ModelStore.prototype.clearStore = function() {
-    Object.keys(this._modelStore).forEach((key) => {
-        delete this._modelStore[key];
+    var that = this;
+    Object.keys(this._modelStore).forEach(function(key) {
+        delete that._modelStore[key];
     });
 };
 

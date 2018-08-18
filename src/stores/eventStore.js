@@ -40,8 +40,8 @@ EventStore.prototype.getStoredEvents = function(debug) {
  */
 EventStore.prototype.storeEvent = function(name, data) {
     this._eventStore.push({
-        name,
-        data,
+        name: name,
+        data: data,
     });
     eventbus.emit('ceddl:events', this._eventStore);
     eventbus.emit(name, data);

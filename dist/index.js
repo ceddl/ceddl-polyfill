@@ -118,8 +118,22 @@
     *
     *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
     */
-    Eventbus.prototype.emit = function(name, ...args) {
+    Eventbus.prototype.emit = function(name, arg0, arg1, arg2) {
         var events = this.prepareEvent(name).slice();
+        var args;
+
+        if(arg0) {
+            args = [];
+            args.push(arg0);
+        }
+
+        if(arg1){
+            args.push(arg1);
+        }
+
+        if(arg2){
+            args.push(arg2);
+        }
 
         _values[name] = args;
         for (var i = 0, length = events.length; i < length; i++) {
@@ -145,7 +159,7 @@
      * @memberof Eventbus
      */
     Eventbus.prototype.clearHistory = function() {
-        Object.keys(_values).forEach((key) => {
+        Object.keys(_values).forEach(function (key) {
             delete _values[key];
         });
     };
@@ -235,7 +249,7 @@
     };
 
     Model.prototype.getValue = function() {
-        const validation = this.validate();
+        var validation = this.validate();
         if (validation.valid) {
             var data = {};
 
@@ -465,7 +479,7 @@
      * @memberof ModelField
      */
     ModelField.prototype.getErrors = function() {
-        let errors = [];
+        var errors = [];
         if (this.error) {
             errors.push({
                 field: this.key,
@@ -474,9 +488,9 @@
         }
 
         if (this._object) {
-            let validator = this._object.validate();
-            if (validator.errors.length > 0) {
-                errors.push(...validator.errors);
+            var validator = this._object.validate();
+            for (var i = 0; i < validator.errors.length; i++) {
+                errors.push(validator.errors[i]);
             }
         }
 
@@ -495,8 +509,10 @@
     function ListField (model, key, list, required, choices, ModelFactory) {
         Field.call(this, key, list, required);
         this._items = [];
+        var item;
         if (list) {
-            for (var item of list) {
+            for (var i = 0; i < list.length; i++) {
+                item = list[i];
                 try {
                     if (item._model) {
                         this._items.push(new ModelFactory.models[item._model](item));
@@ -539,8 +555,10 @@
      */
     ListField.prototype.getValue = function() {
         var data = [];
+        var item;
 
-        for (var item of this._items) {
+        for (var i = 0; i < this._items.length; i++) {
+            item = this._items[i];
             data.push(item.getValue());
         }
 
@@ -555,6 +573,7 @@
      */
     ListField.prototype.getErrors = function() {
         var errors = [];
+        var item, validator;
 
         if (this.error) {
             errors.push({
@@ -563,10 +582,11 @@
             });
         }
 
-        for (var item of this._items) {
-            var validator = item.validate();
-            if (validator.errors.length > 0) {
-                errors.push(...validator.errors);
+        for (var i = 0; i < this._items.length; i++) {
+            item = this._items[i];
+            validator = item.validate();
+            for (var j = 0; j < validator.errors.length; j++) {
+                errors.push(validator.errors[j]);
             }
         }
 
@@ -606,9 +626,10 @@
     function ArrayField(field, key, list, required) {
         Field.call(this, key, list, required);
         this._items = [];
+        var item;
         if (list) {
-            for (let i in list) {
-                let item = list[i];
+            for (var i in list) {
+                item = list[i];
                 try {
                     this._items.push(new field(key+i, item, true));
                 } catch(e) {
@@ -643,6 +664,7 @@
      */
     ArrayField.prototype.getErrors = function() {
         var errors = [];
+        var item, error;
 
         if (this.error) {
             errors.push({
@@ -651,8 +673,9 @@
             });
         }
 
-        for (var item of this._items) {
-            var error = item.getErrors();
+        for (var i = 0; i < this._items.length; i++) {
+            item = this._items[i];
+            error = item.getErrors();
             if (error) {
                 errors.push({
                     field: item.key,
@@ -701,8 +724,8 @@
      */
     ModelFactory.prototype.create = function(modelArgs) {
         var mf = this;
-        let model = function(values) {
-            let myModel;
+        var model = function(values) {
+            var myModel;
             if (modelArgs.extends) {
                 myModel = new mf.models[modelArgs.extends](values);
             } else {
@@ -710,14 +733,14 @@
                 myModel.fields = {};
             }
 
-            for (let key in modelArgs.fields) {
-                let field = modelArgs.fields[key];
+            for (var key in modelArgs.fields) {
+                var field = modelArgs.fields[key];
 
                 if (field.type) {
                     // TODO: Refactor weird if statements
                     if (field.type === ModelField || field.type === ListField) {
 
-                        let foreignModel = mf.models[field.foreignModel];
+                        var foreignModel = mf.models[field.foreignModel];
                         if (foreignModel) {
                             myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices, mf);
                         } else {
@@ -737,7 +760,7 @@
         };
 
         model.getFields = function() {
-            let fields = {};
+            var fields = {};
             if (modelArgs.extends) {
                 fields = new mf.models[modelArgs.extends].getFields();
             }
@@ -870,6 +893,7 @@
      */
     Utils.prototype.diff = function(lhs, rhs) {
         var that = this;
+        var tmp1, tmp2, tmp3;
         if (lhs === rhs) {
            return {}; // equal return no diff
         }
@@ -882,7 +906,13 @@
         var r = this.properObject(rhs);
 
         var deletedValues = Object.keys(l).reduce(function(acc, key) {
-            return r.hasOwnProperty(key) ? acc : Object.assign(acc, {[key]: undefined});
+            if(r.hasOwnProperty(key)) {
+                return acc;
+            } else {
+                tmp1 = {};
+                tmp1[key] = undefined;
+                return Object.assign(acc, tmp1);
+            }
         }, {});
 
         if (this.isDate(l) || this.isDate(r)) {
@@ -894,7 +924,9 @@
 
         return Object.keys(r).reduce(function(acc, key) {
             if (!l.hasOwnProperty(key)) {
-                return Object.assign(acc, {[key]: r[key]}); // return added r key
+                tmp2 = {};
+                tmp2[key] = r[key];
+                return Object.assign(acc, tmp2); // return added r key
             }
 
             var difference = that.diff(l[key], r[key]);
@@ -903,7 +935,9 @@
                 return acc; // return no diff
             }
 
-            return Object.assign(acc, {[key]: difference}); // return updated key
+            tmp3 = {};
+            tmp3[key] = difference;
+            return Object.assign(acc, tmp3); // return updated key
         }, deletedValues);
     };
 
@@ -913,7 +947,7 @@
      * @param {Function} callback function
      */
     Utils.prototype.pageReady = function(callback) {
-        let isReady;
+        var isReady;
         if (document.attachEvent) {
             isReady = document.readyState === "complete";
         } else {
@@ -944,8 +978,8 @@
 
         if(element) {
             for (var i = 0; i < element.attributes.length; i++) {
-                let attrib = element.attributes[i];
-                let name = attrib.name;
+                var attrib = element.attributes[i];
+                var name = attrib.name;
                 if(obj.ceddl && name.indexOf('ceddl-') > -1) {
                     obj.ceddl[this.toCamelCase(name.replace('ceddl-', ''))] = attrib.value;
                 }
@@ -1088,13 +1122,13 @@
         }
 
         if (Array.isArray(diff)) {
-            diff.forEach((item, index) => {
-                emitPropertyEvents(`${eventName}.${index}`, item, index, store[baseKey]);
+            diff.forEach(function (item, index) {
+                emitPropertyEvents(eventName+'.'+index, item, index, store[baseKey]);
             });
         } else if (diff === Object(diff)) {
-            Object.keys(diff).forEach((key) => {
-                const child = diff[key];
-                emitPropertyEvents(`${eventName}.${key}`, child, key, store[baseKey]);
+            Object.keys(diff).forEach(function(key) {
+                var child = diff[key];
+                emitPropertyEvents(eventName+'.'+key, child, key, store[baseKey]);
             });
         }
     }
@@ -1135,11 +1169,11 @@
      */
     ModelStore.prototype.storeModel = function(key, data) {
         // If there was no previous model use an empty object to generate the diff.
-        const existingModel = this._modelStore[key] || {};
+        var existingModel = this._modelStore[key] || {};
         // If there is no new data use an empty object to generate the diff.
-        const newData = data ||{};
+        var newData = data ||{};
 
-        const diff = utils.diff(existingModel, newData);
+        var diff = utils.diff(existingModel, newData);
 
         if (data) {
             this._modelStore[key] = data;
@@ -1149,7 +1183,7 @@
 
         if (!utils.isEmpty(diff)) {
             eventbus.emit('ceddl:models', this.getStoredModels());
-            emitPropertyEvents(`${key}`, diff, key, this.getStoredModels());
+            emitPropertyEvents(key, diff, key, this.getStoredModels());
         }
 
     };
@@ -1159,8 +1193,9 @@
      * @memberof ModelStore
      */
     ModelStore.prototype.clearStore = function() {
-        Object.keys(this._modelStore).forEach((key) => {
-            delete this._modelStore[key];
+        var that = this;
+        Object.keys(this._modelStore).forEach(function(key) {
+            delete that._modelStore[key];
         });
     };
 
@@ -1204,8 +1239,8 @@
      */
     EventStore.prototype.storeEvent = function(name, data) {
         this._eventStore.push({
-            name,
-            data,
+            name: name,
+            data: data,
         });
         eventbus.emit('ceddl:events', this._eventStore);
         eventbus.emit(name, data);
@@ -1254,9 +1289,9 @@
      * @param {HTMLElement} element DOM element
      */
     function getClickEventData(element) {
-        let textContent = element.textContent.replace(/\s\s+/g, ' ').trim();
+        var textContent = element.textContent.replace(/\s\s+/g, ' ').trim();
 
-        const baseObj = {
+        var baseObj = {
             'xtag': utils.perfXtagString(element),
             'action': 'click',
             'tag': element.tagName.toLowerCase(),
@@ -1353,13 +1388,13 @@
 
         doc.addEventListener('click', function(e) {
             e = e || event;
-            const target = e.target;
+            var target = e.target;
             delegate(that.measureClick, target);
         }, true);
 
         doc.addEventListener('submit', function(e) {
             e = e || event;
-            const target = e.target;
+            var target = e.target;
             that.measureSubmit(target);
         }, true);
     };
@@ -1372,14 +1407,15 @@
      * @param {Object} ceddl ModelFactory
      */
     function CeddlObserver(ceddl, ModelFactory) {
+        var that = this;
         this.ceddl = ceddl;
 
         this.ModelFactory = ModelFactory;
-        this.debouncedGenerateModelObjectsCall = utils.debounce(() => {
-            this.generateModelObjects();
+        this.debouncedGenerateModelObjectsCall = utils.debounce(function() {
+            that.generateModelObjects();
         }, 100);
-        utils.pageReady(() => {
-            this.init();
+        utils.pageReady(function() {
+            that.init();
         });
     }
 
@@ -1396,6 +1432,7 @@
         var fields = this.ModelFactory.models[modelName].getFields();
         var elAttr = utils.getAllElementsAttributes(el);
         var object = {};
+        var item;
 
         if (el === null) {
             return undefined;
@@ -1414,7 +1451,8 @@
             } else if (field.type.isList()) {
                 var elements = el.querySelectorAll('[ceddl-observe=' + field.foreignModel + ']');
                 object[key] = [];
-                for (var item of elements) {
+                for (var i = 0; i < elements.length; i++) {
+                    item = elements[i];
                     var model = item.getAttribute('ceddl-model');
                     object[key].push(this.getElementAttributes(model || field.foreignModel, item));
                 }
@@ -1437,15 +1475,17 @@
     CeddlObserver.prototype.generateModelObjects = function() {
         var rootModels = [];
         var dataObj;
+        var that = this;
+
         for (var model in this.ModelFactory.models) {
             if (this.ModelFactory.models[model].isRoot()) {
                 rootModels.push(model);
             }
         }
 
-        rootModels.forEach((modelName) => {
-            dataObj = this.getElementAttributes(modelName, document.querySelector('[ceddl-observe="' + modelName + '"]'));
-            this.ceddl.pushToDataObject(modelName, dataObj);
+        rootModels.forEach(function (modelName) {
+            dataObj = that.getElementAttributes(modelName, document.querySelector('[ceddl-observe="' + modelName + '"]'));
+            that.ceddl.pushToDataObject(modelName, dataObj);
         });
     };
 
@@ -1482,7 +1522,9 @@
      * @memberof DataMoho
      */
     function _printFieldErrors(key, errors) {
-        for (let error of errors) {
+        var error;
+        for (var i = 0; i < errors.length; i++) {
+            error = errors[i];
             if (Array.isArray(error.msg)) {
                 _printFieldErrors(key + '.' + error.field, error.msg);
             } else {
@@ -1532,8 +1574,8 @@
             return;
         }
 
-        const object = new PassModelFactory.models[name](data);
-        const validator = object.validate();
+        var object = new PassModelFactory.models[name](data);
+        var validator = object.validate();
 
         if (validator.valid) {
             _modelStore.storeModel(name, object.getValue());

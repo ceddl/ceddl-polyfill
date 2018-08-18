@@ -15,7 +15,9 @@ var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
  * @memberof DataMoho
  */
 function _printFieldErrors(key, errors) {
-    for (let error of errors) {
+    var error;
+    for (var i = 0; i < errors.length; i++) {
+        error = errors[i];
         if (Array.isArray(error.msg)) {
             _printFieldErrors(key + '.' + error.field, error.msg);
         } else {
@@ -65,8 +67,8 @@ Base.prototype.pushToDataObject = function(name, data) {
         return;
     }
 
-    const object = new PassModelFactory.models[name](data);
-    const validator = object.validate();
+    var object = new PassModelFactory.models[name](data);
+    var validator = object.validate();
 
     if (validator.valid) {
         _modelStore.storeModel(name, object.getValue());

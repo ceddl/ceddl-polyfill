@@ -49,7 +49,7 @@ ModelField.prototype.getValue = function() {
  * @memberof ModelField
  */
 ModelField.prototype.getErrors = function() {
-    let errors = [];
+    var errors = [];
     if (this.error) {
         errors.push({
             field: this.key,
@@ -58,9 +58,9 @@ ModelField.prototype.getErrors = function() {
     }
 
     if (this._object) {
-        let validator = this._object.validate();
-        if (validator.errors.length > 0) {
-            errors.push(...validator.errors);
+        var validator = this._object.validate();
+        for (var i = 0; i < validator.errors.length; i++) {
+            errors.push(validator.errors[i]);
         }
     }
 

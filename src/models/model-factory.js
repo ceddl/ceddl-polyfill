@@ -44,8 +44,8 @@ Object.defineProperty(ModelFactory.prototype, "fields", {
  */
 ModelFactory.prototype.create = function(modelArgs) {
     var mf = this;
-    let model = function(values) {
-        let myModel;
+    var model = function(values) {
+        var myModel;
         if (modelArgs.extends) {
             myModel = new mf.models[modelArgs.extends](values);
         } else {
@@ -53,14 +53,14 @@ ModelFactory.prototype.create = function(modelArgs) {
             myModel.fields = {};
         }
 
-        for (let key in modelArgs.fields) {
-            let field = modelArgs.fields[key];
+        for (var key in modelArgs.fields) {
+            var field = modelArgs.fields[key];
 
             if (field.type) {
                 // TODO: Refactor weird if statements
                 if (field.type === ModelField || field.type === ListField) {
 
-                    let foreignModel = mf.models[field.foreignModel];
+                    var foreignModel = mf.models[field.foreignModel];
                     if (foreignModel) {
                         myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices, mf);
                     } else {
@@ -80,7 +80,7 @@ ModelFactory.prototype.create = function(modelArgs) {
     };
 
     model.getFields = function() {
-        let fields = {};
+        var fields = {};
         if (modelArgs.extends) {
             fields = new mf.models[modelArgs.extends].getFields();
         }

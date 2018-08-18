@@ -112,8 +112,22 @@ Eventbus.prototype.once = function(name, callback, scope) {
 *
 *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
 */
-Eventbus.prototype.emit = function(name, ...args) {
+Eventbus.prototype.emit = function(name, arg0, arg1, arg2) {
     var events = this.prepareEvent(name).slice();
+    var args;
+
+    if(arg0) {
+        args = [];
+        args.push(arg0);
+    }
+
+    if(arg1){
+        args.push(arg1);
+    }
+
+    if(arg2){
+        args.push(arg2);
+    }
 
     _values[name] = args;
     for (var i = 0, length = events.length; i < length; i++) {
@@ -139,7 +153,7 @@ Eventbus.prototype.emit = function(name, ...args) {
  * @memberof Eventbus
  */
 Eventbus.prototype.clearHistory = function() {
-    Object.keys(_values).forEach((key) => {
+    Object.keys(_values).forEach(function (key) {
         delete _values[key];
     });
 };
