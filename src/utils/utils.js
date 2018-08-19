@@ -130,7 +130,7 @@ Utils.prototype.diff = function(lhs, rhs) {
             return acc;
         } else {
             tmp1 = {};
-            tmp1[key] = undefined
+            tmp1[key] = undefined;
             return assign(acc, tmp1);
         }
     }, {});

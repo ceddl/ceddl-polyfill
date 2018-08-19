@@ -115,7 +115,7 @@ Eventbus.prototype.once = function(name, callback, scope) {
 Eventbus.prototype.emit = function(name, arg) {
     var events = this.prepareEvent(name).slice();
     var args;
-    for (var j = 1, length = arguments.length; j < length; j++) {
+    for (var j = 1, lengthj = arguments.length; j < lengthj; j++) {
         if (!args) {
             args = [];
         }
@@ -123,7 +123,7 @@ Eventbus.prototype.emit = function(name, arg) {
     }
 
     _values[name] = args;
-    for (var i = 0, length = events.length; i < length; i++) {
+    for (var i = 0, lengthi = events.length; i < lengthi; i++) {
         var callback = events[i].callback;
         var scope = events[i].scope || this;
 

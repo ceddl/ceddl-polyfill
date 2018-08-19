@@ -26,7 +26,7 @@ if (typeof Object.assign == 'function') {
         }
       }
       return to;
-    }
+    };
 }
 
-export default assign
+export default assign;

@@ -121,7 +121,7 @@
     Eventbus.prototype.emit = function(name, arg) {
         var events = this.prepareEvent(name).slice();
         var args;
-        for (var j = 1, length = arguments.length; j < length; j++) {
+        for (var j = 1, lengthj = arguments.length; j < lengthj; j++) {
             if (!args) {
                 args = [];
             }
@@ -129,7 +129,7 @@
         }
 
         _values[name] = args;
-        for (var i = 0, length = events.length; i < length; i++) {
+        for (var i = 0, lengthi = events.length; i < lengthi; i++) {
             var callback = events[i].callback;
             var scope = events[i].scope || this;
 
@@ -1544,7 +1544,6 @@
      * Method used for printing field errors on models
      * @param {String} key The key of the field
      * @param {Object} errors List of field errors or string containing error
-     * @memberof DataMoho
      */
     function _printFieldErrors(key, errors) {
         var error;
@@ -1613,7 +1612,6 @@
     /**
      * Returns all stored models.
      * @returns {Object}
-     * @memberof DataMoho
      */
     Base.prototype.getModels = function() {
         return _modelStore.getStoredModels();
@@ -1622,7 +1620,6 @@
     /**
      * Returns all stored events.
      * @returns {Array}
-     * @memberof DataMoho
      */
     Base.prototype.getEvents = function() {
         return _eventStore.getStoredEvents();
@@ -1633,7 +1630,6 @@
      *
      * @readonly
      * @static
-     * @memberof CEDDL
      * @returns {Object} ModelFactory
      */
     Object.defineProperty(Base.prototype, "ModelFactory", {
@@ -1646,7 +1642,6 @@
      * Get the eventbus
      *
      * @readonly
-     * @memberof DataMoho
      * @returns {Object} Eventbus
      */
     Object.defineProperty(Base.prototype, "eventbus", {

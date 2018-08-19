@@ -4,12 +4,14 @@
   "description": "customer experience digital data layer polyfill. Bridging the gap between the 2015 ceddl spec and the browsers",
   "main": "index.js",
   "scripts": {
-    "dev": "node demo/app.js",
+    "dev": "copyfiles -u 4 node_modules/@ceddl/ceddl-aditional-inputs/dist/*.js demo/js/aditional-inputs/ && node demo/app.js",
     "build": "node_modules/rollup/bin/rollup -c && node_modules/uglify-js/bin/uglifyjs -o dist/index.min.js -- dist/index.js",
     "test": "node_modules/rollup/bin/rollup -c && node_modules/karma/bin/karma start karma.conf.js",
     "lint": "node_modules/eslint/bin/eslint.js src/**"
   },
   "devDependencies": {
+    "@ceddl/ceddl-aditional-inputs": "^0.9.0",
+    "copyfiles": "^2.0.0",
     "eslint": "^5.2.0",
     "glob": "7.1.2",
     "install": "^0.12.1",
@@ -28,5 +30,6 @@
     "rollup-plugin-istanbul": "^2.0.1",
     "sinon": "^6.1.4",
     "uglify-js": "^3.4.7"
-  }
+  },
+  "dependencies": {}
 }
