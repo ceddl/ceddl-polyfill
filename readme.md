@@ -68,7 +68,7 @@ The goals of this polyfill include:
 
 The schema to support this standard has been designed to be a minimal extention of DOM and Web API's.
 
-Developer documentation, specification document and a website is on its way and can be expected online before end of October 2018.
+Developer documentation, specification document and a website is on its way and can be expected online before end of November 2018.
 
 
 <h2 align="center">development</h2>
