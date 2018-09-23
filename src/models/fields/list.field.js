@@ -9,7 +9,7 @@ import Field from './field';
  * @param {boolean} required Is the field required?
  * @memberof ListField
  */
-function ListField (model, key, list, required, choices, ModelFactory) {
+function ListField (model, key, list, required, pattern, ModelFactory) {
     Field.call(this, key, list, required);
     this._items = [];
     var item;

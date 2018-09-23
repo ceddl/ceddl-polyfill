@@ -383,12 +383,12 @@
      * @param {any} key
      * @param {any} value
      * @param {any} required
-     * @param {string} choices Choices for the field separated by a pipe (|)
+     * @param {string} pattern regex pattern
      * @memberof StringField
      */
-    function StringField(key, value, required, choices) {
+    function StringField(key, value, required, pattern) {
         Field.call(this, key, value, required);
-        this._choices = choices && choices.split('|') || null;
+        this._patternReg = new RegExp(pattern);
 
         if (value !== null && value !== undefined && typeof value !== 'string') {
             this.error = 'Invalid value for StringField '+key+': '+value;
@@ -398,8 +398,8 @@
             this.error = 'Invalid value for StringField '+key+': '+value;
         }
 
-        if (value && choices && this._choices.indexOf(value) <= -1) {
-            this.error = 'Invalid value for StringField ' +key+', should be '+choices;
+        if (value && pattern && !this._patternReg.test(value)) {
+            this.error = 'Invalid value for StringField ' +key+', should be '+pattern;
         }
     }
 
@@ -532,7 +532,7 @@
      * @param {boolean} required Is the field required?
      * @memberof ListField
      */
-    function ListField (model, key, list, required, choices, ModelFactory) {
+    function ListField (model, key, list, required, pattern, ModelFactory) {
         Field.call(this, key, list, required);
         this._items = [];
         var item;
@@ -768,14 +768,14 @@
 
                         var foreignModel = mf.models[field.foreignModel];
                         if (foreignModel) {
-                            myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices, mf);
+                            myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.pattern, mf);
                         } else {
                             logger.warn('foreignModel on '+modelArgs.key+' is not defined');
                         }
                     } else if (field.type === ArrayField) {
-                        myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.choices);
+                        myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.pattern);
                     } else {
-                        myModel.fields[key] = new field.type(key, values[key], field.required, field.choices);
+                        myModel.fields[key] = new field.type(key, values[key], field.required, field.pattern);
                     }
                 } else {
                     logger.warn(field.type+' is not a valid field type.');

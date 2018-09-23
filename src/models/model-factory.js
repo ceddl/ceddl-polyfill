@@ -63,14 +63,14 @@ ModelFactory.prototype.create = function(modelArgs) {
 
                     var foreignModel = mf.models[field.foreignModel];
                     if (foreignModel) {
-                        myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.choices, mf);
+                        myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.pattern, mf);
                     } else {
                         logger.warn('foreignModel on '+modelArgs.key+' is not defined');
                     }
                 } else if (field.type === ArrayField) {
-                    myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.choices);
+                    myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.pattern);
                 } else {
-                    myModel.fields[key] = new field.type(key, values[key], field.required, field.choices);
+                    myModel.fields[key] = new field.type(key, values[key], field.required, field.pattern);
                 }
             } else {
                 logger.warn(field.type+' is not a valid field type.');

@@ -16,18 +16,28 @@ describe('StringField', () => {
         expect(nonStringField.getErrors()).toBeTruthy();
     });
 
-    it('should allow one of the choices', () => {
-        let choiceField = new StringField('choicetest', 'appel', true, 'appel|peer');
+    it('should allow a regex test pattern', () => {
+        let choiceField = new StringField('choicetest', 'appel', true, '^(appel|peer)$');
         expect(choiceField.getErrors()).toBe(undefined);
     });
 
-    it('should error one of the choices', () => {
-        let nonChoiceField = new StringField('choicetest', 'banaan', true, 'appel|peer');
+    it('should error when not matching the regex test pattern', () => {
+        let nonChoiceField = new StringField('choicetest', 'banana', true, '^(appel|peer)$');
         expect(nonChoiceField.getErrors()).toBeTruthy();
     });
 
+    it('should error when not matching the more complex regex test pattern', () => {
+        let nonChoiceField = new StringField('choicetest', '1.0.111', true, '^1\.0\.[0-9]{0,2}$');
+        expect(nonChoiceField.getErrors()).toBeTruthy();
+    });
+
+    it('should not error when not matching the more complex regex test pattern', () => {
+        let nonChoiceField = new StringField('choicetest', '1.0.95', true, '^1\.0\.[0-9]{0,2}$');
+        expect(nonChoiceField.getErrors()).toBe(undefined);
+    });
+
     it('should not error if not required and undefined', () => {
-        let nonChoiceField = new StringField('choicetest', undefined, false, 'appel|peer');
+        let nonChoiceField = new StringField('choicetest', undefined, false, '^(appel|peer)$');
         expect(nonChoiceField.getErrors()).toBe(undefined);
     });
 

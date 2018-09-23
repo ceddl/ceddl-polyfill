@@ -11,7 +11,7 @@ mf.create({
         framework: {
             type: mf.fields.StringField,
             required: false,
-            choices: 'angular 1.x|angular 2.x|vue|loDash'
+            pattern: '^(angular 1.x|angular 2.x|vue|loDash)$'
         },
     }
 });
