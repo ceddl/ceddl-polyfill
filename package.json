@@ -6,6 +6,7 @@
     "type": "git",
     "url": "git://github.com/ceddl/ceddl-polyfill"
   },
+  "license": "MIT",
   "author": {
     "name": "Roland Broekema"
   },
