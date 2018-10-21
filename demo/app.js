@@ -8,7 +8,7 @@ var watchOptions = {
     output: {
         file: 'dist/index.js',
         format: 'umd',
-        name: 'CEDDL'
+        name: 'ceddl'
     },
     watch: {
         include: 'src/**'

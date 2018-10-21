@@ -1,4 +1,4 @@
-var mf = CEDDL.ModelFactory;
+var mf = ceddl.modelFactory;
 
 mf.create({
     key: 'page',
@@ -141,4 +141,4 @@ mf.create({
 });
 
 
-CEDDL.initialize();
+ceddl.initialize();

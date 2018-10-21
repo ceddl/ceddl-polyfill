@@ -5,13 +5,13 @@ import utils from '../utils/utils';
  * It will listen and process changes in the dom and push the data to ceddl.
  * Creates an instance of the ceddl observer.
  * @param {Object} ceddl class
- * @param {Object} ceddl ModelFactory
+ * @param {Object} ceddl modelFactory
  */
-function CeddlObserver(ceddl, ModelFactory) {
+function CeddlObserver(ceddl, modelFactory) {
     var that = this;
     this.ceddl = ceddl;
 
-    this.ModelFactory = ModelFactory;
+    this.modelFactory = modelFactory;
     this.debouncedGenerateModelObjectsCall = utils.debounce(function() {
         that.generateModelObjects();
     }, 100);
@@ -30,7 +30,7 @@ function CeddlObserver(ceddl, ModelFactory) {
  * @return {object} object containing attrubute data that is structure accoding the ceddl models
  */
 CeddlObserver.prototype.getElementAttributes = function(modelName, el) {
-    var fields = this.ModelFactory.models[modelName].getFields();
+    var fields = this.modelFactory.models[modelName].getFields();
     var elAttr = utils.getAllElementsAttributes(el);
     var object = {};
     var item;
@@ -78,15 +78,15 @@ CeddlObserver.prototype.generateModelObjects = function() {
     var dataObj;
     var that = this;
 
-    for (var model in this.ModelFactory.models) {
-        if (this.ModelFactory.models[model].isRoot()) {
+    for (var model in this.modelFactory.models) {
+        if (this.modelFactory.models[model].isRoot()) {
             rootModels.push(model);
         }
     }
 
     rootModels.forEach(function (modelName) {
         dataObj = that.getElementAttributes(modelName, document.querySelector('[ceddl-observe="' + modelName + '"]'));
-        that.ceddl.pushToDataObject(modelName, dataObj);
+        that.ceddl.emitModel(modelName, dataObj);
     });
 };
 

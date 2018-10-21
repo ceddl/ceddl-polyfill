@@ -12,8 +12,8 @@ var demo = demo? demo : {};
         if (!rendering) {
             rendering = true;
             setTimeout(function(){
-                var allData = CEDDL.getModels();
-                allData.events = CEDDL.getEvents();
+                var allData = ceddl.getModels();
+                allData.events = ceddl.getEvents();
                 document.querySelector('.js-event-object').innerHTML = 'events:' + JSON.stringify(allData, null, 4);
                 rendering = false;
             }, 150);
@@ -22,11 +22,11 @@ var demo = demo? demo : {};
 
     function bindDataObject() {
 
-        CEDDL.eventbus.on('ceddl:models', function(data) {
+        ceddl.eventbus.on('ceddl:models', function(data) {
             renderdataObject();
         });
 
-        CEDDL.eventbus.on('ceddl:events', function(data) {
+        ceddl.eventbus.on('ceddl:events', function(data) {
             renderdataObject();
         });
 

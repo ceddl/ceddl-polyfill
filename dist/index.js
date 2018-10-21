@@ -1390,7 +1390,7 @@
         var eventName = attributes.ceddl.click || 'click';
         var eventData = getClickEventData(element);
 
-        this.ceddl.fireEvent(eventName, eventData);
+        this.ceddl.emitEvent(eventName, eventData);
     };
 
     /**
@@ -1402,7 +1402,7 @@
         var eventName = attributes.ceddl.submit || 'submit';
         var eventData = getsubmitEventData(element);
 
-        this.ceddl.fireEvent(eventName, eventData);
+        this.ceddl.emitEvent(eventName, eventData);
     };
 
     /**
@@ -1430,13 +1430,13 @@
      * It will listen and process changes in the dom and push the data to ceddl.
      * Creates an instance of the ceddl observer.
      * @param {Object} ceddl class
-     * @param {Object} ceddl ModelFactory
+     * @param {Object} ceddl modelFactory
      */
-    function CeddlObserver(ceddl, ModelFactory) {
+    function CeddlObserver(ceddl, modelFactory) {
         var that = this;
         this.ceddl = ceddl;
 
-        this.ModelFactory = ModelFactory;
+        this.modelFactory = modelFactory;
         this.debouncedGenerateModelObjectsCall = utils.debounce(function() {
             that.generateModelObjects();
         }, 100);
@@ -1455,7 +1455,7 @@
      * @return {object} object containing attrubute data that is structure accoding the ceddl models
      */
     CeddlObserver.prototype.getElementAttributes = function(modelName, el) {
-        var fields = this.ModelFactory.models[modelName].getFields();
+        var fields = this.modelFactory.models[modelName].getFields();
         var elAttr = utils.getAllElementsAttributes(el);
         var object = {};
         var item;
@@ -1503,15 +1503,15 @@
         var dataObj;
         var that = this;
 
-        for (var model in this.ModelFactory.models) {
-            if (this.ModelFactory.models[model].isRoot()) {
+        for (var model in this.modelFactory.models) {
+            if (this.modelFactory.models[model].isRoot()) {
                 rootModels.push(model);
             }
         }
 
         rootModels.forEach(function (modelName) {
             dataObj = that.getElementAttributes(modelName, document.querySelector('[ceddl-observe="' + modelName + '"]'));
-            that.ceddl.pushToDataObject(modelName, dataObj);
+            that.ceddl.emitModel(modelName, dataObj);
         });
     };
 
@@ -1581,11 +1581,11 @@
 
     };
 
-    Base.prototype.fireEvent = function(name, data) {
+    Base.prototype.emitEvent = function(name, data) {
         _eventStore.storeEvent(name, data);
     };
 
-    Base.prototype.pushToDataObject = function(name, data) {
+    Base.prototype.emitModel = function(name, data) {
         var model = PassModelFactory.models[name];
         if (!model) {
             logger.field('Model does not exist for key: ' + name);
@@ -1633,7 +1633,7 @@
      * @returns {Object} ModelFactory
      */
     Object.defineProperty(Base.prototype, "ModelFactory", {
-        get: function ModelFactory() {
+        get: function modelFactory() {
            return PassModelFactory;
         }
     });

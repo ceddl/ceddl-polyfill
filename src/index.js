@@ -48,11 +48,11 @@ Base.prototype.initialize = function() {
 
 };
 
-Base.prototype.fireEvent = function(name, data) {
+Base.prototype.emitEvent = function(name, data) {
     _eventStore.storeEvent(name, data);
 };
 
-Base.prototype.pushToDataObject = function(name, data) {
+Base.prototype.emitModel = function(name, data) {
     var model = PassModelFactory.models[name];
     if (!model) {
         logger.field('Model does not exist for key: ' + name);
@@ -100,7 +100,7 @@ Base.prototype.getEvents = function() {
  * @returns {Object} ModelFactory
  */
 Object.defineProperty(Base.prototype, "ModelFactory", {
-    get: function ModelFactory() {
+    get: function modelFactory() {
        return PassModelFactory;
     }
 });

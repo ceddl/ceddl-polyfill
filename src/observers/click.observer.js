@@ -110,7 +110,7 @@ ClickObserver.prototype.measureClick = function(element) {
     var eventName = attributes.ceddl.click || 'click';
     var eventData = getClickEventData(element);
 
-    this.ceddl.fireEvent(eventName, eventData);
+    this.ceddl.emitEvent(eventName, eventData);
 };
 
 /**
@@ -122,7 +122,7 @@ ClickObserver.prototype.measureSubmit = function(element) {
     var eventName = attributes.ceddl.submit || 'submit';
     var eventData = getsubmitEventData(element);
 
-    this.ceddl.fireEvent(eventName, eventData);
+    this.ceddl.emitEvent(eventName, eventData);
 };
 
 /**
