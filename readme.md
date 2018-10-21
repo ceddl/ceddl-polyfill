@@ -40,7 +40,7 @@ Html boilerplate:
 
 Minimal ceddl model:
 ```js
-var mf = CEDDL.ModelFactory;
+var mf = ceddl.modelFactory;
 
     mf.create({
         key: 'page',
@@ -53,7 +53,7 @@ var mf = CEDDL.ModelFactory;
         }
     });
 
-    CEDDL.initialize();
+    ceddl.initialize();
 });
 ```
 
