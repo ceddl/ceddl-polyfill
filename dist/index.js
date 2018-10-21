@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.CEDDL = factory());
+    (global.ceddl = factory());
 }(this, (function () { 'use strict';
 
     // Private variables
@@ -804,7 +804,7 @@
         return model;
     };
 
-    var PassModelFactory = (new ModelFactory());
+    var passModelFactory = (new ModelFactory());
 
     /**
      * Singleton Class for instantiating utillity's. Functions need to be
@@ -1570,7 +1570,7 @@
     Base.prototype.initialize = function() {
         if(!_clickObserver && !_CEDDLObserver) {
             _clickObserver = new ClickObserver(this);
-            _CEDDLObserver = new CeddlObserver(this, PassModelFactory);
+            _CEDDLObserver = new CeddlObserver(this, passModelFactory);
         } else {
             _modelStore.clearStore();
             _eventStore.clearStore();
@@ -1586,7 +1586,7 @@
     };
 
     Base.prototype.emitModel = function(name, data) {
-        var model = PassModelFactory.models[name];
+        var model = passModelFactory.models[name];
         if (!model) {
             logger.field('Model does not exist for key: ' + name);
             return;
@@ -1598,7 +1598,7 @@
             return;
         }
 
-        var object = new PassModelFactory.models[name](data);
+        var object = new passModelFactory.models[name](data);
         var validator = object.validate();
 
         if (validator.valid) {
@@ -1632,9 +1632,9 @@
      * @static
      * @returns {Object} ModelFactory
      */
-    Object.defineProperty(Base.prototype, "ModelFactory", {
+    Object.defineProperty(Base.prototype, "modelFactory", {
         get: function modelFactory() {
-           return PassModelFactory;
+           return passModelFactory;
         }
     });
 
