@@ -1,6 +1,6 @@
 {
   "name": "@ceddl/ceddl-polyfill",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "customer experience digital data layer polyfill. Bridging the gap between the 2015 ceddl spec and the browsers",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "lint": "node_modules/eslint/bin/eslint.js src/**"
   },
   "devDependencies": {
-    "@ceddl/ceddl-aditional-inputs": "^0.9.0",
+    "@ceddl/ceddl-aditional-inputs": "^0.9.2",
     "copyfiles": "^2.0.0",
     "eslint": "^5.2.0",
     "glob": "7.1.2",
