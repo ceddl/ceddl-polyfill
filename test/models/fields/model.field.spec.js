@@ -1,5 +1,5 @@
-import ModelField from './model.field.js';
-import ModelFactory from '../model-factory.js';
+import ModelField from '../../../src/models/fields/model.field.js';
+import ModelFactory from '../../../src/models/model-factory.js';
 
 describe('ModelField', () => {
     let testModel;

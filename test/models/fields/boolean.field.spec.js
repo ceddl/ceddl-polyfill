@@ -1,4 +1,4 @@
-import BooleanField from './boolean.field.js';
+import BooleanField from '../../../src/models/fields/boolean.field.js';
 
 describe('BooleanField', () => {
     it('should allow a boolean value', () => {

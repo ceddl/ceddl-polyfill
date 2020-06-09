@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.ceddl = factory());
+    (global = global || self, global.ceddl = factory());
 }(this, (function () { 'use strict';
 
     // Private variables
@@ -118,7 +118,7 @@
     *
     *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
     */
-    Eventbus.prototype.emit = function(name, arg) {
+    Eventbus.prototype.emit = function(name) {
         var events = this.prepareEvent(name).slice();
         var args;
         for (var j = 1, lengthj = arguments.length; j < lengthj; j++) {
@@ -233,7 +233,7 @@
     if (typeof Object.assign == 'function') {
         assign = Object.assign;
     } else {
-        assign = function(target, firstSource) {
+        assign = function(target) {
           if (target === undefined || target === null) {
             throw new TypeError('Cannot convert first argument to object');
           }
@@ -932,6 +932,7 @@
         var r = this.properObject(rhs);
 
         var deletedValues = Object.keys(l).reduce(function(acc, key) {
+            // eslint-disable-next-line no-prototype-builtins
             if(r.hasOwnProperty(key)) {
                 return acc;
             } else {
@@ -949,6 +950,7 @@
         }
 
         return Object.keys(r).reduce(function(acc, key) {
+            // eslint-disable-next-line no-prototype-builtins
             if (!l.hasOwnProperty(key)) {
                 tmp2 = {};
                 tmp2[key] = r[key];
@@ -1645,7 +1647,7 @@
      * @returns {Object} Eventbus
      */
     Object.defineProperty(Base.prototype, "eventbus", {
-        get: function eventbus$$1() {
+        get: function eventbus$1() {
            return eventbus;
         }
     });

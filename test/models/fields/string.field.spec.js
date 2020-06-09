@@ -1,4 +1,4 @@
-import StringField from './string.field.js';
+import StringField from '../../../src/models/fields/string.field.js';
 
 describe('StringField', () => {
     it('should allow a string value', () => {

@@ -1,4 +1,4 @@
-import NumberField from './number.field.js';
+import NumberField from '../../../src/models/fields/number.field.js';
 
 describe('NumberField', () => {
     it('should allow a numerical value', () => {
