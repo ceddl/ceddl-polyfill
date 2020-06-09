@@ -20,7 +20,7 @@
   "devDependencies": {
     "@ceddl/ceddl-aditional-inputs": "^0.9.3",
     "copyfiles": "^2.0.0",
-    "eslint": "^5.2.0",
+    "eslint": "^7.2.0",
     "glob": "7.1.2",
     "install": "^0.12.1",
     "jasmine-core": "3.1.0",

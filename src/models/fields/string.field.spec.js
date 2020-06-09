@@ -27,11 +27,13 @@ describe('StringField', () => {
     });
 
     it('should error when not matching the more complex regex test pattern', () => {
+        // eslint-disable-next-line no-useless-escape
         let nonChoiceField = new StringField('choicetest', '1.0.111', true, '^1\.0\.[0-9]{0,2}$');
         expect(nonChoiceField.getErrors()).toBeTruthy();
     });
 
     it('should not error when not matching the more complex regex test pattern', () => {
+        // eslint-disable-next-line no-useless-escape
         let nonChoiceField = new StringField('choicetest', '1.0.95', true, '^1\.0\.[0-9]{0,2}$');
         expect(nonChoiceField.getErrors()).toBe(undefined);
     });

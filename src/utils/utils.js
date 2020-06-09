@@ -126,6 +126,7 @@ Utils.prototype.diff = function(lhs, rhs) {
     var r = this.properObject(rhs);
 
     var deletedValues = Object.keys(l).reduce(function(acc, key) {
+        // eslint-disable-next-line no-prototype-builtins
         if(r.hasOwnProperty(key)) {
             return acc;
         } else {
@@ -143,6 +144,7 @@ Utils.prototype.diff = function(lhs, rhs) {
     }
 
     return Object.keys(r).reduce(function(acc, key) {
+        // eslint-disable-next-line no-prototype-builtins
         if (!l.hasOwnProperty(key)) {
             tmp2 = {};
             tmp2[key] = r[key];

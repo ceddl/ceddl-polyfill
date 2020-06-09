@@ -5,7 +5,7 @@ var assign;
 if (typeof Object.assign == 'function') {
     assign = Object.assign;
 } else {
-    assign = function(target, firstSource) {
+    assign = function(target) {
       if (target === undefined || target === null) {
         throw new TypeError('Cannot convert first argument to object');
       }
