@@ -2,16 +2,30 @@
     <img src="https://github.com/ceddl/ceddl-polyfill/raw/master/assets/logotext.png">
 <br>
 <br>
-<h1>Version 0.9 Release 🎉</h1>
+<h1>Version 0.9.4 Release 🎉</h1>
 </div>
 
 
 <div align="center">
   <p>
-    Customer experience digital data layer polyfill. Bridging the gap between the ceddl spec's and the browsers
+    Customer experience digital data layer polyfill. Applying lessons learned by many implementations of Customer Experience Digital Data Layer and bringing this back into a specification that browser vendors can implement.
   </p>
 
 </div>
+
+<h2 align="center">Introduction</h2>
+
+Increasingly, multiple groups are involved in the data collection process for a given digital property, and each has a solution to be implemented on the page. Page design has become more complex and development cycles have lengthened. As a result when you look inside your Tag Manager chances are high that you see a chaos of different marketing tags. All your data is collected from different locations in your application. There is no order, integrity and consistency. No control and overview over events and data flows. Customer Experience Digital Data Layer ames to align your data into a single unidirectional data stream. To create a small(in browser) modular, independant and decoupled datalayer for improving web tracking, website personalization and DMP implementations.
+
+The goals of this polyfill include:
+* Expanding the accessibility, quality of dynamic data inside a DDL that may be supplied by the author
+* Describing a HTML and javascript api for the browser and or polyfill
+* Apply lessons learnt by implementations of Customer Experience Digital Data Layer 1.0
+
+The schema to support this standard has been designed to be a minimal extention of DOM and Web API's.
+
+Developer documentation website [https://www.ceddlbyexample.com/getting-started](https://www.ceddlbyexample.com/getting-started)
+Demo Website [https://www.ceddlbyexample.com/demo/index.html](https://www.ceddlbyexample.com/demo/index.html)
 
 <h2 align="center">Getting started</h2>
 
@@ -56,19 +70,6 @@ var mf = ceddl.modelFactory;
     ceddl.initialize();
 });
 ```
-
-<h2 align="center">Introduction</h2>
-
-Increasingly, multiple groups are involved in the data collection process for a given digital property, and each has a solution to be implemented on the page. Page design has become more complex and development cycles have lengthened. As a result when you look inside your Tag Manager chances are high that you see a chaos of different marketing tags. All your data is collected from different locations in your application. There is no order, integrity and consistency. No control and overview over events and data flows. Customer Experience Digital Data Layer ames to align your data into a single unidirectional data stream. To create a small(in browser) modular, independant and decoupled datalayer for improving web tracking, website personalization and DMP implementations.
-
-The goals of this polyfill include:
-* Expanding the accessibility, quality of dynamic data inside a DDL that may be supplied by the author
-* Describing a HTML and javascript api for the browser and or polyfill
-* Apply lessons learnt by implementations of Customer Experience Digital Data Layer 1.0
-
-The schema to support this standard has been designed to be a minimal extention of DOM and Web API's.
-
-Developer documentation, specification document and a website is on its way and can be expected online before end of November 2018.
 
 
 <h2 align="center">development</h2>
