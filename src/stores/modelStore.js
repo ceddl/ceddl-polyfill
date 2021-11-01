@@ -1,5 +1,5 @@
-import utils from '../utils/utils';
-import {eventbus} from '../utils/eventbus';
+import { utils } from '../utils/utils.js';
+import { eventbus } from '../utils/eventbus.js';
 
 /**
  * Publish a delta event on the event bus with all nested data that changed.
@@ -115,4 +115,4 @@ ModelStore.prototype.clearStore = function() {
 };
 
 
-export default ModelStore;
+export { ModelStore };

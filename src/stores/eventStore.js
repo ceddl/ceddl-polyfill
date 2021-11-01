@@ -1,4 +1,4 @@
-import {eventbus} from '../utils/eventbus';
+import {eventbus} from '../utils/eventbus.js';
 
 /**
  * Simple store that saves events before dispatching them on the event bus.
@@ -57,4 +57,4 @@ EventStore.prototype.clearStore = function() {
 };
 
 
-export default EventStore;
+export { EventStore };

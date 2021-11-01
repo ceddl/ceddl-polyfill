@@ -59,4 +59,4 @@ Model.prototype.validate = function() {
 };
 
 
-export default Model;
+export { Model };

@@ -1,6 +1,6 @@
 import {eventbus} from '../../src/utils/eventbus';
 eventbus.__proto__.emit = sinon.spy();
-import ModelStore from '../../src/stores/modelStore.js';
+import { ModelStore } from '../../src/stores/modelStore.js';
 
 describe('ModelStore:', () => {
     it('should be a constructor', () => {

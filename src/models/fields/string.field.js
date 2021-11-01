@@ -1,4 +1,4 @@
-import Field from './field';
+import { Field } from './field.js';
 
 /**
  * Create a StringField on a model to vaidate a string value
@@ -37,4 +37,4 @@ StringField.isList = function() {
 StringField.prototype = Object.create(Field.prototype);
 StringField.prototype.constructor = StringField;
 
-export default StringField;
+export{ StringField };

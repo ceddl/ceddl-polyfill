@@ -1,4 +1,4 @@
-import Field from './field';
+import { Field } from './field.js';
 
 /**
  * Create a ModelField on a Model to nest the instance of another model in the field
@@ -67,4 +67,4 @@ ModelField.prototype.getErrors = function() {
     return (errors.length > 0 && errors) || null;
 };
 
-export default ModelField;
+export { ModelField };

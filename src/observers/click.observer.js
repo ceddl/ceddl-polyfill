@@ -1,5 +1,5 @@
-import utils from '../utils/utils';
-import assign from '../utils/assign';
+import { utils } from '../utils/utils.js';
+import { assign } from '../utils/assign.js';
 
 /**
  * Determines if the element is a valid element to stop the delegation loop and
@@ -145,4 +145,4 @@ ClickObserver.prototype.setListeners = function() {
     }, true);
 };
 
-export default ClickObserver;
+export { ClickObserver };

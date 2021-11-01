@@ -1,4 +1,4 @@
-import Field from './field';
+import { Field } from './field.js';
 
 /**
  * Create a NumberField on a model to validate a number value
@@ -30,4 +30,4 @@ NumberField.isList = function() {
 NumberField.prototype = Object.create(Field.prototype);
 NumberField.prototype.constructor = NumberField;
 
-export default NumberField;
+export { NumberField };

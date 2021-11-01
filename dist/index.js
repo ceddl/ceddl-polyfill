@@ -1,8 +1,8 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global = global || self, global.ceddl = factory());
-}(this, (function () { 'use strict';
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.ceddl = factory());
+})(this, (function () { 'use strict';
 
     // Private variables
     var _values = {};
@@ -256,8 +256,6 @@
           return to;
         };
     }
-
-    var assign$1 = assign;
 
     /**
      * Defines an abstract data model
@@ -716,17 +714,17 @@
     /**
      * Class for creating models
      *
-     * @class ModelFactory
+     * @class ModelFactoryClass
      */
 
-    function ModelFactory () {
+    function ModelFactoryClass () {
         this.models = {};
     }
 
     /**
      * getter function exposing all the field types on the modelfactory api
      */
-    Object.defineProperty(ModelFactory.prototype, "fields", {
+    Object.defineProperty(ModelFactoryClass.prototype, "fields", {
         get: function fields() {
             return {
                 StringField: StringField,
@@ -748,7 +746,7 @@
      * @returns {Model} The created model
      * @memberof ModelFactory
      */
-    ModelFactory.prototype.create = function(modelArgs) {
+    ModelFactoryClass.prototype.create = function(modelArgs) {
         var mf = this;
         var model = function(values) {
             var myModel;
@@ -791,7 +789,7 @@
                 fields = new mf.models[modelArgs.extends].getFields();
             }
 
-            assign$1(fields, modelArgs.fields);
+            assign(fields, modelArgs.fields);
             return fields;
         };
 
@@ -803,24 +801,14 @@
 
         return model;
     };
-
-    var passModelFactory = (new ModelFactory());
-
-    /**
-     * Singleton Class for instantiating utillity's. Functions need to be
-     * functional / performant and stateless to promote re-use
-     *
-     * @export
-     * @class Utils
-     */
-    function Utils () {}
+    var ModelFactory = new ModelFactoryClass();
 
     /**
      * [isDate description]
      * @param  {[type]}  d [description]
      * @return {Boolean}   [description]
      */
-    Utils.prototype.isDate = function(d) {
+    var isDate = function(d) {
         return d instanceof Date;
     };
 
@@ -829,7 +817,7 @@
      * @param  {[type]}  o [description]
      * @return {Boolean}   [description]
      */
-    Utils.prototype.isEmpty = function(o) {
+    var isEmpty = function(o) {
         return Object.keys(o).length === 0;
     };
 
@@ -838,7 +826,7 @@
      * @param  {[type]}  o [description]
      * @return {Boolean}   [description]
      */
-    Utils.prototype.isObject = function(o) {
+    var isObject = function(o) {
         return o != null && o instanceof Object;
     };
 
@@ -847,7 +835,7 @@
      * @param  {[type]} o [description]
      * @return {[type]}   [description]
      */
-    Utils.prototype.properObject = function(o) {
+    var properObject = function(o) {
         if (this.isObject(o) && !o.hasOwnProperty) {
             return Object.assign({}, o);
         } else {
@@ -855,7 +843,7 @@
         }
     };
 
-    Utils.prototype.toCamelCase = function(attrString) {
+    var toCamelCase = function(attrString) {
         return attrString.replace(/-([a-z])/g, function (g) {
             return g[1].toUpperCase();
         });
@@ -866,7 +854,7 @@
      * @param  {object} o
      * @return {boolean}
      */
-    Utils.prototype.isArrayOfStrings = function(o) {
+    var isArrayOfStrings = function(o) {
         if (toString.call(o) != '[object Array]') {
             return false;
         }
@@ -885,7 +873,7 @@
      * @returns {(Object|Array)}
      * @memberof ceddlUtils
      */
-    Utils.prototype.simpleDeepClone = function(target) {
+    var simpleDeepClone = function(target) {
         var that = this;
         var isArray = Array.isArray(target);
         var isObject = !isArray && this.isObject(target);
@@ -917,7 +905,7 @@
      * @returns {Object} Returns a object containing pointers and values
      * that have changed between lhs and rhs.
      */
-    Utils.prototype.diff = function(lhs, rhs) {
+    var diff = function(lhs, rhs) {
         var that = this;
         var tmp1, tmp2, tmp3;
         if (lhs === rhs) {
@@ -938,7 +926,7 @@
             } else {
                 tmp1 = {};
                 tmp1[key] = undefined;
-                return assign$1(acc, tmp1);
+                return assign(acc, tmp1);
             }
         }, {});
 
@@ -954,7 +942,7 @@
             if (!l.hasOwnProperty(key)) {
                 tmp2 = {};
                 tmp2[key] = r[key];
-                return assign$1(acc, tmp2); // return added r key
+                return assign(acc, tmp2); // return added r key
             }
 
             var difference = that.diff(l[key], r[key]);
@@ -965,7 +953,7 @@
 
             tmp3 = {};
             tmp3[key] = difference;
-            return assign$1(acc, tmp3); // return updated key
+            return assign(acc, tmp3); // return updated key
         }, deletedValues);
     };
 
@@ -974,7 +962,7 @@
      *
      * @param {Function} callback function
      */
-    Utils.prototype.pageReady = function(callback) {
+    var pageReady = function(callback) {
         var isReady;
         if (document.attachEvent) {
             isReady = document.readyState === "complete";
@@ -995,7 +983,7 @@
      * @param {Object} element from the DOM
      * @returns {Object} atribute data without prefixes
      */
-    Utils.prototype.getAllElementsAttributes = function(element, opt) {
+    var getAllElementsAttributes = function(element, opt) {
         var obj = {};
         if(element) {
             obj = this.simpleDeepClone(element.dataset);
@@ -1023,7 +1011,7 @@
      * @param {Object} element from the DOM
      * @returns {String} unique string for a dom tree position.
      */
-    Utils.prototype.perfXtagString = function(element) {
+    var perfXtagString = function(element) {
         var paths = [];
         var index = 0;
         var hasindex = false;
@@ -1075,7 +1063,7 @@
      * @param {boolean} immediate event on invoke
      * @returns {Function} Returns the new debounced function.
      */
-    Utils.prototype.debounce = function(func, wait, immediate) {
+    var debounce = function(func, wait, immediate) {
         var timeout, args, context, timestamp, result;
         if (null == wait) wait = 100;
 
@@ -1110,9 +1098,20 @@
         return debounced;
     };
 
-
-
-    var utils = (new Utils());
+    var utils = {
+        isDate,
+        isEmpty,
+        isObject,
+        properObject,
+        toCamelCase,
+        isArrayOfStrings,
+        simpleDeepClone,
+        diff,
+        pageReady,
+        getAllElementsAttributes,
+        perfXtagString,
+        debounce
+    };
 
     /**
      * Publish a delta event on the event bus with all nested data that changed.
@@ -1333,7 +1332,7 @@
             baseObj.href = element.href;
         }
 
-        assign$1(baseObj, utils.getAllElementsAttributes(element));
+        assign(baseObj, utils.getAllElementsAttributes(element));
 
         delete baseObj.ceddl;
         return baseObj;
@@ -1358,7 +1357,7 @@
             baseObj.href = element.action;
         }
 
-        assign$1(baseObj, utils.getAllElementsAttributes(element));
+        assign(baseObj, utils.getAllElementsAttributes(element));
 
         delete baseObj.ceddl;
         return baseObj;
@@ -1540,7 +1539,7 @@
         this.generateModelObjects();
     };
 
-    var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
+    var _modelStore, _eventStore, _clickObserver, _CeddlObserver;
 
     /**
      * Method used for printing field errors on models
@@ -1570,14 +1569,14 @@
      * and initialize the html interface when ready.
      */
     Base.prototype.initialize = function() {
-        if(!_clickObserver && !_CEDDLObserver) {
+        if(!_clickObserver && !_CeddlObserver) {
             _clickObserver = new ClickObserver(this);
-            _CEDDLObserver = new CeddlObserver(this, passModelFactory);
+            _CeddlObserver = new CeddlObserver(this, ModelFactory);
         } else {
             _modelStore.clearStore();
             _eventStore.clearStore();
             eventbus.clearHistory();
-            _CEDDLObserver.generateModelObjects();
+            _CeddlObserver.generateModelObjects();
             eventbus.emit('initialize');
         }
 
@@ -1588,7 +1587,7 @@
     };
 
     Base.prototype.emitModel = function(name, data) {
-        var model = passModelFactory.models[name];
+        var model = ModelFactory.models[name];
         if (!model) {
             logger.field('Model does not exist for key: ' + name);
             return;
@@ -1600,7 +1599,7 @@
             return;
         }
 
-        var object = new passModelFactory.models[name](data);
+        var object = new ModelFactory.models[name](data);
         var validator = object.validate();
 
         if (validator.valid) {
@@ -1636,7 +1635,7 @@
      */
     Object.defineProperty(Base.prototype, "modelFactory", {
         get: function modelFactory() {
-           return passModelFactory;
+           return ModelFactory;
         }
     });
 
@@ -1647,7 +1646,7 @@
      * @returns {Object} Eventbus
      */
     Object.defineProperty(Base.prototype, "eventbus", {
-        get: function eventbus$1() {
+        get: function eventbus() {
            return eventbus;
         }
     });
@@ -1656,4 +1655,4 @@
 
     return index;
 
-})));
+}));

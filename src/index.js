@@ -1,11 +1,11 @@
-import {logger, eventbus as passEventBus} from './utils/eventbus.js';
-import passModelFactory from './models/model-factory.js';
-import ModelStore from './stores/modelStore';
-import EventStore from './stores/eventStore';
-import ClickObserver from './observers/click.observer.js';
-import CEDDLObserver from './observers/ceddl.observer.js';
+import {logger, eventbus} from './utils/eventbus.js';
+import { ModelFactory } from './models/model-factory.js';
+import { ModelStore } from './stores/modelStore.js';
+import { EventStore } from './stores/eventStore.js';
+import { ClickObserver } from './observers/click.observer.js';
+import { CeddlObserver } from './observers/ceddl.observer.js';
 
-var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
+var _modelStore, _eventStore, _clickObserver, _CeddlObserver;
 
 /**
  * Method used for printing field errors on models
@@ -35,15 +35,15 @@ function Base() {
  * and initialize the html interface when ready.
  */
 Base.prototype.initialize = function() {
-    if(!_clickObserver && !_CEDDLObserver) {
+    if(!_clickObserver && !_CeddlObserver) {
         _clickObserver = new ClickObserver(this);
-        _CEDDLObserver = new CEDDLObserver(this, passModelFactory);
+        _CeddlObserver = new CeddlObserver(this, ModelFactory);
     } else {
         _modelStore.clearStore();
         _eventStore.clearStore();
-        passEventBus.clearHistory();
-        _CEDDLObserver.generateModelObjects();
-        passEventBus.emit('initialize');
+        eventbus.clearHistory();
+        _CeddlObserver.generateModelObjects();
+        eventbus.emit('initialize');
     }
 
 };
@@ -53,7 +53,7 @@ Base.prototype.emitEvent = function(name, data) {
 };
 
 Base.prototype.emitModel = function(name, data) {
-    var model = passModelFactory.models[name];
+    var model = ModelFactory.models[name];
     if (!model) {
         logger.field('Model does not exist for key: ' + name);
         return;
@@ -65,7 +65,7 @@ Base.prototype.emitModel = function(name, data) {
         return;
     }
 
-    var object = new passModelFactory.models[name](data);
+    var object = new ModelFactory.models[name](data);
     var validator = object.validate();
 
     if (validator.valid) {
@@ -101,7 +101,7 @@ Base.prototype.getEvents = function() {
  */
 Object.defineProperty(Base.prototype, "modelFactory", {
     get: function modelFactory() {
-       return passModelFactory;
+       return ModelFactory;
     }
 });
 
@@ -113,7 +113,7 @@ Object.defineProperty(Base.prototype, "modelFactory", {
  */
 Object.defineProperty(Base.prototype, "eventbus", {
     get: function eventbus() {
-       return passEventBus;
+       return eventbus;
     }
 });
 

@@ -1,27 +1,27 @@
-import {logger} from '../utils/eventbus';
-import assign from '../utils/assign';
-import Model from './model.js';
-import StringField from './fields/string.field.js';
-import BooleanField from './fields/boolean.field.js';
-import ModelField from './fields/model.field.js';
-import ListField from './fields/list.field.js';
-import NumberField from './fields/number.field.js';
-import ArrayField from './fields/array.field.js';
+import { logger } from '../utils/eventbus.js';
+import { assign } from '../utils/assign.js';
+import { Model } from './model.js';
+import { StringField } from './fields/string.field.js';
+import { BooleanField } from './fields/boolean.field.js';
+import { ModelField } from './fields/model.field.js';
+import { ListField } from './fields/list.field.js';
+import { NumberField } from './fields/number.field.js';
+import { ArrayField } from './fields/array.field.js';
 
 /**
  * Class for creating models
  *
- * @class ModelFactory
+ * @class ModelFactoryClass
  */
 
-function ModelFactory () {
+function ModelFactoryClass () {
     this.models = {};
 }
 
 /**
  * getter function exposing all the field types on the modelfactory api
  */
-Object.defineProperty(ModelFactory.prototype, "fields", {
+Object.defineProperty(ModelFactoryClass.prototype, "fields", {
     get: function fields() {
         return {
             StringField: StringField,
@@ -43,7 +43,7 @@ Object.defineProperty(ModelFactory.prototype, "fields", {
  * @returns {Model} The created model
  * @memberof ModelFactory
  */
-ModelFactory.prototype.create = function(modelArgs) {
+ModelFactoryClass.prototype.create = function(modelArgs) {
     var mf = this;
     var model = function(values) {
         var myModel;
@@ -98,5 +98,5 @@ ModelFactory.prototype.create = function(modelArgs) {
 
     return model;
 };
-
-export default (new ModelFactory());
+var ModelFactory = new ModelFactoryClass();
+export { ModelFactory };

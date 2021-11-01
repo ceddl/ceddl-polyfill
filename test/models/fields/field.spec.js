@@ -1,4 +1,4 @@
-import Field from '../../../src/models/fields/field.js';
+import { Field } from '../../../src/models/fields/field.js';
 
 describe('Field', () => {
     it('should allow an empty value for non-required field', () => {

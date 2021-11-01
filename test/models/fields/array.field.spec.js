@@ -1,5 +1,5 @@
-import ArrayField from '../../../src/models/fields/array.field.js';
-import StringField from '../../../src/models/fields/string.field.js';
+import { ArrayField } from '../../../src/models/fields/array.field.js';
+import { StringField } from '../../../src/models/fields/string.field.js';
 
 describe('ArrayField', () => {
     it('should allow a list of valid data types', () => {

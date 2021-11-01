@@ -1,4 +1,4 @@
-import {eventbus} from '../../src/utils/eventbus';
+import { eventbus } from '../../src/utils/eventbus';
 describe('Eventbus', () => {
 
     it('should allow binding and unbind with a scope and emitting with arguments', () => {
