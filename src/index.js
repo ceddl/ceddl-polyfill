@@ -25,7 +25,7 @@ function _printFieldErrors(key, errors) {
     }
 }
 
-function Base() {
+function Ceddl() {
     _modelStore = new ModelStore();
     _eventStore = new EventStore();
 }
@@ -34,7 +34,7 @@ function Base() {
  * The initialize function makes it possible to allow async loading of the models
  * and initialize the html interface when ready.
  */
-Base.prototype.initialize = function() {
+Ceddl.prototype.initialize = function() {
     if(!_clickObserver && !_CeddlObserver) {
         _clickObserver = new ClickObserver(this);
         _CeddlObserver = new CeddlObserver(this, ModelFactory);
@@ -48,11 +48,11 @@ Base.prototype.initialize = function() {
 
 };
 
-Base.prototype.emitEvent = function(name, data) {
+Ceddl.prototype.emitEvent = function(name, data) {
     _eventStore.storeEvent(name, data);
 };
 
-Base.prototype.emitModel = function(name, data) {
+Ceddl.prototype.emitModel = function(name, data) {
     var model = ModelFactory.models[name];
     if (!model) {
         Logger.field('Model does not exist for key: ' + name);
@@ -80,7 +80,7 @@ Base.prototype.emitModel = function(name, data) {
  * Returns all stored models.
  * @returns {Object}
  */
-Base.prototype.getModels = function() {
+Ceddl.prototype.getModels = function() {
     return _modelStore.getStoredModels();
 };
 
@@ -88,7 +88,7 @@ Base.prototype.getModels = function() {
  * Returns all stored events.
  * @returns {Array}
  */
-Base.prototype.getEvents = function() {
+Ceddl.prototype.getEvents = function() {
     return _eventStore.getStoredEvents();
 };
 
@@ -99,7 +99,7 @@ Base.prototype.getEvents = function() {
  * @static
  * @returns {Object} ModelFactory
  */
-Object.defineProperty(Base.prototype, "modelFactory", {
+Object.defineProperty(Ceddl.prototype, "modelFactory", {
     get: function modelFactory() {
        return ModelFactory;
     }
@@ -112,10 +112,10 @@ Object.defineProperty(Base.prototype, "modelFactory", {
  * @returns {Object} Eventbus
  */
 
-Object.defineProperty(Base.prototype, "eventbus", {
+Object.defineProperty(Ceddl.prototype, "eventbus", {
     get: function eventbus() {
        return Eventbus;
     }
 });
 
-export default (new Base());
+export default (new Ceddl());

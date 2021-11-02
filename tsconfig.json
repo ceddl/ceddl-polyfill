@@ -9,8 +9,7 @@
     "esModuleInterop": false,
     "outDir": "output",
     "rootDir": "./",
-    "typeRoots": ["./types"]
-  }
-,
-  "include": ["./test/**/*.ts"]
+    "typeRoots": [ "./types", "./node_modules/@types" ]
+  },
+  "include": ["./test/**/*.ts", "./types/*.ts"]
 }
