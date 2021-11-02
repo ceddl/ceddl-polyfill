@@ -10,8 +10,16 @@
   "author": {
     "name": "Roland Broekema"
   },
-  "main": "/dist/index.esm.js",
+  "main": "/dist/index.js",
+  "module": "/src/index.js",
+  "jsnext:main": "src/index.js",
+  "files": [
+    "src",
+    "lib",
+    "dist"
+  ],
   "scripts": {
+    "link": "npm link @ceddl/ceddl-polyfill",
     "dev": "copyfiles -u 4 node_modules/@ceddl/ceddl-aditional-inputs/dist/*.js demo/js/aditional-inputs/ && node demo/app.js",
     "build": "rollup -c && node_modules/uglify-js/bin/uglifyjs -o dist/index.min.js -- dist/index.js",
     "test": "rollup -c && node_modules/karma/bin/karma start karma.conf.js",
@@ -20,6 +28,7 @@
     "d.ts": "tsc dist/index.esm.js --declaration --allowJs --emitDeclarationOnly --outDir types"
   },
   "devDependencies": {
+    "@ceddl/ceddl-polyfill": "^0.9.4",
     "@ceddl/ceddl-aditional-inputs": "^0.9.3",
     "@rollup/plugin-typescript": "^8.3.0",
     "copyfiles": "^2.4.1",

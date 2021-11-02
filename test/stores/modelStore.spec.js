@@ -1,5 +1,5 @@
-import {eventbus} from '../../src/utils/eventbus';
-eventbus.__proto__.emit = sinon.spy();
+import { Eventbus } from '../../src/utils/eventbus';
+Eventbus.__proto__.emit = sinon.spy();
 import { ModelStore } from '../../src/stores/modelStore.js';
 
 describe('ModelStore:', () => {
@@ -54,7 +54,7 @@ describe('ModelStore:', () => {
         });
 
         afterEach(() => {
-            eventbus.emit.resetHistory();
+            Eventbus.emit.resetHistory();
         });
 
         describe('getStoredModels', () => {
@@ -142,25 +142,25 @@ describe('ModelStore:', () => {
             it('should emit delta events when a simple model is added', () => {
                 modelStore.storeModel(simpleModelMockKey, simpleModelMock);
 
-                sinon.assert.callCount(eventbus.emit, 3);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
-                sinon.assert.calledWith(eventbus.emit, `${simpleModelMockKey}`, simpleModelMock);
-                sinon.assert.calledWith(eventbus.emit, `${simpleModelMockKey}.a`, simpleModelMock.a);
+                sinon.assert.callCount(Eventbus.emit, 3);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
+                sinon.assert.calledWith(Eventbus.emit, `${simpleModelMockKey}`, simpleModelMock);
+                sinon.assert.calledWith(Eventbus.emit, `${simpleModelMockKey}.a`, simpleModelMock.a);
             });
 
             it('should be able to emit boolean events with false', () => {
                 modelStore.storeModel('booleankey', { k: false });
 
-                sinon.assert.callCount(eventbus.emit, 3);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
-                sinon.assert.calledWith(eventbus.emit, 'booleankey.k', false);
+                sinon.assert.callCount(Eventbus.emit, 3);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
+                sinon.assert.calledWith(Eventbus.emit, 'booleankey.k', false);
             });
 
             it('should emit delta events when a simple model is updated', () => {
                 modelStore.storeModel(simpleModelMockKey, simpleModelMock);
 
                 // Discard the events from the model creation.
-                eventbus.emit.resetHistory();
+                Eventbus.emit.resetHistory();
 
                 const newSimpleModelMock = { c: 'd' };
                 const expected = {
@@ -169,32 +169,32 @@ describe('ModelStore:', () => {
 
                 modelStore.storeModel(simpleModelMockKey, newSimpleModelMock);
 
-                sinon.assert.callCount(eventbus.emit, 4);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
-                sinon.assert.calledWith(eventbus.emit, `${simpleModelMockKey}`, expected);
-                sinon.assert.calledWith(eventbus.emit, `${simpleModelMockKey}.a`, undefined);
-                sinon.assert.calledWith(eventbus.emit, `${simpleModelMockKey}.c`, expected.c);
+                sinon.assert.callCount(Eventbus.emit, 4);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
+                sinon.assert.calledWith(Eventbus.emit, `${simpleModelMockKey}`, expected);
+                sinon.assert.calledWith(Eventbus.emit, `${simpleModelMockKey}.a`, undefined);
+                sinon.assert.calledWith(Eventbus.emit, `${simpleModelMockKey}.c`, expected.c);
             });
 
             it('should emit delta events when a nested model is added', () => {
                 modelStore.storeModel(nestedModelMockKey, nestedModelMock);
 
-                sinon.assert.callCount(eventbus.emit, 8);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}`, nestedModelMock);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.a`, nestedModelMock.a);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.b`, nestedModelMock.b),
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c`, nestedModelMock.c);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c.d`, nestedModelMock.c.d);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c.e`, nestedModelMock.c.e);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c.e.f`, nestedModelMock.c.e.f);
+                sinon.assert.callCount(Eventbus.emit, 8);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}`, nestedModelMock);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.a`, nestedModelMock.a);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.b`, nestedModelMock.b),
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c`, nestedModelMock.c);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c.d`, nestedModelMock.c.d);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c.e`, nestedModelMock.c.e);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c.e.f`, nestedModelMock.c.e.f);
             });
 
             it('should emit delta events when a nested model is updated', () => {
                 modelStore.storeModel(nestedModelMockKey, nestedModelMock);
 
                 // Discard the events from the model creation.
-                eventbus.emit.resetHistory();
+                Eventbus.emit.resetHistory();
 
                 const newNestedModelMock = {
                     a: 'b',
@@ -208,37 +208,37 @@ describe('ModelStore:', () => {
 
                 modelStore.storeModel(nestedModelMockKey, newNestedModelMock);
 
-                sinon.assert.callCount(eventbus.emit, 7);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}`, newNestedModelMock);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.b`, newNestedModelMock.b);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c`, newNestedModelMock.c);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c.d`, newNestedModelMock.c.d);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c.d.g`, newNestedModelMock.c.d.g);
-                sinon.assert.calledWith(eventbus.emit, `${nestedModelMockKey}.c.e`, undefined);
+                sinon.assert.callCount(Eventbus.emit, 7);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}`, newNestedModelMock);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.b`, newNestedModelMock.b);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c`, newNestedModelMock.c);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c.d`, newNestedModelMock.c.d);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c.d.g`, newNestedModelMock.c.d.g);
+                sinon.assert.calledWith(Eventbus.emit, `${nestedModelMockKey}.c.e`, undefined);
             });
 
             it('should emit delta events when a list model is added', () => {
                 modelStore.storeModel(listModelMockKey, listModelMock);
 
-                sinon.assert.callCount(eventbus.emit, 10);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}`, listModelMock);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g`, listModelMock.g);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h`, listModelMock.g.h);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.0`, listModelMock.g.h[0]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.0.i`, listModelMock.g.h[0].i);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.1`, listModelMock.g.h[1]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.1.i`, listModelMock.g.h[1].i);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.2`, listModelMock.g.h[2]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.2.i`, listModelMock.g.h[2].i);
+                sinon.assert.callCount(Eventbus.emit, 10);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}`, listModelMock);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g`, listModelMock.g);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h`, listModelMock.g.h);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.0`, listModelMock.g.h[0]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.0.i`, listModelMock.g.h[0].i);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.1`, listModelMock.g.h[1]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.1.i`, listModelMock.g.h[1].i);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.2`, listModelMock.g.h[2]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.2.i`, listModelMock.g.h[2].i);
             });
 
             it('should emit delta events when a list model is updated', () => {
                 modelStore.storeModel(listModelMockKey, listModelMock);
 
                 // Discard the events from the model creation.
-                eventbus.emit.resetHistory();
+                Eventbus.emit.resetHistory();
 
                 const newListedModuleMock = {
                     g: {
@@ -267,22 +267,22 @@ describe('ModelStore:', () => {
 
                 modelStore.storeModel(listModelMockKey, newListedModuleMock);
 
-                sinon.assert.callCount(eventbus.emit, 15);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}`, newListedModuleMock);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g`, newListedModuleMock.g);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h`, newListedModuleMock.g.h);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.1`, newListedModuleMock.g.h[1]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.1.i`, newListedModuleMock.g.h[1].i);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.2`, newListedModuleMock.g.h[2]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.2.i`, undefined);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.2.j`, newListedModuleMock.g.h[2].j);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.3`, newListedModuleMock.g.h[3]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.3.i`, newListedModuleMock.g.h[3].i);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.3.k`, newListedModuleMock.g.h[3].k);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.3.k.0`, newListedModuleMock.g.h[3].k[0]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.3.k.1`, newListedModuleMock.g.h[3].k[1]);
-                sinon.assert.calledWith(eventbus.emit, `${listModelMockKey}.g.h.3.k.2`, newListedModuleMock.g.h[3].k[2]);
+                sinon.assert.callCount(Eventbus.emit, 15);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:models', modelStore.getStoredModels());
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}`, newListedModuleMock);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g`, newListedModuleMock.g);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h`, newListedModuleMock.g.h);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.1`, newListedModuleMock.g.h[1]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.1.i`, newListedModuleMock.g.h[1].i);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.2`, newListedModuleMock.g.h[2]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.2.i`, undefined);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.2.j`, newListedModuleMock.g.h[2].j);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.3`, newListedModuleMock.g.h[3]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.3.i`, newListedModuleMock.g.h[3].i);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.3.k`, newListedModuleMock.g.h[3].k);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.3.k.0`, newListedModuleMock.g.h[3].k[0]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.3.k.1`, newListedModuleMock.g.h[3].k[1]);
+                sinon.assert.calledWith(Eventbus.emit, `${listModelMockKey}.g.h.3.k.2`, newListedModuleMock.g.h[3].k[2]);
 
             });
         });

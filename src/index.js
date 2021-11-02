@@ -1,4 +1,4 @@
-import {logger, eventbus} from './utils/eventbus.js';
+import {Logger, Eventbus} from './utils/eventbus.js';
 import { ModelFactory } from './models/model-factory.js';
 import { ModelStore } from './stores/modelStore.js';
 import { EventStore } from './stores/eventStore.js';
@@ -20,7 +20,7 @@ function _printFieldErrors(key, errors) {
             _printFieldErrors(key + '.' + error.field, error.msg);
         } else {
             var message = key+'.'+error.field+': '+error.msg;
-            logger.field(message);
+            Logger.field(message);
         }
     }
 }
@@ -41,9 +41,9 @@ Base.prototype.initialize = function() {
     } else {
         _modelStore.clearStore();
         _eventStore.clearStore();
-        eventbus.clearHistory();
+        Eventbus.clearHistory();
         _CeddlObserver.generateModelObjects();
-        eventbus.emit('initialize');
+        Eventbus.emit('initialize');
     }
 
 };
@@ -55,7 +55,7 @@ Base.prototype.emitEvent = function(name, data) {
 Base.prototype.emitModel = function(name, data) {
     var model = ModelFactory.models[name];
     if (!model) {
-        logger.field('Model does not exist for key: ' + name);
+        Logger.field('Model does not exist for key: ' + name);
         return;
     }
 
@@ -111,9 +111,10 @@ Object.defineProperty(Base.prototype, "modelFactory", {
  * @readonly
  * @returns {Object} Eventbus
  */
+
 Object.defineProperty(Base.prototype, "eventbus", {
     get: function eventbus() {
-       return eventbus;
+       return Eventbus;
     }
 });
 

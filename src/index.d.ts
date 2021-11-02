@@ -4,10 +4,9 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.3
 
-export { index as default };
-declare var index: Base;
-declare function Base(): void;
-declare class Base {
+export { ceddl as default };
+declare var ceddl: Ceddl;
+declare class Ceddl {
     /**
      * The initialize function makes it possible to allow async loading of the models
      * and initialize the html interface when ready.

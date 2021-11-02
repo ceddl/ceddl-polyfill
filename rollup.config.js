@@ -5,11 +5,4 @@ export default [{
     format: 'umd',
     name: 'ceddl'
   }
-},{
-  input: 'src/index.js',
-  output: {
-    file: 'dist/index.esm.js',
-    format: 'esm',
-    name: 'ceddl'
-  }
 }];

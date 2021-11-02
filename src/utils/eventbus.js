@@ -1,8 +1,9 @@
 // Private variables
 var _values = {};
 var _events;
-var logger = new Logger();
-var eventbus = new Eventbus();
+var Logger = new LoggerClass();
+var Eventbus = new EventbusClass();
+
 
 /**
  * @desc An EventBus is responsible for managing a set of listeners and publishing
@@ -13,7 +14,7 @@ var eventbus = new Eventbus();
  * The EventBus is designed to be generic enough to support all the different
  * contexts in which one might want to emit events.
  */
-function Eventbus() {}
+function EventbusClass() {}
 
 /**
  * Returns the correct callback array, or create a new one should it not
@@ -22,7 +23,7 @@ function Eventbus() {}
  * @returns {Array<Object>}
  * @memberof Eventbus
  */
-Eventbus.prototype.prepareEvent = function(name) {
+EventbusClass.prototype.prepareEvent = function(name) {
     if (!_events) _events = {};
     if (!_events[name]) _events[name] = [];
     return _events[name];
@@ -36,7 +37,7 @@ Eventbus.prototype.prepareEvent = function(name) {
  * @param {Function?} callback Function to remove from callback list.
  * @param {any?} scope Scope the supplied callback was bound to.
  */
-Eventbus.prototype.off = function(name, callback, scope) {
+EventbusClass.prototype.off = function(name, callback, scope) {
     var events = this.prepareEvent(name);
 
     if (callback) {
@@ -64,12 +65,12 @@ Eventbus.prototype.off = function(name, callback, scope) {
  * @param {any} scope - Optional context object to use when invoking the
  *   listener
  */
-Eventbus.prototype.on = function(name, callback, scope) {
+EventbusClass.prototype.on = function(name, callback, scope) {
     if (_values[name]) {
         try {
             callback.apply(scope || this, _values[name]);
         } catch(error) {
-            logger.error(error.message);
+            Logger.error(error.message);
         }
     }
 
@@ -86,12 +87,12 @@ Eventbus.prototype.on = function(name, callback, scope) {
  * @param {any} scope - Optional context object to use when invoking the
  *   listener
  */
-Eventbus.prototype.once = function(name, callback, scope) {
+EventbusClass.prototype.once = function(name, callback, scope) {
     if (_values[name]) {
         try {
             callback.apply(scope || this, _values[name]);
         } catch(error) {
-            logger.error(error.message);
+            Logger.error(error.message);
         }
     } else {
         this.prepareEvent(name).push({ callback: callback, scope: scope, once: true });
@@ -112,7 +113,7 @@ Eventbus.prototype.once = function(name, callback, scope) {
 *
 *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
 */
-Eventbus.prototype.emit = function(name) {
+EventbusClass.prototype.emit = function(name) {
     var events = this.prepareEvent(name).slice();
     var args;
     for (var j = 1, lengthj = arguments.length; j < lengthj; j++) {
@@ -130,7 +131,7 @@ Eventbus.prototype.emit = function(name) {
         try {
             callback.apply(scope, args);
         } catch (error) {
-            logger.error(error.message);
+            Logger.error(error.message);
         }
 
         if(events[i].once) {
@@ -145,7 +146,7 @@ Eventbus.prototype.emit = function(name) {
  * from firing with old data.
  * @memberof Eventbus
  */
-Eventbus.prototype.clearHistory = function() {
+EventbusClass.prototype.clearHistory = function() {
     Object.keys(_values).forEach(function (key) {
         delete _values[key];
     });
@@ -177,7 +178,7 @@ function logAndEmit(level, message) {
     }
 
 
-    eventbus.emit('ceddl:'+level, {
+    Eventbus.emit('ceddl:'+level, {
         exDescription: message,
         exFatal: level === 'error',
     });
@@ -192,19 +193,19 @@ function logAndEmit(level, message) {
  * times during a page load. the events produces by the logger are not part of
  * the eventstore.
  */
-function Logger () {
+function LoggerClass () {
     this.fieldErrors = [];
 }
 
-Logger.prototype.log = function(message) {
+LoggerClass.prototype.log = function(message) {
     logAndEmit('log', message);
 };
 
-Logger.prototype.info = function(message) {
+LoggerClass.prototype.info = function(message) {
     logAndEmit('info', message);
 };
 
-Logger.prototype.field = function(message) {
+LoggerClass.prototype.field = function(message) {
     if (this.fieldErrors.includes(message)) {
         return;
     }
@@ -212,17 +213,17 @@ Logger.prototype.field = function(message) {
     logAndEmit('warn', message);
 };
 
-Logger.prototype.warn = function(message) {
+LoggerClass.prototype.warn = function(message) {
     logAndEmit('warn', message);
 };
 
-Logger.prototype.error = function(message) {
+LoggerClass.prototype.error = function(message) {
     logAndEmit('error', message);
 };
 
 export {
-    logger,
-    eventbus
+    Logger,
+    Eventbus
 };
 
 

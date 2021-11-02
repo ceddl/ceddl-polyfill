@@ -1,4 +1,4 @@
-import { logger } from '../utils/eventbus.js';
+import { Logger } from '../utils/eventbus.js';
 import { assign } from '../utils/assign.js';
 import { Model } from './model.js';
 import { StringField } from './fields/string.field.js';
@@ -65,7 +65,7 @@ ModelFactoryClass.prototype.create = function(modelArgs) {
                     if (foreignModel) {
                         myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.pattern, mf);
                     } else {
-                        logger.warn('foreignModel on '+modelArgs.key+' is not defined');
+                        Logger.warn('foreignModel on '+modelArgs.key+' is not defined');
                     }
                 } else if (field.type === ArrayField) {
                     myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.pattern);
@@ -73,7 +73,7 @@ ModelFactoryClass.prototype.create = function(modelArgs) {
                     myModel.fields[key] = new field.type(key, values[key], field.required, field.pattern);
                 }
             } else {
-                logger.warn(field.type+' is not a valid field type.');
+                Logger.warn(field.type+' is not a valid field type.');
             }
         }
 

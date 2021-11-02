@@ -7,8 +7,9 @@
     // Private variables
     var _values = {};
     var _events;
-    var logger = new Logger();
-    var eventbus = new Eventbus();
+    var Logger = new LoggerClass();
+    var Eventbus = new EventbusClass();
+
 
     /**
      * @desc An EventBus is responsible for managing a set of listeners and publishing
@@ -19,7 +20,7 @@
      * The EventBus is designed to be generic enough to support all the different
      * contexts in which one might want to emit events.
      */
-    function Eventbus() {}
+    function EventbusClass() {}
 
     /**
      * Returns the correct callback array, or create a new one should it not
@@ -28,7 +29,7 @@
      * @returns {Array<Object>}
      * @memberof Eventbus
      */
-    Eventbus.prototype.prepareEvent = function(name) {
+    EventbusClass.prototype.prepareEvent = function(name) {
         if (!_events) _events = {};
         if (!_events[name]) _events[name] = [];
         return _events[name];
@@ -42,7 +43,7 @@
      * @param {Function?} callback Function to remove from callback list.
      * @param {any?} scope Scope the supplied callback was bound to.
      */
-    Eventbus.prototype.off = function(name, callback, scope) {
+    EventbusClass.prototype.off = function(name, callback, scope) {
         var events = this.prepareEvent(name);
 
         if (callback) {
@@ -70,12 +71,12 @@
      * @param {any} scope - Optional context object to use when invoking the
      *   listener
      */
-    Eventbus.prototype.on = function(name, callback, scope) {
+    EventbusClass.prototype.on = function(name, callback, scope) {
         if (_values[name]) {
             try {
                 callback.apply(scope || this, _values[name]);
             } catch(error) {
-                logger.error(error.message);
+                Logger.error(error.message);
             }
         }
 
@@ -92,12 +93,12 @@
      * @param {any} scope - Optional context object to use when invoking the
      *   listener
      */
-    Eventbus.prototype.once = function(name, callback, scope) {
+    EventbusClass.prototype.once = function(name, callback, scope) {
         if (_values[name]) {
             try {
                 callback.apply(scope || this, _values[name]);
             } catch(error) {
-                logger.error(error.message);
+                Logger.error(error.message);
             }
         } else {
             this.prepareEvent(name).push({ callback: callback, scope: scope, once: true });
@@ -118,7 +119,7 @@
     *
     *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
     */
-    Eventbus.prototype.emit = function(name) {
+    EventbusClass.prototype.emit = function(name) {
         var events = this.prepareEvent(name).slice();
         var args;
         for (var j = 1, lengthj = arguments.length; j < lengthj; j++) {
@@ -136,7 +137,7 @@
             try {
                 callback.apply(scope, args);
             } catch (error) {
-                logger.error(error.message);
+                Logger.error(error.message);
             }
 
             if(events[i].once) {
@@ -151,7 +152,7 @@
      * from firing with old data.
      * @memberof Eventbus
      */
-    Eventbus.prototype.clearHistory = function() {
+    EventbusClass.prototype.clearHistory = function() {
         Object.keys(_values).forEach(function (key) {
             delete _values[key];
         });
@@ -183,7 +184,7 @@
         }
 
 
-        eventbus.emit('ceddl:'+level, {
+        Eventbus.emit('ceddl:'+level, {
             exDescription: message,
             exFatal: level === 'error',
         });
@@ -198,19 +199,19 @@
      * times during a page load. the events produces by the logger are not part of
      * the eventstore.
      */
-    function Logger () {
+    function LoggerClass () {
         this.fieldErrors = [];
     }
 
-    Logger.prototype.log = function(message) {
+    LoggerClass.prototype.log = function(message) {
         logAndEmit('log', message);
     };
 
-    Logger.prototype.info = function(message) {
+    LoggerClass.prototype.info = function(message) {
         logAndEmit('info', message);
     };
 
-    Logger.prototype.field = function(message) {
+    LoggerClass.prototype.field = function(message) {
         if (this.fieldErrors.includes(message)) {
             return;
         }
@@ -218,11 +219,11 @@
         logAndEmit('warn', message);
     };
 
-    Logger.prototype.warn = function(message) {
+    LoggerClass.prototype.warn = function(message) {
         logAndEmit('warn', message);
     };
 
-    Logger.prototype.error = function(message) {
+    LoggerClass.prototype.error = function(message) {
         logAndEmit('error', message);
     };
 
@@ -768,7 +769,7 @@
                         if (foreignModel) {
                             myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.pattern, mf);
                         } else {
-                            logger.warn('foreignModel on '+modelArgs.key+' is not defined');
+                            Logger.warn('foreignModel on '+modelArgs.key+' is not defined');
                         }
                     } else if (field.type === ArrayField) {
                         myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.pattern);
@@ -776,7 +777,7 @@
                         myModel.fields[key] = new field.type(key, values[key], field.required, field.pattern);
                     }
                 } else {
-                    logger.warn(field.type+' is not a valid field type.');
+                    Logger.warn(field.type+' is not a valid field type.');
                 }
             }
 
@@ -1143,9 +1144,9 @@
      */
     function emitPropertyEvents(eventName, diff, baseKey, store) {
         if(store && store[baseKey] !== undefined && store[baseKey] !== null) {
-           eventbus.emit(eventName, store[baseKey]);
+           Eventbus.emit(eventName, store[baseKey]);
         } else {
-           eventbus.emit(eventName, undefined);
+           Eventbus.emit(eventName, undefined);
         }
 
         if (Array.isArray(diff)) {
@@ -1209,7 +1210,7 @@
         }
 
         if (!utils.isEmpty(diff)) {
-            eventbus.emit('ceddl:models', this.getStoredModels());
+            Eventbus.emit('ceddl:models', this.getStoredModels());
             emitPropertyEvents(key, diff, key, this.getStoredModels());
         }
 
@@ -1269,8 +1270,8 @@
             name: name,
             data: data,
         });
-        eventbus.emit('ceddl:events', this._eventStore);
-        eventbus.emit(name, data);
+        Eventbus.emit('ceddl:events', this._eventStore);
+        Eventbus.emit(name, data);
     };
 
 
@@ -1554,7 +1555,7 @@
                 _printFieldErrors(key + '.' + error.field, error.msg);
             } else {
                 var message = key+'.'+error.field+': '+error.msg;
-                logger.field(message);
+                Logger.field(message);
             }
         }
     }
@@ -1575,9 +1576,9 @@
         } else {
             _modelStore.clearStore();
             _eventStore.clearStore();
-            eventbus.clearHistory();
+            Eventbus.clearHistory();
             _CeddlObserver.generateModelObjects();
-            eventbus.emit('initialize');
+            Eventbus.emit('initialize');
         }
 
     };
@@ -1589,7 +1590,7 @@
     Base.prototype.emitModel = function(name, data) {
         var model = ModelFactory.models[name];
         if (!model) {
-            logger.field('Model does not exist for key: ' + name);
+            Logger.field('Model does not exist for key: ' + name);
             return;
         }
 
@@ -1645,9 +1646,10 @@
      * @readonly
      * @returns {Object} Eventbus
      */
+
     Object.defineProperty(Base.prototype, "eventbus", {
         get: function eventbus() {
-           return eventbus;
+           return Eventbus;
         }
     });
 
