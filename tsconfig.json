@@ -9,6 +9,7 @@
     "esModuleInterop": false,
     "outDir": "output",
     "rootDir": "./",
+    "typeRoots": ["./types"]
   }
 ,
   "include": ["./test/**/*.ts"]

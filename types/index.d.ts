@@ -4,10 +4,9 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.3
 
-export as namespace ceddl;
+export as namespace "@ceddl/ceddl-polyfill";
 
 declare const ceddl: ceddlStatic;
-export = ceddl;
 
 
 interface ceddlStatic {
@@ -23,6 +22,6 @@ interface ceddlStatic {
 
 }
 
-declare namespace ceddl {
+declare namespace "@ceddl/ceddl-polyfill" {
 
 }
