@@ -25,7 +25,7 @@
     "test": "rollup -c && node_modules/karma/bin/karma start karma.conf.js",
     "lint": "node_modules/eslint/bin/eslint.js src/**",
     "typescript": "rollup --config rollup.ts.config.js",
-    "d.ts": "tsc dist/index.esm.js --declaration --allowJs --emitDeclarationOnly --outDir types"
+    "d.ts": "tsc src/index.js --declaration --allowJs --emitDeclarationOnly --outDir types"
   },
   "devDependencies": {
     "@ceddl/ceddl-polyfill": "^0.9.4",
