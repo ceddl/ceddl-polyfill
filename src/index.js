@@ -31,8 +31,10 @@ function Ceddl() {
 }
 
 /**
- * The initialize function makes it possible to allow async loading of the models
- * and initialize the html interface when ready.
+ * The initialize function makes it possible to do async loading of the model
+ * definitions and initialize the html interface when ready. The initialize
+ * also clears the events and models stored allowing ceddl to be used in single
+ * page applications.
  */
 Ceddl.prototype.initialize = function() {
     if(!_clickObserver && !_CeddlObserver) {
@@ -48,10 +50,39 @@ Ceddl.prototype.initialize = function() {
 
 };
 
+/**
+ * A call to emitEvent will add the event to the event store and process the event
+ * onto the eventbus. If you have a large number of different events on a page, the
+ * convention is to use colons to namespace them: "poll:start", or "change:selection".
+ * @example
+ *    ceddl.emitEvent('poll:start', {
+ *       url: window.location.href,
+ *       trigger: 'shipping view more than 5s'
+ *    });
+ */
+
 Ceddl.prototype.emitEvent = function(name, data) {
     _eventStore.storeEvent(name, data);
 };
 
+/**
+ * A call to emitModel will perform the following sequance:
+ *   - Validate the data input against the a root model definitions.
+ *   - Store the data in the model store.
+ *   - Send main event on the eventbus.
+ *   - Recursively moves through the delta to publish the smallest changes under a specific eventName. The dot "page.title" will be used as a namespace separator.
+ * @param name
+ * @param data
+ * @example
+ *    ceddl.emitModel('funnel', {
+ *      category: 'single_sign_on',
+ *      name: 'register',
+ *      stepName: password set,
+ *      step: 2
+ *    });
+ *
+ * In many cases where this function used the html interface will give you a more maintanable / testable solution.
+ */
 Ceddl.prototype.emitModel = function(name, data) {
     var model = ModelFactory.models[name];
     if (!model) {
@@ -93,7 +124,7 @@ Ceddl.prototype.getEvents = function() {
 };
 
 /**
- * Get the model factory
+ * Creating, configuring data models for datalayer
  *
  * @readonly
  * @static

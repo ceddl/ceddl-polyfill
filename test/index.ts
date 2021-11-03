@@ -1,5 +1,5 @@
-import ceddl from '@ceddl/ceddl-polyfill'
-import { ModelConfig } from '../types';
+import ceddl, { ModelConfig } from '@ceddl/ceddl-polyfill'
+
 console.log(ceddl.eventbus);
 const myModel: ModelConfig = {
     key: 'product',
@@ -27,3 +27,4 @@ const myModel: ModelConfig = {
     }
 }
 ceddl.modelFactory.create(myModel)
+ceddl.eventbus.emit('jan.klaas', {}, {});
