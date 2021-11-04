@@ -27,7 +27,6 @@
     "lint": "node_modules/eslint/bin/eslint.js src/**"
   },
   "devDependencies": {
-    "@ceddl/ceddl-polyfill": "^0.9.4",
     "@ceddl/ceddl-aditional-inputs": "^0.9.3",
     "@rollup/plugin-typescript": "^8.3.0",
     "copyfiles": "^2.4.1",
