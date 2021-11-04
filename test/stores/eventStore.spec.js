@@ -1,6 +1,6 @@
-import {eventbus} from '../../src/utils/eventbus';
-eventbus.__proto__.emit = sinon.spy();
-import EventStore from '../../src/stores/eventStore.js';
+import { Eventbus } from '../../src/utils/eventbus';
+Eventbus.__proto__.emit = sinon.spy();
+import { EventStore } from '../../src/stores/eventStore.js';
 
 describe('EventStore:', () => {
     it('should be a constructor', () => {
@@ -20,7 +20,7 @@ describe('EventStore:', () => {
         });
 
         afterEach(() => {
-            eventbus.emit.resetHistory();
+            Eventbus.emit.resetHistory();
         });
 
         describe('getStoredEvents:', () => {
@@ -87,9 +87,9 @@ describe('EventStore:', () => {
 
             it('should dispatch the event on the event bus', () => {
                 eventStore.storeEvent(testEvent, testData);
-                sinon.assert.callCount(eventbus.emit, 2);
-                sinon.assert.calledWith(eventbus.emit, 'ceddl:events', eventStore.getStoredEvents());
-                sinon.assert.calledWith(eventbus.emit, testEvent, testData);
+                sinon.assert.callCount(Eventbus.emit, 2);
+                sinon.assert.calledWith(Eventbus.emit, 'ceddl:events', eventStore.getStoredEvents());
+                sinon.assert.calledWith(Eventbus.emit, testEvent, testData);
             });
         });
 

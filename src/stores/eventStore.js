@@ -1,4 +1,4 @@
-import {eventbus} from '../utils/eventbus';
+import { Eventbus } from '../utils/eventbus.js';
 
 /**
  * Simple store that saves events before dispatching them on the event bus.
@@ -43,8 +43,8 @@ EventStore.prototype.storeEvent = function(name, data) {
         name: name,
         data: data,
     });
-    eventbus.emit('ceddl:events', this._eventStore);
-    eventbus.emit(name, data);
+    Eventbus.emit('ceddl:events', this._eventStore);
+    Eventbus.emit(name, data);
 };
 
 
@@ -57,4 +57,4 @@ EventStore.prototype.clearStore = function() {
 };
 
 
-export default EventStore;
+export { EventStore };

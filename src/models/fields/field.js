@@ -57,4 +57,4 @@ Field.prototype.getErrors = function() {
     return this.error;
 };
 
-export default Field;
+export { Field };

@@ -1,4 +1,4 @@
-import utils from '../utils/utils';
+import { utils } from '../utils/utils.js';
 
 /**
  * @desc This observer intended to monitor and receive analytics data from html.
@@ -113,4 +113,4 @@ CeddlObserver.prototype.init = function() {
     this.generateModelObjects();
 };
 
-export default CeddlObserver;
+export { CeddlObserver };

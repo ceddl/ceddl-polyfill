@@ -1,4 +1,4 @@
-import Field from './field';
+import { Field } from './field';
 
 /**
  * Create a ListField on a model to create a relation between that model and many instances of another Model
@@ -97,4 +97,4 @@ ListField.prototype.getErrors = function() {
 };
 
 
-export default ListField;
+export { ListField };

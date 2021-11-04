@@ -1,20 +1,11 @@
-import assign from './assign';
-
-/**
- * Singleton Class for instantiating utillity's. Functions need to be
- * functional / performant and stateless to promote re-use
- *
- * @export
- * @class Utils
- */
-function Utils () {}
+import { assign } from './assign.js';
 
 /**
  * [isDate description]
  * @param  {[type]}  d [description]
  * @return {Boolean}   [description]
  */
-Utils.prototype.isDate = function(d) {
+var isDate = function(d) {
     return d instanceof Date;
 };
 
@@ -23,7 +14,7 @@ Utils.prototype.isDate = function(d) {
  * @param  {[type]}  o [description]
  * @return {Boolean}   [description]
  */
-Utils.prototype.isEmpty = function(o) {
+var isEmpty = function(o) {
     return Object.keys(o).length === 0;
 };
 
@@ -32,7 +23,7 @@ Utils.prototype.isEmpty = function(o) {
  * @param  {[type]}  o [description]
  * @return {Boolean}   [description]
  */
-Utils.prototype.isObject = function(o) {
+var isObject = function(o) {
     return o != null && o instanceof Object;
 };
 
@@ -41,7 +32,7 @@ Utils.prototype.isObject = function(o) {
  * @param  {[type]} o [description]
  * @return {[type]}   [description]
  */
-Utils.prototype.properObject = function(o) {
+var properObject = function(o) {
     if (this.isObject(o) && !o.hasOwnProperty) {
         return Object.assign({}, o);
     } else {
@@ -49,7 +40,7 @@ Utils.prototype.properObject = function(o) {
     }
 };
 
-Utils.prototype.toCamelCase = function(attrString) {
+var toCamelCase = function(attrString) {
     return attrString.replace(/-([a-z])/g, function (g) {
         return g[1].toUpperCase();
     });
@@ -60,7 +51,7 @@ Utils.prototype.toCamelCase = function(attrString) {
  * @param  {object} o
  * @return {boolean}
  */
-Utils.prototype.isArrayOfStrings = function(o) {
+var isArrayOfStrings = function(o) {
     if (toString.call(o) != '[object Array]') {
         return false;
     }
@@ -79,7 +70,7 @@ Utils.prototype.isArrayOfStrings = function(o) {
  * @returns {(Object|Array)}
  * @memberof ceddlUtils
  */
-Utils.prototype.simpleDeepClone = function(target) {
+var simpleDeepClone = function(target) {
     var that = this;
     var isArray = Array.isArray(target);
     var isObject = !isArray && this.isObject(target);
@@ -111,7 +102,7 @@ Utils.prototype.simpleDeepClone = function(target) {
  * @returns {Object} Returns a object containing pointers and values
  * that have changed between lhs and rhs.
  */
-Utils.prototype.diff = function(lhs, rhs) {
+var diff = function(lhs, rhs) {
     var that = this;
     var tmp1, tmp2, tmp3;
     if (lhs === rhs) {
@@ -168,7 +159,7 @@ Utils.prototype.diff = function(lhs, rhs) {
  *
  * @param {Function} callback function
  */
-Utils.prototype.pageReady = function(callback) {
+var pageReady = function(callback) {
     var isReady;
     if (document.attachEvent) {
         isReady = document.readyState === "complete";
@@ -189,7 +180,7 @@ Utils.prototype.pageReady = function(callback) {
  * @param {Object} element from the DOM
  * @returns {Object} atribute data without prefixes
  */
-Utils.prototype.getAllElementsAttributes = function(element, opt) {
+var getAllElementsAttributes = function(element, opt) {
     var obj = {};
     if(element) {
         obj = this.simpleDeepClone(element.dataset);
@@ -217,7 +208,7 @@ Utils.prototype.getAllElementsAttributes = function(element, opt) {
  * @param {Object} element from the DOM
  * @returns {String} unique string for a dom tree position.
  */
-Utils.prototype.perfXtagString = function(element) {
+var perfXtagString = function(element) {
     var paths = [];
     var index = 0;
     var hasindex = false;
@@ -269,7 +260,7 @@ Utils.prototype.perfXtagString = function(element) {
  * @param {boolean} immediate event on invoke
  * @returns {Function} Returns the new debounced function.
  */
-Utils.prototype.debounce = function(func, wait, immediate) {
+var debounce = function(func, wait, immediate) {
     var timeout, args, context, timestamp, result;
     if (null == wait) wait = 100;
 
@@ -304,6 +295,19 @@ Utils.prototype.debounce = function(func, wait, immediate) {
     return debounced;
 };
 
+var utils = {
+    isDate,
+    isEmpty,
+    isObject,
+    properObject,
+    toCamelCase,
+    isArrayOfStrings,
+    simpleDeepClone,
+    diff,
+    pageReady,
+    getAllElementsAttributes,
+    perfXtagString,
+    debounce
+};
 
-
-export default (new Utils());
+export { utils };

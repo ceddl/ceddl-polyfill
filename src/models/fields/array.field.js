@@ -1,4 +1,4 @@
-import Field from './field';
+import { Field } from './field.js';
 
 
 function ArrayField(field, key, list, required) {
@@ -66,5 +66,5 @@ ArrayField.prototype.getErrors = function() {
 };
 
 
-export default ArrayField;
+export { ArrayField };
 

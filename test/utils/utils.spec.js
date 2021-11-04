@@ -1,6 +1,6 @@
 "use strict";
 
-import utils from '../../src/utils/utils.js';
+import { utils } from '../../src/utils/utils.js';
 
 describe('util', () => {
     describe('simpleDeepClone:', () => {

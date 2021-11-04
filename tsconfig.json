@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "lib": ["es2017", "dom"],
+    "strict": true,
+    "esModuleInterop": false,
+    "outDir": "output",
+    "rootDir": "./",
+    "typeRoots": [ "./types", "./node_modules/@types" ],
+    "paths": {
+      "@ceddl/*": ["ceddl__*"]
+    }
+  },
+  "include": ["./test/**/*.ts", "./types/**/*.ts"]
+}
+

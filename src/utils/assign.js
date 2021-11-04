@@ -29,4 +29,4 @@ if (typeof Object.assign == 'function') {
     };
 }
 
-export default assign;
+export { assign };

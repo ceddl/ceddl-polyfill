@@ -1,4 +1,4 @@
-import Field from './field';
+import { Field } from './field.js';
 
 /**
  * Create a BooleanField on a model to validate a boolean value
@@ -42,4 +42,4 @@ BooleanField.isList = function() {
 BooleanField.prototype = Object.create(Field.prototype);
 BooleanField.prototype.constructor = BooleanField;
 
-export default BooleanField;
+export { BooleanField };

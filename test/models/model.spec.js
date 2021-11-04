@@ -1,4 +1,4 @@
-import ModelFactory from '../../src/models/model-factory.js';
+import { ModelFactory } from '../../src/models/model-factory.js';
 
 describe('Model', () => {
     function createModel() {

@@ -1,14 +1,15 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global = global || self, global.ceddl = factory());
-}(this, (function () { 'use strict';
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.ceddl = factory());
+})(this, (function () { 'use strict';
 
     // Private variables
     var _values = {};
     var _events;
-    var logger = new Logger();
-    var eventbus = new Eventbus();
+    var Logger = new LoggerClass();
+    var Eventbus = new EventbusClass();
+
 
     /**
      * @desc An EventBus is responsible for managing a set of listeners and publishing
@@ -19,7 +20,7 @@
      * The EventBus is designed to be generic enough to support all the different
      * contexts in which one might want to emit events.
      */
-    function Eventbus() {}
+    function EventbusClass() {}
 
     /**
      * Returns the correct callback array, or create a new one should it not
@@ -28,7 +29,7 @@
      * @returns {Array<Object>}
      * @memberof Eventbus
      */
-    Eventbus.prototype.prepareEvent = function(name) {
+    EventbusClass.prototype.prepareEvent = function(name) {
         if (!_events) _events = {};
         if (!_events[name]) _events[name] = [];
         return _events[name];
@@ -42,7 +43,7 @@
      * @param {Function?} callback Function to remove from callback list.
      * @param {any?} scope Scope the supplied callback was bound to.
      */
-    Eventbus.prototype.off = function(name, callback, scope) {
+    EventbusClass.prototype.off = function(name, callback, scope) {
         var events = this.prepareEvent(name);
 
         if (callback) {
@@ -70,12 +71,12 @@
      * @param {any} scope - Optional context object to use when invoking the
      *   listener
      */
-    Eventbus.prototype.on = function(name, callback, scope) {
+    EventbusClass.prototype.on = function(name, callback, scope) {
         if (_values[name]) {
             try {
                 callback.apply(scope || this, _values[name]);
             } catch(error) {
-                logger.error(error.message);
+                Logger.error(error.message);
             }
         }
 
@@ -92,12 +93,12 @@
      * @param {any} scope - Optional context object to use when invoking the
      *   listener
      */
-    Eventbus.prototype.once = function(name, callback, scope) {
+    EventbusClass.prototype.once = function(name, callback, scope) {
         if (_values[name]) {
             try {
                 callback.apply(scope || this, _values[name]);
             } catch(error) {
-                logger.error(error.message);
+                Logger.error(error.message);
             }
         } else {
             this.prepareEvent(name).push({ callback: callback, scope: scope, once: true });
@@ -118,7 +119,7 @@
     *
     *   eventbus.emit('someEvent', 'abc'); // logs 'abc'
     */
-    Eventbus.prototype.emit = function(name) {
+    EventbusClass.prototype.emit = function(name) {
         var events = this.prepareEvent(name).slice();
         var args;
         for (var j = 1, lengthj = arguments.length; j < lengthj; j++) {
@@ -136,7 +137,7 @@
             try {
                 callback.apply(scope, args);
             } catch (error) {
-                logger.error(error.message);
+                Logger.error(error.message);
             }
 
             if(events[i].once) {
@@ -151,7 +152,7 @@
      * from firing with old data.
      * @memberof Eventbus
      */
-    Eventbus.prototype.clearHistory = function() {
+    EventbusClass.prototype.clearHistory = function() {
         Object.keys(_values).forEach(function (key) {
             delete _values[key];
         });
@@ -183,7 +184,7 @@
         }
 
 
-        eventbus.emit('ceddl:'+level, {
+        Eventbus.emit('ceddl:'+level, {
             exDescription: message,
             exFatal: level === 'error',
         });
@@ -198,19 +199,19 @@
      * times during a page load. the events produces by the logger are not part of
      * the eventstore.
      */
-    function Logger () {
+    function LoggerClass () {
         this.fieldErrors = [];
     }
 
-    Logger.prototype.log = function(message) {
+    LoggerClass.prototype.log = function(message) {
         logAndEmit('log', message);
     };
 
-    Logger.prototype.info = function(message) {
+    LoggerClass.prototype.info = function(message) {
         logAndEmit('info', message);
     };
 
-    Logger.prototype.field = function(message) {
+    LoggerClass.prototype.field = function(message) {
         if (this.fieldErrors.includes(message)) {
             return;
         }
@@ -218,11 +219,11 @@
         logAndEmit('warn', message);
     };
 
-    Logger.prototype.warn = function(message) {
+    LoggerClass.prototype.warn = function(message) {
         logAndEmit('warn', message);
     };
 
-    Logger.prototype.error = function(message) {
+    LoggerClass.prototype.error = function(message) {
         logAndEmit('error', message);
     };
 
@@ -256,8 +257,6 @@
           return to;
         };
     }
-
-    var assign$1 = assign;
 
     /**
      * Defines an abstract data model
@@ -716,17 +715,17 @@
     /**
      * Class for creating models
      *
-     * @class ModelFactory
+     * @class ModelFactoryClass
      */
 
-    function ModelFactory () {
+    function ModelFactoryClass () {
         this.models = {};
     }
 
     /**
      * getter function exposing all the field types on the modelfactory api
      */
-    Object.defineProperty(ModelFactory.prototype, "fields", {
+    Object.defineProperty(ModelFactoryClass.prototype, "fields", {
         get: function fields() {
             return {
                 StringField: StringField,
@@ -748,7 +747,7 @@
      * @returns {Model} The created model
      * @memberof ModelFactory
      */
-    ModelFactory.prototype.create = function(modelArgs) {
+    ModelFactoryClass.prototype.create = function(modelArgs) {
         var mf = this;
         var model = function(values) {
             var myModel;
@@ -770,7 +769,7 @@
                         if (foreignModel) {
                             myModel.fields[key] = new field.type(foreignModel, key, values[key], field.required, field.pattern, mf);
                         } else {
-                            logger.warn('foreignModel on '+modelArgs.key+' is not defined');
+                            Logger.warn('foreignModel on '+modelArgs.key+' is not defined');
                         }
                     } else if (field.type === ArrayField) {
                         myModel.fields[key] = new field.type(field.fieldType, key, values[key], field.required, field.pattern);
@@ -778,7 +777,7 @@
                         myModel.fields[key] = new field.type(key, values[key], field.required, field.pattern);
                     }
                 } else {
-                    logger.warn(field.type+' is not a valid field type.');
+                    Logger.warn(field.type+' is not a valid field type.');
                 }
             }
 
@@ -791,7 +790,7 @@
                 fields = new mf.models[modelArgs.extends].getFields();
             }
 
-            assign$1(fields, modelArgs.fields);
+            assign(fields, modelArgs.fields);
             return fields;
         };
 
@@ -803,24 +802,14 @@
 
         return model;
     };
-
-    var passModelFactory = (new ModelFactory());
-
-    /**
-     * Singleton Class for instantiating utillity's. Functions need to be
-     * functional / performant and stateless to promote re-use
-     *
-     * @export
-     * @class Utils
-     */
-    function Utils () {}
+    var ModelFactory = new ModelFactoryClass();
 
     /**
      * [isDate description]
      * @param  {[type]}  d [description]
      * @return {Boolean}   [description]
      */
-    Utils.prototype.isDate = function(d) {
+    var isDate = function(d) {
         return d instanceof Date;
     };
 
@@ -829,7 +818,7 @@
      * @param  {[type]}  o [description]
      * @return {Boolean}   [description]
      */
-    Utils.prototype.isEmpty = function(o) {
+    var isEmpty = function(o) {
         return Object.keys(o).length === 0;
     };
 
@@ -838,7 +827,7 @@
      * @param  {[type]}  o [description]
      * @return {Boolean}   [description]
      */
-    Utils.prototype.isObject = function(o) {
+    var isObject = function(o) {
         return o != null && o instanceof Object;
     };
 
@@ -847,7 +836,7 @@
      * @param  {[type]} o [description]
      * @return {[type]}   [description]
      */
-    Utils.prototype.properObject = function(o) {
+    var properObject = function(o) {
         if (this.isObject(o) && !o.hasOwnProperty) {
             return Object.assign({}, o);
         } else {
@@ -855,7 +844,7 @@
         }
     };
 
-    Utils.prototype.toCamelCase = function(attrString) {
+    var toCamelCase = function(attrString) {
         return attrString.replace(/-([a-z])/g, function (g) {
             return g[1].toUpperCase();
         });
@@ -866,7 +855,7 @@
      * @param  {object} o
      * @return {boolean}
      */
-    Utils.prototype.isArrayOfStrings = function(o) {
+    var isArrayOfStrings = function(o) {
         if (toString.call(o) != '[object Array]') {
             return false;
         }
@@ -885,7 +874,7 @@
      * @returns {(Object|Array)}
      * @memberof ceddlUtils
      */
-    Utils.prototype.simpleDeepClone = function(target) {
+    var simpleDeepClone = function(target) {
         var that = this;
         var isArray = Array.isArray(target);
         var isObject = !isArray && this.isObject(target);
@@ -917,7 +906,7 @@
      * @returns {Object} Returns a object containing pointers and values
      * that have changed between lhs and rhs.
      */
-    Utils.prototype.diff = function(lhs, rhs) {
+    var diff = function(lhs, rhs) {
         var that = this;
         var tmp1, tmp2, tmp3;
         if (lhs === rhs) {
@@ -938,7 +927,7 @@
             } else {
                 tmp1 = {};
                 tmp1[key] = undefined;
-                return assign$1(acc, tmp1);
+                return assign(acc, tmp1);
             }
         }, {});
 
@@ -954,7 +943,7 @@
             if (!l.hasOwnProperty(key)) {
                 tmp2 = {};
                 tmp2[key] = r[key];
-                return assign$1(acc, tmp2); // return added r key
+                return assign(acc, tmp2); // return added r key
             }
 
             var difference = that.diff(l[key], r[key]);
@@ -965,7 +954,7 @@
 
             tmp3 = {};
             tmp3[key] = difference;
-            return assign$1(acc, tmp3); // return updated key
+            return assign(acc, tmp3); // return updated key
         }, deletedValues);
     };
 
@@ -974,7 +963,7 @@
      *
      * @param {Function} callback function
      */
-    Utils.prototype.pageReady = function(callback) {
+    var pageReady = function(callback) {
         var isReady;
         if (document.attachEvent) {
             isReady = document.readyState === "complete";
@@ -995,7 +984,7 @@
      * @param {Object} element from the DOM
      * @returns {Object} atribute data without prefixes
      */
-    Utils.prototype.getAllElementsAttributes = function(element, opt) {
+    var getAllElementsAttributes = function(element, opt) {
         var obj = {};
         if(element) {
             obj = this.simpleDeepClone(element.dataset);
@@ -1023,7 +1012,7 @@
      * @param {Object} element from the DOM
      * @returns {String} unique string for a dom tree position.
      */
-    Utils.prototype.perfXtagString = function(element) {
+    var perfXtagString = function(element) {
         var paths = [];
         var index = 0;
         var hasindex = false;
@@ -1075,7 +1064,7 @@
      * @param {boolean} immediate event on invoke
      * @returns {Function} Returns the new debounced function.
      */
-    Utils.prototype.debounce = function(func, wait, immediate) {
+    var debounce = function(func, wait, immediate) {
         var timeout, args, context, timestamp, result;
         if (null == wait) wait = 100;
 
@@ -1110,9 +1099,20 @@
         return debounced;
     };
 
-
-
-    var utils = (new Utils());
+    var utils = {
+        isDate,
+        isEmpty,
+        isObject,
+        properObject,
+        toCamelCase,
+        isArrayOfStrings,
+        simpleDeepClone,
+        diff,
+        pageReady,
+        getAllElementsAttributes,
+        perfXtagString,
+        debounce
+    };
 
     /**
      * Publish a delta event on the event bus with all nested data that changed.
@@ -1144,9 +1144,9 @@
      */
     function emitPropertyEvents(eventName, diff, baseKey, store) {
         if(store && store[baseKey] !== undefined && store[baseKey] !== null) {
-           eventbus.emit(eventName, store[baseKey]);
+           Eventbus.emit(eventName, store[baseKey]);
         } else {
-           eventbus.emit(eventName, undefined);
+           Eventbus.emit(eventName, undefined);
         }
 
         if (Array.isArray(diff)) {
@@ -1210,7 +1210,7 @@
         }
 
         if (!utils.isEmpty(diff)) {
-            eventbus.emit('ceddl:models', this.getStoredModels());
+            Eventbus.emit('ceddl:models', this.getStoredModels());
             emitPropertyEvents(key, diff, key, this.getStoredModels());
         }
 
@@ -1270,8 +1270,8 @@
             name: name,
             data: data,
         });
-        eventbus.emit('ceddl:events', this._eventStore);
-        eventbus.emit(name, data);
+        Eventbus.emit('ceddl:events', this._eventStore);
+        Eventbus.emit(name, data);
     };
 
 
@@ -1333,7 +1333,7 @@
             baseObj.href = element.href;
         }
 
-        assign$1(baseObj, utils.getAllElementsAttributes(element));
+        assign(baseObj, utils.getAllElementsAttributes(element));
 
         delete baseObj.ceddl;
         return baseObj;
@@ -1358,7 +1358,7 @@
             baseObj.href = element.action;
         }
 
-        assign$1(baseObj, utils.getAllElementsAttributes(element));
+        assign(baseObj, utils.getAllElementsAttributes(element));
 
         delete baseObj.ceddl;
         return baseObj;
@@ -1540,7 +1540,7 @@
         this.generateModelObjects();
     };
 
-    var _modelStore, _eventStore, _clickObserver, _CEDDLObserver;
+    var _modelStore, _eventStore, _clickObserver, _CeddlObserver;
 
     /**
      * Method used for printing field errors on models
@@ -1555,42 +1555,73 @@
                 _printFieldErrors(key + '.' + error.field, error.msg);
             } else {
                 var message = key+'.'+error.field+': '+error.msg;
-                logger.field(message);
+                Logger.field(message);
             }
         }
     }
 
-    function Base() {
+    function Ceddl() {
         _modelStore = new ModelStore();
         _eventStore = new EventStore();
     }
 
     /**
-     * The initialize function makes it possible to allow async loading of the models
-     * and initialize the html interface when ready.
+     * The initialize function makes it possible to do async loading of the model
+     * definitions and initialize the html interface when ready. The initialize
+     * also clears the events and models stored allowing ceddl to be used in single
+     * page applications.
      */
-    Base.prototype.initialize = function() {
-        if(!_clickObserver && !_CEDDLObserver) {
+    Ceddl.prototype.initialize = function() {
+        if(!_clickObserver && !_CeddlObserver) {
             _clickObserver = new ClickObserver(this);
-            _CEDDLObserver = new CeddlObserver(this, passModelFactory);
+            _CeddlObserver = new CeddlObserver(this, ModelFactory);
         } else {
             _modelStore.clearStore();
             _eventStore.clearStore();
-            eventbus.clearHistory();
-            _CEDDLObserver.generateModelObjects();
-            eventbus.emit('initialize');
+            Eventbus.clearHistory();
+            _CeddlObserver.generateModelObjects();
+            Eventbus.emit('initialize');
         }
 
     };
 
-    Base.prototype.emitEvent = function(name, data) {
+    /**
+     * A call to emitEvent will add the event to the event store and process the event
+     * onto the eventbus. If you have a large number of different events on a page, the
+     * convention is to use colons to namespace them: "poll:start", or "change:selection".
+     * @example
+     *    ceddl.emitEvent('poll:start', {
+     *       url: window.location.href,
+     *       trigger: 'shipping view more than 5s'
+     *    });
+     */
+
+    Ceddl.prototype.emitEvent = function(name, data) {
         _eventStore.storeEvent(name, data);
     };
 
-    Base.prototype.emitModel = function(name, data) {
-        var model = passModelFactory.models[name];
+    /**
+     * A call to emitModel will perform the following sequance:
+     *   - Validate the data input against the a root model definitions.
+     *   - Store the data in the model store.
+     *   - Send main event on the eventbus.
+     *   - Recursively moves through the delta to publish the smallest changes under a specific eventName. The dot "page.title" will be used as a namespace separator.
+     * @param name
+     * @param data
+     * @example
+     *    ceddl.emitModel('funnel', {
+     *      category: 'single_sign_on',
+     *      name: 'register',
+     *      stepName: password set,
+     *      step: 2
+     *    });
+     *
+     * In many cases where this function used the html interface will give you a more maintanable / testable solution.
+     */
+    Ceddl.prototype.emitModel = function(name, data) {
+        var model = ModelFactory.models[name];
         if (!model) {
-            logger.field('Model does not exist for key: ' + name);
+            Logger.field('Model does not exist for key: ' + name);
             return;
         }
 
@@ -1600,7 +1631,7 @@
             return;
         }
 
-        var object = new passModelFactory.models[name](data);
+        var object = new ModelFactory.models[name](data);
         var validator = object.validate();
 
         if (validator.valid) {
@@ -1615,7 +1646,7 @@
      * Returns all stored models.
      * @returns {Object}
      */
-    Base.prototype.getModels = function() {
+    Ceddl.prototype.getModels = function() {
         return _modelStore.getStoredModels();
     };
 
@@ -1623,20 +1654,20 @@
      * Returns all stored events.
      * @returns {Array}
      */
-    Base.prototype.getEvents = function() {
+    Ceddl.prototype.getEvents = function() {
         return _eventStore.getStoredEvents();
     };
 
     /**
-     * Get the model factory
+     * Creating, configuring data models for datalayer
      *
      * @readonly
      * @static
      * @returns {Object} ModelFactory
      */
-    Object.defineProperty(Base.prototype, "modelFactory", {
+    Object.defineProperty(Ceddl.prototype, "modelFactory", {
         get: function modelFactory() {
-           return passModelFactory;
+           return ModelFactory;
         }
     });
 
@@ -1646,14 +1677,15 @@
      * @readonly
      * @returns {Object} Eventbus
      */
-    Object.defineProperty(Base.prototype, "eventbus", {
-        get: function eventbus$1() {
-           return eventbus;
+
+    Object.defineProperty(Ceddl.prototype, "eventbus", {
+        get: function eventbus() {
+           return Eventbus;
         }
     });
 
-    var index = (new Base());
+    var index = (new Ceddl());
 
     return index;
 
-})));
+}));

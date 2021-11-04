@@ -1,5 +1,5 @@
-import ListField from '../../../src/models/fields/list.field.js';
-import ModelFactory from '../../../src/models/model-factory.js';
+import { ListField } from '../../../src/models/fields/list.field.js';
+import { ModelFactory } from '../../../src/models/model-factory.js';
 
 describe('ListField', () => {
     let testModel;
