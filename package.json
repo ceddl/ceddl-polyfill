@@ -1,6 +1,6 @@
 {
   "name": "@ceddl/ceddl-polyfill",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "customer experience digital data layer polyfill. Bridging the gap between the 2015 ceddl spec and the browsers",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
   "main": "/dist/index.js",
   "module": "/src/index.js",
   "jsnext:main": "/src/index.js",
-  "typings": "/types/index.d.ts",
+  "typings": "/types/ceddl__ceddl-polyfill/index.d.ts",
   "files": [
     "src",
     "lib",
