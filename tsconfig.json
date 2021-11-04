@@ -9,8 +9,11 @@
     "esModuleInterop": false,
     "outDir": "output",
     "rootDir": "./",
-    "typeRoots": [ "./types", "./node_modules/@types" ]
+    "typeRoots": [ "./types", "./node_modules/@types" ],
+    "paths": {
+      "@ceddl/*": ["ceddl__*"]
+    }
   },
-  "include": ["./test/**/*.ts", "./types/*.ts"]
+  "include": ["./test/**/*.ts", "./types/**/*.ts"]
 }
 

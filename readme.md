@@ -109,8 +109,38 @@ Every marketing tool provides it's own API for events and data tracking. While a
 #### Vendor independent with easy migration path
 Replace any third-party system to another or run A/B test between them? Vendor migration will take you no more than 5 minutes. No change on the site server is required since all data stream is done through a standardized data layer.
 
+<h2 align="center">TypeScript support </h2>
+
+This package doesn't have built-in types, you can get its type definitions through the @types npm namespace, which hosts TypeScript type definitions from the DefinitelyTyped project. types for this polyfill can be installed with.
+
+```shell
+npm install --save @ceddl/ceddl-polyfill @types/ceddl__ceddl-polyfill
+```
+
+Minimal Typescript example:
+```
+import { ceddl, ModelConfig } from '@ceddl/ceddl-polyfill';
+
+const PageModelConfig: ModelConfig = {
+    key: 'page',
+    root: 'true',
+    fields: {
+            section: {
+                type: ceddl.modelFactory.fields.StringField,
+                required: true
+            }
+        }
+    }
+};
+
+ceddl.modelFactory.create(PageModelConfig);
+ceddl.initialize();
+```
+
+
 <h2 align="center">License</h2>
 
 ceddl-polyfill is [MIT licensed]()
 
 The ceddl-polyfill documentation and logos (e.g., .md, .png, .sketch)  files in the /demo, /docs and /assets folder) is [Creative Commons licensed]().
+
