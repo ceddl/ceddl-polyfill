@@ -2,7 +2,7 @@
     <img src="https://github.com/ceddl/ceddl-polyfill/raw/master/assets/logotext.png">
 <br>
 <br>
-<h1>Version 0.9.5 Release 💥</h1>
+<h1>Version 0.9.6 Release 💥</h1>
 </div>
 
 
