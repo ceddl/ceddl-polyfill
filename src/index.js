@@ -149,4 +149,13 @@ Object.defineProperty(Ceddl.prototype, "eventbus", {
     }
 });
 
-export default (new Ceddl());
+/**
+ * We export the named ceddl object placing it on the global if we are running inside the browser.
+ */
+var ceddl = new Ceddl();
+if (typeof exports === 'object' && typeof module === 'undefined' && typeof define === 'undefined') {
+    var global;
+    // eslint-disable-next-line no-undef
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.ceddl = ceddl);
+}
+export { ceddl };

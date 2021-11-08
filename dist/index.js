@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.ceddl = factory());
-})(this, (function () { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ceddl = {}));
+})(this, (function (exports) { 'use strict';
 
     // Private variables
     var _values = {};
@@ -1684,8 +1684,18 @@
         }
     });
 
-    var index = (new Ceddl());
+    /**
+     * We export the named ceddl object placing it on the global if we are running inside the browser.
+     */
+    var ceddl = new Ceddl();
+    if (typeof exports === 'object' && typeof module === 'undefined' && typeof define === 'undefined') {
+        var global;
+        // eslint-disable-next-line no-undef
+        (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.ceddl = ceddl);
+    }
 
-    return index;
+    exports.ceddl = ceddl;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
 
 }));

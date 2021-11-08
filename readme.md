@@ -2,7 +2,7 @@
     <img src="https://github.com/ceddl/ceddl-polyfill/raw/master/assets/logotext.png">
 <br>
 <br>
-<h1>Version 0.9.8 Release 💥</h1>
+<h1>Version 0.9.9 Release 💥</h1>
 </div>
 
 
@@ -72,7 +72,21 @@ var mf = ceddl.modelFactory;
 ```
 
 
-<h2 align="center">Development</h2>
+<h2 align="center">Community</h2>
+
+With the number of downloads increasing would like to get a better understanding of our user group. Here are a few questions that will tee us up for a good conversation:
+
+- Can you tell me about your project in a few sentences?
+- How did you hear about this polyfill? What specifically interests you about it?
+- What environment are you using ceddl-polyfill in and what does your technology stack look like.
+- How large is your team?
+- Are you talking to others about this project? Wat would you prefer as a communication channel?
+- Anything else that we should know about?
+
+Thanks!
+
+[Provide Feedback](https://github.com/ceddl/ceddl-website-and-spec/issues/new?assignees=&labels=question&template=feedback.md&title=)
+
 
 #### Open ceddl development app
 ```
@@ -144,3 +158,4 @@ ceddl-polyfill is [MIT licensed]()
 
 The ceddl-polyfill documentation and logos (e.g., .md, .png, .sketch)  files in the /demo, /docs and /assets folder) is [Creative Commons licensed]().
 
+**Love ceddl-polyfill? Give our repo a star :star: :arrow_up:.**
