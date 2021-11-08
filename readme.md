@@ -74,7 +74,7 @@ var mf = ceddl.modelFactory;
 
 <h2 align="center">Community</h2>
 
-With the number of downloads increasing would like to get a better understanding of our user group. Here are a few questions that will tee us up for a good conversation:
+With the number of downloads increasing we would like to get a better understanding of our user group. Here are a few questions that will tee us up for a good conversation:
 
 - Can you tell me about your project in a few sentences?
 - How did you hear about this polyfill? What specifically interests you about it?
