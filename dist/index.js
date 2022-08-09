@@ -1573,8 +1573,8 @@
      */
     Ceddl.prototype.initialize = function() {
         if(!_clickObserver && !_CeddlObserver) {
-            _clickObserver = new ClickObserver(this);
-            _CeddlObserver = new CeddlObserver(this, ModelFactory);
+            _clickObserver = new ClickObserver(ceddl);
+            _CeddlObserver = new CeddlObserver(ceddl, ModelFactory);
         } else {
             _modelStore.clearStore();
             _eventStore.clearStore();
