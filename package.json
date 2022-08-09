@@ -1,6 +1,6 @@
 {
   "name": "@ceddl/ceddl-polyfill",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "description": "customer experience digital data layer polyfill. Bridging the gap between the 2015 ceddl spec and the browsers",
   "repository": {
     "type": "git",
